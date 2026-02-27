@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GLEAM — Professional Car Care, At Your Doorstep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#000;--white:#fff;--bg:#fff;--bg-alt:#f7f7f7;--bg-dark:#0a0a0a;
+  --text:#111;--text-sec:#555;--text-tri:#888;
+  --text-on-dark:#f5f5f5;--text-on-dark-sec:rgba(255,255,255,.55);
+  --border:rgba(0,0,0,.08);--border-dark:rgba(255,255,255,.08);
+  --accent:#0D9668;--accent-bg:rgba(13,150,104,.06);--accent-light:#e6f5ef;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.05);--shadow-md:0 4px 20px rgba(0,0,0,.07);--shadow-lg:0 16px 48px rgba(0,0,0,.1);
+  --fd:'Cormorant Garamond',Georgia,serif;--fb:'DM Sans',system-ui,sans-serif;
+  --cw:min(1200px,88vw);--sp:clamp(80px,12vw,140px);
+  --r:12px;--pill:999px;--ease:cubic-bezier(.22,1,.36,1);
+  --grain:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{font-family:var(--fb);background:var(--bg);color:var(--text);line-height:1.6;font-weight:400}
+a{color:inherit;text-decoration:none}button{font-family:inherit;cursor:pointer;border:none;background:none}
+img{max-width:100%;display:block}ul{list-style:none}
+.ctn{width:var(--cw);margin:0 auto}
+.lbl{font-family:var(--fb);font-size:.6875rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;margin-bottom:20px;display:inline-block}
+.lbl-a{color:var(--accent)}.lbl-w{color:rgba(255,255,255,.35)}
+h2.hd{font-family:var(--fd);font-weight:600;font-size:clamp(2.25rem,4.5vw,3.75rem);line-height:1.1;letter-spacing:-.015em;color:var(--text)}
+.sub{font-size:1.0625rem;color:var(--text-sec);line-height:1.75;max-width:520px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:16px 32px;border-radius:var(--pill);font-size:.875rem;font-weight:500;font-family:var(--fb);letter-spacing:.01em;transition:all .35s var(--ease);white-space:nowrap}
+.btn-b{background:var(--black);color:var(--white)}.btn-b:hover{background:#1a1a1a;box-shadow:var(--shadow-md)}
+.btn-w{background:var(--white);color:var(--black)}.btn-w:hover{background:#f5f5f5}
+.btn-o{background:transparent;color:var(--text);border:1.5px solid rgba(0,0,0,.12)}.btn-o:hover{border-color:var(--black);background:rgba(0,0,0,.02)}
+.btn-ow{background:transparent;color:var(--white);border:1.5px solid rgba(255,255,255,.2)}.btn-ow:hover{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.05)}
+.btn-sm{padding:12px 24px;font-size:.8125rem}.btn-f{width:100%;justify-content:center}
+.rv{opacity:0;transform:translateY(28px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.rv.v{opacity:1;transform:none}.d1{transition-delay:.1s}.d2{transition-delay:.18s}.d3{transition-delay:.26s}.d4{transition-delay:.34s}.d5{transition-delay:.42s}
+
+/* Lucide icon sizing */
+.lucide{stroke-width:1.5}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;height:72px;display:flex;align-items:center;transition:all .4s var(--ease)}
+.nav.sc{background:rgba(255,255,255,.88);backdrop-filter:blur(24px) saturate(1.2);-webkit-backdrop-filter:blur(24px) saturate(1.2);border-bottom:1px solid var(--border)}
+.nav-i{width:var(--cw);margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.nav-l{font-family:var(--fb);font-size:1.25rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase}.nav-l em{font-style:normal;color:var(--accent)}
+.nav-k{display:flex;gap:36px;align-items:center}
+.nav-k a{font-size:.8125rem;font-weight:500;color:var(--text-sec);transition:color .2s;letter-spacing:.01em}.nav-k a:hover{color:var(--black)}
+.nav-c .btn{padding:11px 26px}
+.nav-h{display:none;width:22px;height:16px;position:relative}
+.nav-h span{position:absolute;left:0;width:100%;height:1.5px;background:var(--black);border-radius:2px;transition:all .3s var(--ease)}
+.nav-h span:nth-child(1){top:0}.nav-h span:nth-child(2){top:7px}.nav-h span:nth-child(3){top:14px}
+.nav-h.on span:nth-child(1){top:7px;transform:rotate(45deg)}.nav-h.on span:nth-child(2){opacity:0}.nav-h.on span:nth-child(3){top:7px;transform:rotate(-45deg)}
+.mn{position:fixed;inset:0;z-index:99;background:var(--white);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;transform:translateY(-100%);transition:transform .45s var(--ease)}
+.mn.on{transform:translateY(0)}.mn a{font-family:var(--fd);font-size:1.75rem;font-weight:500;color:var(--text)}
+@media(max-width:900px){.nav-k,.nav-c{display:none}.nav-h{display:block}}
+
+/* HERO */
+.hero{padding:150px 0 100px;background:var(--white);overflow:hidden}
+.hero-g{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.hero-e{display:inline-flex;align-items:center;gap:8px;padding:8px 16px 8px 10px;border-radius:var(--pill);background:var(--accent-bg);color:var(--accent);font-size:.75rem;font-weight:500;margin-bottom:28px;letter-spacing:.02em}
+.hero-e::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--accent);animation:pu 2.5s infinite}
+@keyframes pu{0%,100%{opacity:1}50%{opacity:.2}}
+.hero h1{font-family:var(--fd);font-weight:700;font-size:clamp(2.75rem,6vw,5rem);line-height:1.06;letter-spacing:-.02em;margin-bottom:24px}
+.hero-s{font-size:1.0625rem;color:var(--text-sec);line-height:1.75;max-width:460px;margin-bottom:40px}
+.hero-sl{margin-bottom:14px}
+.hero-sl-l{font-size:.6875rem;font-weight:600;color:var(--text-tri);text-transform:uppercase;letter-spacing:.15em;margin-bottom:12px}
+.hero-ps{display:flex;gap:8px;flex-wrap:wrap}
+.hp{padding:10px 20px;border-radius:var(--pill);border:1.5px solid var(--border);background:var(--white);font-size:.8125rem;font-weight:500;color:var(--text-sec);cursor:pointer;transition:all .25s var(--ease)}
+.hp:hover{border-color:var(--black);color:var(--black)}
+.hp.on{border-color:var(--black);background:var(--black);color:var(--white)}
+.hero-pr{font-size:.9375rem;color:var(--text-tri);margin-bottom:36px;min-height:24px}
+.hero-pr strong{color:var(--black);font-weight:600}
+.hero-bt{display:flex;gap:12px;flex-wrap:wrap}
+/* Hero visual — cinematic dark composition */
+.hero-v{position:relative;aspect-ratio:4/3.2;border-radius:20px;overflow:hidden;background:#080808}
+.hero-vi{position:absolute;inset:0;background:radial-gradient(ellipse at 75% 65%,rgba(13,150,104,.14) 0%,transparent 55%),radial-gradient(ellipse at 20% 25%,rgba(13,150,104,.05) 0%,transparent 45%),linear-gradient(155deg,#0f1f18 0%,#0a100d 30%,#060606 100%)}
+.hero-vi::before{content:'';position:absolute;inset:0;background:linear-gradient(128deg,transparent 25%,rgba(255,255,255,.012) 42%,rgba(255,255,255,.035) 50%,rgba(255,255,255,.012) 58%,transparent 75%)}
+.hero-vi::after{content:'';position:absolute;inset:0;opacity:.035;background-image:var(--grain);pointer-events:none}
+.hero-vo{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:32px}
+.hero-vb{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:var(--r);background:rgba(255,255,255,.08);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);color:rgba(255,255,255,.85);font-size:.8125rem;font-weight:500;width:fit-content;border:1px solid rgba(255,255,255,.06)}
+.hero-vb svg{width:15px;height:15px;opacity:.7}
+/* Hero car silhouette hints */
+.hero-hl{position:absolute;bottom:30%;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 8%,rgba(255,255,255,.04) 25%,rgba(255,255,255,.07) 50%,rgba(255,255,255,.04) 75%,transparent 92%)}
+.hero-hl2{position:absolute;bottom:42%;right:10%;width:55%;height:1px;background:linear-gradient(90deg,transparent,rgba(13,150,104,.1) 40%,rgba(13,150,104,.06),transparent)}
+@media(max-width:900px){.hero{padding:120px 0 64px}.hero-g{grid-template-columns:1fr;gap:48px}.hero-v{aspect-ratio:16/10}}
+
+/* TRUST */
+.trust{padding:36px 0;border-bottom:1px solid var(--border)}
+.trust-i{display:flex;justify-content:center;align-items:center;gap:48px;flex-wrap:wrap}
+.trust-t{display:flex;align-items:center;gap:8px;font-size:.8125rem;color:var(--text-tri)}
+.trust-t strong{color:var(--black);font-weight:600;font-family:var(--fd);font-size:.9375rem}
+.trust-d{width:3px;height:3px;border-radius:50%;background:rgba(0,0,0,.15)}
+@media(max-width:600px){.trust-i{gap:20px}.trust-d{display:none}}
+
+/* PROBLEM */
+.prob{padding:var(--sp) 0;background:var(--bg-alt)}
+.prob-g{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin:48px 0 40px}
+.prob-c{padding:40px 32px;border-radius:var(--r);background:var(--white);border:1px solid var(--border);transition:all .35s var(--ease)}
+.prob-c:hover{box-shadow:var(--shadow-md);transform:translateY(-3px)}
+.prob-ic{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:24px;color:#8a7a68;background:#f5f2ee}
+.prob-ic svg{width:22px;height:22px}
+.prob-c h3{font-family:var(--fd);font-size:1.25rem;font-weight:600;margin-bottom:12px}
+.prob-c p{font-size:.9375rem;color:var(--text-sec);line-height:1.7}
+.prob-tr{text-align:center;font-family:var(--fd);font-size:1.375rem;font-weight:500;color:var(--accent);font-style:italic}
+@media(max-width:768px){.prob-g{grid-template-columns:1fr}}
+
+/* HOW */
+.how{padding:var(--sp) 0;background:var(--white)}
+.how-g{display:grid;grid-template-columns:repeat(3,1fr);gap:48px;margin:56px 0 48px}
+.how-s h3{font-family:var(--fd);font-size:1.375rem;font-weight:600;margin-bottom:12px}
+.how-s p{font-size:.9375rem;color:var(--text-sec);line-height:1.7}
+.how-n{font-family:var(--fd);font-size:5rem;font-weight:400;color:rgba(0,0,0,.06);line-height:1;margin-bottom:16px;letter-spacing:-.02em}
+.how-ct{text-align:center}
+@media(max-width:768px){.how-g{grid-template-columns:1fr;gap:40px}}
+
+/* SERVICES */
+.svcs{padding:var(--sp) 0;background:var(--bg-alt)}
+.svcs-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px;margin:48px 0 0}
+.sc{padding:36px 32px;border-radius:var(--r);background:var(--white);border:1px solid var(--border);transition:all .35s var(--ease);position:relative;display:flex;flex-direction:column}
+.sc:hover{box-shadow:var(--shadow-md);transform:translateY(-3px)}
+.sc-bd{position:absolute;top:20px;right:20px;padding:5px 14px;border-radius:var(--pill);background:var(--black);color:var(--white);font-size:.625rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.sc-m{font-size:.75rem;color:var(--text-tri);margin-bottom:16px;display:flex;gap:16px;letter-spacing:.02em}
+.sc h3{font-family:var(--fd);font-size:1.375rem;font-weight:600;margin-bottom:4px}
+.sc-p{font-family:var(--fd);font-size:2.25rem;font-weight:600;margin-bottom:12px;display:flex;align-items:baseline;gap:6px}
+.sc-p .fr{font-size:.75rem;font-weight:400;color:var(--text-tri);font-family:var(--fb)}
+.sc p{font-size:.9375rem;color:var(--text-sec);line-height:1.7;margin-bottom:24px;flex:1}
+.sc .btn{margin-top:auto}
+.ao{margin-top:32px;padding-top:32px;border-top:1px solid var(--border)}
+.ao-l{font-size:.6875rem;font-weight:600;color:var(--text-tri);text-transform:uppercase;letter-spacing:.14em;margin-bottom:14px}
+.ao-t{display:flex;flex-wrap:wrap;gap:8px}
+.ao-tg{padding:8px 18px;border-radius:var(--pill);border:1px solid var(--border);font-size:.8125rem;color:var(--text-sec);transition:all .25s}
+.ao-tg:hover{border-color:var(--black);color:var(--black)}
+
+/* PRICING */
+.pri{padding:var(--sp) 0;background:var(--white)}
+.pri-ts{display:flex;gap:4px;margin:40px 0 28px;padding:4px;background:var(--bg-alt);border-radius:var(--pill);width:fit-content;flex-wrap:wrap}
+.pri-t{padding:10px 20px;border-radius:var(--pill);font-size:.8125rem;font-weight:500;color:var(--text-sec);transition:all .25s var(--ease);cursor:pointer}
+.pri-t:hover{color:var(--black)}.pri-t.on{background:var(--black);color:var(--white)}
+.pri-tw{border-radius:var(--r);border:1px solid var(--border);overflow-x:auto}
+.pri-tb{width:100%;border-collapse:collapse;min-width:580px}
+.pri-tb th{text-align:left;padding:16px 28px;font-size:.6875rem;font-weight:600;color:var(--text-tri);text-transform:uppercase;letter-spacing:.1em;background:var(--bg-alt);border-bottom:1px solid var(--border)}
+.pri-tb td{padding:20px 28px;font-size:.9375rem;border-bottom:1px solid var(--border);transition:background .25s}
+.pri-tb tr:last-child td{border-bottom:none}
+.pri-tb tr:hover td{background:rgba(0,0,0,.015)}
+.pri-tb td:first-child{font-weight:500}
+.pri-tb td:last-child{font-family:var(--fd);font-weight:600;font-size:1.25rem}
+.pri-nt{margin-top:20px;font-size:.8125rem;color:var(--text-tri)}
+
+/* WHY */
+.why{padding:var(--sp) 0;background:var(--bg-alt)}
+.why-g{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
+.why-c{padding:40px 32px;border-radius:var(--r);background:var(--white);border:1px solid var(--border);transition:all .35s var(--ease)}
+.why-c:hover{box-shadow:var(--shadow-md);transform:translateY(-3px)}
+.why-ic{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:24px;background:var(--accent-bg);color:var(--accent)}
+.why-ic svg{width:22px;height:22px}
+.why-c h3{font-family:var(--fd);font-size:1.1875rem;font-weight:600;margin-bottom:10px}
+.why-c p{font-size:.9375rem;color:var(--text-sec);line-height:1.7}
+@media(max-width:768px){.why-g{grid-template-columns:1fr}}
+
+/* PLANS */
+.pln{padding:var(--sp) 0;background:var(--white)}
+.pln-g{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:48px 0 32px}
+.pl{padding:36px 28px;border-radius:var(--r);border:1px solid var(--border);background:var(--white);display:flex;flex-direction:column;transition:all .35s var(--ease);position:relative}
+.pl:hover{box-shadow:var(--shadow-md);transform:translateY(-3px)}
+.pl-pop{border-color:var(--black);border-width:2px}
+.pl-b{position:absolute;top:-13px;left:50%;transform:translateX(-50%);padding:5px 16px;border-radius:var(--pill);background:var(--black);color:var(--white);font-size:.625rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em}
+.pl-n{font-family:var(--fb);font-size:1rem;font-weight:600;margin-bottom:8px;letter-spacing:.02em}
+.pl-pr{font-family:var(--fd);font-size:3rem;font-weight:600;line-height:1;margin-bottom:4px}
+.pl-pe{font-size:.8125rem;color:var(--text-tri);margin-bottom:24px}
+.pl-ls{padding:24px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);flex:1;margin-bottom:20px}
+.pl-ls li{font-size:.875rem;color:var(--text-sec);margin-bottom:10px;padding-left:22px;position:relative;line-height:1.5}
+.pl-ls li::before{content:'';position:absolute;left:0;top:6px;width:10px;height:10px;border-radius:50%;border:1.5px solid var(--accent)}
+.pl-tg{font-size:.8125rem;color:var(--text-tri);font-style:italic;margin-bottom:20px}
+.pl .btn{margin-top:auto}
+.pln-ex{display:flex;gap:40px;justify-content:center;flex-wrap:wrap}
+.pln-e{font-size:.8125rem;color:var(--text-sec);display:flex;align-items:center;gap:8px}
+.pln-e svg{width:16px;height:16px;color:var(--text-tri)}
+@media(max-width:960px){.pln-g{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.pln-g{grid-template-columns:1fr}}
+
+/* B/A — Rich before/after visuals */
+.ba{padding:var(--sp) 0;background:var(--bg-alt)}
+.ba-g{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin:48px 0 40px}
+.ba-c{border-radius:var(--r);overflow:hidden;background:var(--white);border:1px solid var(--border);transition:all .35s var(--ease)}
+.ba-c:hover{box-shadow:var(--shadow-md);transform:translateY(-3px)}
+.ba-v{position:relative;height:260px;cursor:col-resize;overflow:hidden}
+.ba-bf,.ba-af{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-weight:500;font-size:.875rem;letter-spacing:.08em}
+.ba-bf{background:radial-gradient(circle at 55% 45%,rgba(90,65,30,.2) 0%,transparent 65%),linear-gradient(145deg,#2a1e10,#201810,#18130c,#1e1812);color:rgba(255,255,255,.12)}
+.ba-bf::after{content:'';position:absolute;inset:0;opacity:.04;background-image:var(--grain)}
+.ba-af{background:radial-gradient(ellipse at 45% 55%,rgba(13,150,104,.15) 0%,transparent 55%),linear-gradient(145deg,#0c1e14,#10261c,#0e2018,#0a1a12);color:rgba(255,255,255,.12);clip-path:inset(0 50% 0 0)}
+.ba-af::before{content:'';position:absolute;top:18%;left:25%;width:50%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent)}
+.ba-af::after{content:'';position:absolute;inset:0;opacity:.03;background-image:var(--grain)}
+.ba-d{position:absolute;top:0;bottom:0;left:50%;width:2px;background:var(--white);z-index:4}
+.ba-d::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:32px;height:32px;border-radius:50%;background:var(--white);box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.ba-d-arr{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:2px;z-index:5}
+.ba-d-arr svg{width:12px;height:12px;color:var(--black)}
+.ba-tg{position:absolute;top:14px;padding:5px 12px;border-radius:var(--pill);font-size:.625rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;z-index:5;font-family:var(--fb)}
+.ba-tg-b{left:14px;background:rgba(0,0,0,.45);color:rgba(255,255,255,.75);backdrop-filter:blur(8px)}
+.ba-tg-a{right:14px;background:rgba(13,150,104,.6);color:var(--white);backdrop-filter:blur(8px)}
+.ba-in{padding:20px 24px}.ba-in p{font-size:.875rem;color:var(--text-sec);line-height:1.6}
+.ba-in strong{color:var(--text);font-weight:600}
+.ba-ct{text-align:center}
+@media(max-width:768px){.ba-g{grid-template-columns:1fr}}
+
+/* CONDO — Architectural visual */
+.condo{padding:var(--sp) 0;background:var(--white)}
+.condo-g{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.condo-bd{font-size:1.0625rem;color:var(--text-sec);line-height:1.8;margin:24px 0 32px}
+.condo-fs{display:flex;flex-direction:column;gap:16px;margin-bottom:36px}
+.condo-f{display:flex;align-items:center;gap:14px;font-size:.9375rem}
+.condo-fi{width:40px;height:40px;border-radius:10px;background:var(--accent-bg);display:flex;align-items:center;justify-content:center;color:var(--accent);flex-shrink:0}
+.condo-fi svg{width:20px;height:20px}
+.condo-nt{font-size:.8125rem;color:var(--text-tri);margin-top:20px}
+.condo-v{aspect-ratio:4/3.5;border-radius:20px;overflow:hidden;position:relative;background:linear-gradient(175deg,#eef5f2 0%,#e5efe9 40%,#dce8e1 100%);border:1px solid rgba(0,0,0,.04)}
+.condo-bld{position:absolute;bottom:0;background:linear-gradient(180deg,rgba(13,150,104,.03),rgba(13,150,104,.08));border-radius:3px 3px 0 0}
+.condo-bld-1{right:12%;width:22%;height:72%}
+.condo-bld-2{right:38%;width:16%;height:55%}
+.condo-bld-3{right:58%;width:20%;height:65%}
+.condo-bld::after{content:'';position:absolute;inset:6% 8%;background:repeating-linear-gradient(0deg,rgba(255,255,255,.35) 0px,rgba(255,255,255,.35) 4px,transparent 4px,transparent 14px),repeating-linear-gradient(90deg,rgba(255,255,255,.35) 0px,rgba(255,255,255,.35) 4px,transparent 4px,transparent 20px)}
+.condo-glow{position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(0deg,rgba(13,150,104,.04),transparent)}
+@media(max-width:768px){.condo-g{grid-template-columns:1fr}.condo-v{aspect-ratio:16/9}}
+
+/* RIDESHARE — Night driving aesthetic */
+.rs{padding:var(--sp) 0;background:var(--bg-alt)}
+.rs-g{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.rs-st{padding:24px 28px;border-radius:var(--r);margin:24px 0 32px;background:var(--white);border:1px solid var(--border)}
+.rs-st strong{font-family:var(--fd);font-size:2.25rem;font-weight:600;display:block}
+.rs-st p{font-size:.875rem;color:var(--text-sec);margin-top:4px}
+.rs-of{display:inline-block;margin-top:16px;padding:8px 20px;border-radius:var(--pill);background:#fef9ee;color:#92400e;font-size:.8125rem;font-weight:500;border:1px solid rgba(146,64,14,.08)}
+.rs-v{aspect-ratio:4/3.5;border-radius:20px;overflow:hidden;position:relative;background:linear-gradient(165deg,#151515 0%,#111 40%,#0d0d0d 100%);border:1px solid rgba(255,255,255,.04)}
+.rs-v::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(178deg,transparent,transparent 49%,rgba(255,255,255,.012) 49.3%,transparent 49.6%)}
+.rs-v::after{content:'';position:absolute;inset:0;opacity:.03;background-image:var(--grain)}
+.rs-bokeh{position:absolute;border-radius:50%;filter:blur(25px)}
+.rs-bokeh-1{width:80px;height:80px;top:25%;left:60%;background:rgba(255,200,60,.07)}
+.rs-bokeh-2{width:50px;height:50px;top:55%;left:25%;background:rgba(255,100,100,.05)}
+.rs-bokeh-3{width:60px;height:60px;top:35%;left:40%;background:rgba(13,150,104,.06)}
+.rs-road{position:absolute;bottom:35%;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 5%,rgba(255,255,255,.04) 30%,rgba(255,255,255,.06) 50%,rgba(255,255,255,.04) 70%,transparent 95%)}
+@media(max-width:768px){.rs-g{grid-template-columns:1fr}.rs-v{aspect-ratio:16/9;order:-1}}
+
+/* FLEET */
+.fleet{padding:var(--sp) 0;background:var(--white)}
+.fleet-g{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin:40px 0 24px}
+.fleet-c{padding:36px 28px;border-radius:var(--r);border:1px solid var(--border);text-align:center;transition:all .35s var(--ease)}
+.fleet-c:hover{box-shadow:var(--shadow-md);transform:translateY(-3px)}
+.fleet-c h3{font-family:var(--fd);font-size:1.25rem;font-weight:600;margin-bottom:4px}
+.fleet-mn{font-size:.8125rem;color:var(--text-tri);margin-bottom:20px}
+.fleet-pr{font-family:var(--fd);font-size:2.75rem;font-weight:600}
+.fleet-pe{font-size:.8125rem;color:var(--text-tri);display:block;margin-bottom:16px}
+.fleet-in{padding-top:16px;border-top:1px solid var(--border);font-size:.875rem;color:var(--text-sec)}
+.fleet-nt{font-size:.8125rem;color:var(--text-tri);text-align:center;margin-bottom:20px}
+.fleet-ct{text-align:center}
+@media(max-width:768px){.fleet-g{grid-template-columns:1fr}}
+
+/* GUARANTEE */
+.guar{padding:var(--sp) 0;background:var(--bg-alt)}
+.guar-g{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
+.guar-c{padding:48px 32px;border-radius:var(--r);text-align:center;background:var(--white);border:1px solid var(--border);transition:all .35s var(--ease)}
+.guar-c:hover{box-shadow:var(--shadow-md);transform:translateY(-3px)}
+.guar-ic{width:52px;height:52px;border-radius:50%;margin:0 auto 24px;display:flex;align-items:center;justify-content:center;background:var(--accent-bg);color:var(--accent)}
+.guar-ic svg{width:24px;height:24px}
+.guar-c h3{font-family:var(--fd);font-size:1.1875rem;font-weight:600;margin-bottom:12px}
+.guar-c p{font-size:.9375rem;color:var(--text-sec);line-height:1.7}
+@media(max-width:768px){.guar-g{grid-template-columns:1fr}}
+
+/* TESTIMONIALS */
+.tst{padding:var(--sp) 0;background:var(--white)}
+.tst-g{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin:48px 0 32px}
+.tst-c{padding:36px 32px;border-radius:var(--r);border:1px solid var(--border);transition:all .35s var(--ease)}
+.tst-c:hover{box-shadow:var(--shadow-md);transform:translateY(-3px)}
+.tst-s{display:flex;gap:3px;margin-bottom:20px;color:var(--accent)}
+.tst-s svg{width:16px;height:16px;fill:var(--accent);stroke:var(--accent)}
+.tst-c blockquote{font-size:.9375rem;color:var(--text-sec);line-height:1.8;margin-bottom:24px;font-style:italic}
+.tst-au{display:flex;align-items:center;gap:12px}
+.tst-av{width:40px;height:40px;border-radius:50%;background:var(--black);display:flex;align-items:center;justify-content:center;font-size:.6875rem;font-weight:600;color:var(--white);font-family:var(--fb);letter-spacing:.02em}
+.tst-nm{font-size:.875rem;font-weight:600}.tst-mt{font-size:.8125rem;color:var(--text-tri)}
+.tst-bw{text-align:center}
+.tst-bg{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border-radius:var(--pill);background:var(--bg-alt);border:1px solid var(--border);font-size:.8125rem;color:var(--text-sec)}
+.tst-bg .st{display:flex;gap:2px;color:var(--accent)}
+.tst-bg .st svg{width:14px;height:14px;fill:var(--accent);stroke:var(--accent)}
+@media(max-width:768px){.tst-g{grid-template-columns:1fr}}
+
+/* AREAS — Abstract map visual */
+.areas{padding:var(--sp) 0;background:var(--bg-alt)}
+.areas-g{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px}
+.areas-m{aspect-ratio:4/3;border-radius:20px;overflow:hidden;position:relative;background:linear-gradient(160deg,#eef4f1,#e8f0ec,#e0e9e4);border:1px solid rgba(0,0,0,.04)}
+.areas-m::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,0,0,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.018) 1px,transparent 1px);background-size:28px 28px}
+.areas-m::after{content:'';position:absolute;inset:0;opacity:.02;background-image:var(--grain)}
+.areas-dot{position:absolute;border-radius:50%;background:var(--accent)}
+.areas-dot::after{content:'';position:absolute;inset:-8px;border-radius:50%;background:rgba(13,150,104,.12);animation:dot-pulse 3s infinite}
+@keyframes dot-pulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.6);opacity:0}}
+.areas-dot-1{width:10px;height:10px;top:38%;left:55%}
+.areas-dot-2{width:8px;height:8px;top:48%;left:42%}
+.areas-dot-3{width:8px;height:8px;top:42%;left:62%}
+.areas-dot-1::after{animation-delay:0s}.areas-dot-2::after{animation-delay:1s}.areas-dot-3::after{animation-delay:2s}
+.areas-road{position:absolute;top:35%;left:20%;right:20%;height:1px;background:rgba(0,0,0,.06);transform:rotate(-8deg)}
+.areas-road-2{position:absolute;top:25%;bottom:30%;left:50%;width:1px;background:rgba(0,0,0,.05);transform:rotate(5deg)}
+.areas-l h3{font-family:var(--fd);font-size:1.125rem;font-weight:600;margin-bottom:16px}
+.areas-ac{margin-bottom:32px}
+.ar{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+.ar-d{width:7px;height:7px;border-radius:50%;margin-top:7px;flex-shrink:0}
+.ar-d-on{background:var(--accent)}.ar-d-so{background:#e5a100}
+.ar-n{font-size:.9375rem;font-weight:500}.ar-s{font-size:.8125rem;color:var(--text-tri)}
+.areas-p{display:flex;gap:8px;margin-top:28px}
+.areas-p input{flex:1;padding:14px 20px;border-radius:var(--pill);border:1px solid var(--border);font-family:var(--fb);font-size:.875rem;outline:none;background:var(--white);transition:border-color .25s}
+.areas-p input:focus{border-color:var(--black)}
+@media(max-width:768px){.areas-g{grid-template-columns:1fr}.areas-m{aspect-ratio:16/9}}
+
+/* PROVIDERS — Dark section with accent glow */
+.prov{padding:var(--sp) 0;background:var(--bg-dark);color:var(--text-on-dark)}
+.prov .lbl{color:rgba(255,255,255,.3)}.prov .hd{color:var(--white)}
+.prov-g{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.prov-bd{font-size:1.0625rem;color:var(--text-on-dark-sec);line-height:1.8;margin:24px 0 36px}
+.prov-bs{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:36px}
+.prov-bn{display:flex;align-items:flex-start;gap:10px;font-size:.875rem;color:var(--text-on-dark-sec);line-height:1.5}
+.prov-bn svg{width:16px;height:16px;color:var(--accent);flex-shrink:0;margin-top:2px}
+.prov-v{aspect-ratio:4/3.5;border-radius:20px;overflow:hidden;position:relative;background:radial-gradient(ellipse at 30% 65%,rgba(13,150,104,.08) 0%,transparent 50%),linear-gradient(160deg,#161616,#101010,#0a0a0a);border:1px solid var(--border-dark)}
+.prov-v::before{content:'';position:absolute;top:0;bottom:0;left:22%;width:1px;background:linear-gradient(180deg,transparent 15%,rgba(13,150,104,.12) 50%,transparent 85%)}
+.prov-v::after{content:'';position:absolute;inset:0;opacity:.03;background-image:var(--grain)}
+.prov-line2{position:absolute;top:0;bottom:0;right:35%;width:1px;background:linear-gradient(180deg,transparent 25%,rgba(255,255,255,.03) 50%,transparent 75%)}
+.prov-glow{position:absolute;bottom:20%;left:15%;width:120px;height:120px;border-radius:50%;background:rgba(13,150,104,.06);filter:blur(40px)}
+@media(max-width:768px){.prov-g{grid-template-columns:1fr}.prov-bs{grid-template-columns:1fr}}
+
+/* FAQ */
+.faq{padding:var(--sp) 0;background:var(--white)}
+.faq-l{max-width:760px;margin:48px auto 0}
+.faq-i{border-bottom:1px solid var(--border)}
+.faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:24px 0;text-align:left;font-family:var(--fd);font-size:1.125rem;font-weight:500;color:var(--text);transition:color .25s}
+.faq-q:hover{color:var(--accent)}
+.faq-ic{width:28px;height:28px;border-radius:50%;border:1.5px solid rgba(0,0,0,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .35s var(--ease)}
+.faq-ic svg{width:14px;height:14px;color:var(--text-tri);transition:transform .35s var(--ease)}
+.faq-i.op .faq-ic{border-color:var(--black)}
+.faq-i.op .faq-ic svg{transform:rotate(45deg);color:var(--black)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s var(--ease)}
+.faq-i.op .faq-a{max-height:300px}
+.faq-ai{padding-bottom:24px;font-size:.9375rem;color:var(--text-sec);line-height:1.8}
+
+/* FINAL CTA (dark) */
+.cta-f{padding:var(--sp) 0;background:var(--bg-dark);text-align:center;color:var(--text-on-dark);position:relative;overflow:hidden}
+.cta-f::before{content:'';position:absolute;top:50%;left:50%;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(13,150,104,.06) 0%,transparent 70%);transform:translate(-50%,-50%)}
+.cta-f .hd{color:var(--white);font-size:clamp(2.5rem,5.5vw,4.5rem);margin-bottom:16px;position:relative}
+.cta-f .sub{color:var(--text-on-dark-sec);max-width:480px;margin:0 auto 40px;text-align:center;position:relative}
+.cta-fb{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative}
+
+/* FOOTER */
+.ft{background:var(--bg-alt);border-top:1px solid var(--border);padding:64px 0 0}
+.ft-g{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px}
+.ft-tg{font-size:.875rem;color:var(--text-tri);line-height:1.7;max-width:280px;margin-top:16px}
+.ft-sc{display:flex;gap:10px;margin-top:20px}
+.ft-sc a{width:34px;height:34px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-tri);transition:all .25s}
+.ft-sc a:hover{border-color:var(--black);color:var(--black)}
+.ft-sc svg{width:15px;height:15px}
+.ft-c h4{font-size:.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:.15em;margin-bottom:20px;color:var(--text-tri)}
+.ft-c a{display:block;font-size:.875rem;color:var(--text-sec);margin-bottom:12px;transition:color .2s}
+.ft-c a:hover{color:var(--black)}
+.ft-b{margin-top:48px;padding:20px 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.ft-cp{font-size:.8125rem;color:var(--text-tri)}
+.ft-lg{display:flex;gap:24px}.ft-lg a{font-size:.8125rem;color:var(--text-tri);transition:color .2s}.ft-lg a:hover{color:var(--black)}
+@media(max-width:768px){.ft-g{grid-template-columns:1fr 1fr}.ft-b{flex-direction:column}}
+@media(max-width:480px){.ft-g{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nv"><div class="nav-i"><a href="#" class="nav-l">GLEAM<em>.</em></a><div class="nav-k"><a href="#hw">How It Works</a><a href="#sv">Services</a><a href="#pl">Plans</a><a href="#ar">Areas</a><a href="#pv">For Partners</a></div><div class="nav-c"><a href="#" class="btn btn-b btn-sm">Book Now</a></div><button class="nav-h" id="bg" aria-label="Menu"><span></span><span></span><span></span></button></div></nav>
+<div class="mn" id="mn"><a href="#hw" onclick="cm()">How It Works</a><a href="#sv" onclick="cm()">Services</a><a href="#pl" onclick="cm()">Plans</a><a href="#ar" onclick="cm()">Areas</a><a href="#pv" onclick="cm()">For Partners</a><a href="#" class="btn btn-b" onclick="cm()">Book Now</a></div>
+
+<section class="hero"><div class="ctn"><div class="hero-g"><div><div class="hero-e rv">Now serving the West GTA</div><h1 class="rv d1">Your car.<br>Your schedule.<br>Our experts.</h1><p class="hero-s rv d2">Professional car detailing that comes to you — at home, at your condo, at work. Book a certified GLEAM pro in under 2 minutes.</p><div class="hero-sl rv d3"><div class="hero-sl-l">Select your vehicle</div><div class="hero-ps" id="hp"><button class="hp on" data-v="sedan" data-p="229">Sedan</button><button class="hp" data-v="suv" data-p="289">SUV</button><button class="hp" data-v="pickup" data-p="279">Pickup</button><button class="hp" data-v="minivan" data-p="289">Minivan</button><button class="hp" data-v="large_suv" data-p="319">Large SUV</button></div></div><div class="hero-pr rv d4" id="hpr">Full Detail for your <strong>Sedan</strong> — starting at <strong>$229</strong></div><div class="hero-bt rv d5"><a href="#" class="btn btn-b">Book Your First GLEAM →</a><a href="#hw" class="btn btn-o">See How It Works</a></div></div><div class="hero-v rv d2"><div class="hero-vi"></div><div class="hero-hl"></div><div class="hero-hl2"></div><div class="hero-vo"><div class="hero-vb"><i data-lucide="shield-check"></i> Certified &amp; Insured Professionals</div></div></div></div></div></section>
+
+<div class="trust"><div class="trust-i"><div class="trust-t"><strong>500+</strong> jobs completed</div><div class="trust-d"></div><div class="trust-t"><strong>4.9★</strong> average rating</div><div class="trust-d"></div><div class="trust-t"><strong>100%</strong> photo-documented</div><div class="trust-d"></div><div class="trust-t">Serving <strong>Etobicoke &amp; Mississauga</strong></div></div></div>
+
+<section class="prob"><div class="ctn"><span class="lbl lbl-a rv">THE OLD WAY</span><h2 class="hd rv d1">Car care in Toronto is broken.</h2><div class="prob-g"><div class="prob-c rv d1"><div class="prob-ic"><i data-lucide="droplets"></i></div><h3>The Gas Station Wash</h3><p>Scratched paint, recycled water, 20-minute drive for a mediocre result. Your car deserves better.</p></div><div class="prob-c rv d2"><div class="prob-ic"><i data-lucide="shield-alert"></i></div><h3>The Random Detailer</h3><p>Found on Kijiji. No insurance. No photos. No proof. You're gambling with your paint.</p></div><div class="prob-c rv d3"><div class="prob-ic"><i data-lucide="clock"></i></div><h3>The "I'll Do It Myself"</h3><p>3 hours of your Saturday gone. You still missed the door jambs. And the salt is eating your undercarriage.</p></div></div><p class="prob-tr rv">There's a better way. It starts with a tap.</p></div></section>
+
+<section class="how" id="hw"><div class="ctn"><span class="lbl lbl-a rv">HOW IT WORKS</span><h2 class="hd rv d1">From booking to brilliance — in 3 steps.</h2><div class="how-g"><div class="how-s rv d1"><div class="how-n">01</div><h3>Pick your service</h3><p>Choose from Express Shine to Full Detail. Select your vehicle type — pricing adjusts instantly. Add extras like ceramic coating or salt flush.</p></div><div class="how-s rv d2"><div class="how-n">02</div><h3>We come to you</h3><p>A certified GLEAM pro arrives at your location — driveway, underground parking, office lot. Fully equipped. Fully insured. Right on time.</p></div><div class="how-s rv d3"><div class="how-n">03</div><h3>See the proof</h3><p>5 before photos. 5 after photos. Every angle documented. Delivered to your phone the moment we're done. That's the GLEAM standard.</p></div></div><div class="how-ct rv"><a href="#" class="btn btn-b">Book Now — It Takes 2 Minutes →</a></div></div></section>
+
+<section class="svcs" id="sv"><div class="ctn"><span class="lbl lbl-a rv">OUR SERVICES</span><h2 class="hd rv d1">Every level of clean, one platform.</h2><p class="sub rv d2">From a quick exterior refresh to a full restoration — choose the service that fits your car and your life.</p><div class="svcs-g"><div class="sc rv d1"><div class="sc-m"><span>45 min</span><span>Exterior + Vacuum</span></div><h3>Express Shine</h3><div class="sc-p"><span class="fr">from</span>$69</div><p>Exterior rinseless wash, glass, tires, interior vacuum. Perfect for your weekly reset.</p><a href="#" class="btn btn-o btn-f btn-sm">Book Express Shine →</a></div><div class="sc rv d2"><div class="sc-m"><span>75 min</span><span>Interior Only</span></div><h3>Interior Refresh</h3><div class="sc-p"><span class="fr">from</span>$119</div><p>Full interior vacuum, dashboard wipe, console clean, door pockets, interior glass. Your cabin, like new.</p><a href="#" class="btn btn-o btn-f btn-sm">Book Interior Refresh →</a></div><div class="sc rv d3"><span class="sc-bd">Most Popular</span><div class="sc-m"><span>3.5 hrs</span><span>Full Car</span></div><h3>Full Detail</h3><div class="sc-p"><span class="fr">from</span>$229</div><p>Express Shine + Interior Refresh + wheel faces + trim dressing. The complete package — inside and out.</p><a href="#" class="btn btn-b btn-f btn-sm">Book Full Detail →</a></div><div class="sc rv d4"><div class="sc-m"><span>5 hrs</span><span>Deep Clean</span></div><h3>Deep Restoration</h3><div class="sc-p"><span class="fr">from</span>$369</div><p>Full Detail + shampoo seats &amp; carpet + odor treatment + clay bar. Bringing neglected cars back to life.</p><a href="#" class="btn btn-o btn-f btn-sm">Book Deep Restoration →</a></div><div class="sc rv d5"><div class="sc-m"><span>4.5 hrs</span><span>Protection</span></div><h3>Protection Package</h3><div class="sc-p"><span class="fr">from</span>$429</div><p>Full Detail + paint sealant/wax + glass treatment + tire coating. Long-term protection for your investment.</p><a href="#" class="btn btn-o btn-f btn-sm">Book Protection →</a></div></div><div class="ao rv"><div class="ao-l">Premium Add-Ons</div><div class="ao-t"><span class="ao-tg">Ceramic Coating</span><span class="ao-tg">Paint Correction</span><span class="ao-tg">Ozone Treatment</span><span class="ao-tg">Pet Hair Removal</span><span class="ao-tg">Salt Underbody Flush</span><span class="ao-tg">Headlight Restoration</span><span class="ao-tg">Engine Bay Clean</span></div></div></div></section>
+
+<section class="pri" id="pr"><div class="ctn"><span class="lbl lbl-a rv">TRANSPARENT PRICING</span><h2 class="hd rv d1">Your car type. Your price. No surprises.</h2><p class="sub rv d2">Pricing is based on your vehicle size — because an SUV takes more work than a sedan.</p><div class="pri-ts rv" id="pt"><button class="pri-t on" data-v="sedan">Sedan</button><button class="pri-t" data-v="coupe">Coupe</button><button class="pri-t" data-v="crossover">Crossover</button><button class="pri-t" data-v="suv">SUV</button><button class="pri-t" data-v="minivan">Minivan</button><button class="pri-t" data-v="pickup">Pickup</button><button class="pri-t" data-v="large_suv">Large SUV</button></div><div class="pri-tw rv"><table class="pri-tb" id="ptb"><thead><tr><th>Service</th><th>Duration</th><th>Price (CAD)</th></tr></thead><tbody></tbody></table></div><p class="pri-nt rv">All prices in CAD. HST (13%) added at checkout. No hidden fees, ever.</p></div></section>
+
+<section class="why"><div class="ctn"><span class="lbl lbl-a rv">THE GLEAM DIFFERENCE</span><h2 class="hd rv d1">This isn't a car wash.<br>It's car care, reimagined.</h2><div class="why-g"><div class="why-c rv d1"><div class="why-ic"><i data-lucide="camera"></i></div><h3>Photo Proof on Every Job</h3><p>5 before. 5 after. Every angle documented. You'll see exactly what was done — and so will we.</p></div><div class="why-c rv d2"><div class="why-ic"><i data-lucide="shield-check"></i></div><h3>Certified &amp; Insured Pros</h3><p>Every GLEAM provider is vetted, trained, insured, and rated. They pass our quality rubric before touching a single car.</p></div><div class="why-c rv d3"><div class="why-ic"><i data-lucide="map-pin"></i></div><h3>We Come to You</h3><p>Driveway, condo underground, office parking lot — we show up where your car is. Waterless methods for indoor spaces.</p></div><div class="why-c rv d1"><div class="why-ic"><i data-lucide="smartphone"></i></div><h3>Real-Time Status</h3><p>Know exactly when your pro is on the way, when they arrive, and when they're done. Like tracking your ride.</p></div><div class="why-c rv d2"><div class="why-ic"><i data-lucide="repeat"></i></div><h3>Subscribe &amp; Save</h3><p>Monthly plans from $59/mo. Your car stays clean without you lifting a finger. Skip or cancel anytime.</p></div><div class="why-c rv d3"><div class="why-ic"><i data-lucide="award"></i></div><h3>Satisfaction Guaranteed</h3><p>Not happy? We'll redo it. Every job is tracked, photographed, and backed by our quality guarantee.</p></div></div></div></section>
+
+<section class="pln" id="pl"><div class="ctn"><span class="lbl lbl-a rv">MONTHLY PLANS</span><h2 class="hd rv d1">Stop booking one-offs.<br>Start subscribing to clean.</h2><p class="sub rv d2">Pick a plan that fits your life. No rollover, no contracts — cancel anytime with 30 days notice.</p><div class="pln-g"><div class="pl rv d1"><div class="pl-n">GLEAM Go</div><div class="pl-pr">$59</div><div class="pl-pe">/month</div><ul class="pl-ls"><li>2× Express Shine per month</li><li>Exterior wash + vacuum</li><li>Cancel anytime</li></ul><div class="pl-tg">Perfect for: Commuters, ride-share drivers</div><a href="#" class="btn btn-o btn-f btn-sm">Choose Go →</a></div><div class="pl pl-pop rv d2"><span class="pl-b">Most Popular</span><div class="pl-n">GLEAM Plus</div><div class="pl-pr">$109</div><div class="pl-pe">/month</div><ul class="pl-ls"><li>1× Interior Refresh per month</li><li>1× Express Shine per month</li><li>Inside + outside covered</li><li>Cancel anytime</li></ul><div class="pl-tg">Perfect for: Professionals, condo residents</div><a href="#" class="btn btn-b btn-f btn-sm">Choose Plus →</a></div><div class="pl rv d3"><div class="pl-n">GLEAM Full</div><div class="pl-pr">$189</div><div class="pl-pe">/month</div><ul class="pl-ls"><li>1× Full Detail per month</li><li>1× Interior Refresh per month</li><li>1× Express Shine per month</li><li>Cancel anytime</li></ul><div class="pl-tg">Perfect for: Families, lease holders, enthusiasts</div><a href="#" class="btn btn-o btn-f btn-sm">Choose Full →</a></div><div class="pl rv d4"><div class="pl-n">GLEAM Prime</div><div class="pl-pr">$299</div><div class="pl-pe">/month</div><ul class="pl-ls"><li>Full care package</li><li>Quarterly Protection Package</li><li>Priority scheduling</li><li>15% off all add-ons</li><li>Cancel anytime</li></ul><div class="pl-tg">Perfect for: Luxury owners, new car protection</div><a href="#" class="btn btn-o btn-f btn-sm">Choose Prime →</a></div></div><div class="pln-ex rv"><div class="pln-e"><i data-lucide="home"></i> Multi-vehicle discount: 20% off second vehicle</div><div class="pln-e"><i data-lucide="gift"></i> Gift subscriptions: 3-month or 12-month prepaid</div></div></div></section>
+
+<section class="ba"><div class="ctn"><span class="lbl lbl-a rv">SEE THE RESULTS</span><h2 class="hd rv d1">Every job tells a story. Here's the proof.</h2><div class="ba-g"><div class="ba-c rv d1"><div class="ba-v" data-ba><div class="ba-bf">BEFORE</div><div class="ba-af">AFTER</div><div class="ba-d"><div class="ba-d-arr"><i data-lucide="chevron-left"></i><i data-lucide="chevron-right"></i></div></div><span class="ba-tg ba-tg-b">Before</span><span class="ba-tg ba-tg-a">After</span></div><div class="ba-in"><p>2 kids, 1 dog, 6 months of chaos — <strong>Full Detail</strong> on a 2023 Hyundai Palisade</p></div></div><div class="ba-c rv d2"><div class="ba-v" data-ba><div class="ba-bf">BEFORE</div><div class="ba-af">AFTER</div><div class="ba-d"><div class="ba-d-arr"><i data-lucide="chevron-left"></i><i data-lucide="chevron-right"></i></div></div><span class="ba-tg ba-tg-b">Before</span><span class="ba-tg ba-tg-a">After</span></div><div class="ba-in"><p>February in Toronto — <strong>Express Shine + Salt Flush</strong> on a 2022 Honda Civic</p></div></div><div class="ba-c rv d3"><div class="ba-v" data-ba><div class="ba-bf">BEFORE</div><div class="ba-af">AFTER</div><div class="ba-d"><div class="ba-d-arr"><i data-lucide="chevron-left"></i><i data-lucide="chevron-right"></i></div></div><span class="ba-tg ba-tg-b">Before</span><span class="ba-tg ba-tg-a">After</span></div><div class="ba-in"><p><strong>Deep Restoration</strong> on a 2021 BMW X5 — 18 months since last detail</p></div></div></div><div class="ba-ct rv"><a href="#" class="btn btn-b">Book your transformation →</a></div></div></section>
+
+<section class="condo"><div class="ctn"><div class="condo-g"><div><span class="lbl lbl-a rv">CONDO LIVING? WE'VE GOT YOU.</span><h2 class="hd rv d1">Mobile detailing built for condo life.</h2><p class="condo-bd rv d2">No water access? No outdoor space? Strict building rules? GLEAM was designed for exactly this. We use waterless and rinseless methods for all underground and indoor jobs. We carry our own equipment. We bring insurance certificates if your building needs them.</p><div class="condo-fs rv d3"><div class="condo-f"><div class="condo-fi"><i data-lucide="droplets"></i></div><span>Waterless methods for underground parking</span></div><div class="condo-f"><div class="condo-fi"><i data-lucide="file-check"></i></div><span>Insurance certificate provided to your building</span></div><div class="condo-f"><div class="condo-fi"><i data-lucide="car"></i></div><span>We handle visitor parking logistics</span></div></div><a href="#" class="btn btn-b rv d4">Book Your Condo Detail →</a><p class="condo-nt rv d5">Serving condos in Etobicoke &amp; Mississauga — including Absolute World, M City, Erin Square, and Sherway Gate area.</p></div><div class="condo-v rv d2"><div class="condo-bld condo-bld-1"></div><div class="condo-bld condo-bld-2"></div><div class="condo-bld condo-bld-3"></div><div class="condo-glow"></div></div></div></div></section>
+
+<section class="rs"><div class="ctn"><div class="rs-g"><div class="rs-v rv"><div class="rs-bokeh rs-bokeh-1"></div><div class="rs-bokeh rs-bokeh-2"></div><div class="rs-bokeh rs-bokeh-3"></div><div class="rs-road"></div></div><div><span class="lbl lbl-a rv">FOR UBER &amp; LYFT DRIVERS</span><h2 class="hd rv d1">Keep your rating high.<br>We keep your car clean.</h2><p class="condo-bd rv d2">Your car is your office. Passengers notice a clean car — and they rate you for it. GLEAM Go gives you 2 Express Shines per month for just $59. We come to you — parking lot, home, wherever's convenient.</p><div class="rs-st rv d3"><strong>80,000+</strong><p>licensed ride-share drivers in the GTA. The ones with 4.9★ ratings? Their cars are clean.</p></div><a href="#" class="btn btn-b rv d4">Get GLEAM Go — $59/mo →</a><div class="rs-of rv d5">First month $49 for ride-share drivers</div></div></div></div></section>
+
+<section class="fleet"><div class="ctn"><span class="lbl lbl-a rv">FLEET SOLUTIONS</span><h2 class="hd rv d1">Keep your fleet spotless. We handle the rest.</h2><p class="sub rv d2">Managing 3+ vehicles? GLEAM Fleet gives your team clean cars on a fixed schedule — with per-vehicle service reports and monthly invoicing.</p><div class="fleet-g"><div class="fleet-c rv d1"><h3>Fleet Basic</h3><div class="fleet-mn">3+ vehicles</div><div class="fleet-pr">$89</div><div class="fleet-pe">/vehicle/month</div><div class="fleet-in">2× Express Shine per month</div></div><div class="fleet-c rv d2"><h3>Fleet Plus</h3><div class="fleet-mn">5+ vehicles</div><div class="fleet-pr">$139</div><div class="fleet-pe">/vehicle/month</div><div class="fleet-in">2× Express + 1× Interior per month</div></div><div class="fleet-c rv d3"><h3>Fleet Pro</h3><div class="fleet-mn">10+ vehicles</div><div class="fleet-pr">$189</div><div class="fleet-pe">/vehicle/month</div><div class="fleet-in">3× Express + 1× Full Detail per month</div></div></div><p class="fleet-nt rv">Monthly invoice (net-15). Fixed weekly schedule. Serving Etobicoke &amp; Mississauga.</p><div class="fleet-ct rv"><a href="#" class="btn btn-b">Contact Us for Fleet Pricing →</a></div></div></section>
+
+<section class="guar"><div class="ctn"><h2 class="hd rv" style="text-align:center">Our promise to you.</h2><div class="guar-g"><div class="guar-c rv d1"><div class="guar-ic"><i data-lucide="circle-check"></i></div><h3>100% Satisfaction</h3><p>Not happy? We'll send a pro back to make it right — no questions, no charge.</p></div><div class="guar-c rv d2"><div class="guar-ic"><i data-lucide="clock"></i></div><h3>On-Time, Every Time</h3><p>If your provider is late, you get a $15 credit. We respect your schedule.</p></div><div class="guar-c rv d3"><div class="guar-ic"><i data-lucide="receipt"></i></div><h3>No Hidden Fees</h3><p>The price you see is the price you pay. Vehicle-type pricing, upfront. HST clearly shown.</p></div></div></div></section>
+
+<section class="tst"><div class="ctn"><span class="lbl lbl-a rv">WHAT OUR CUSTOMERS SAY</span><h2 class="hd rv d1">Don't take our word for it.</h2><div class="tst-g"><div class="tst-c rv d1"><div class="tst-s"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div><blockquote>"I live in a condo with no water access. GLEAM showed up in my underground parking and made my car look brand new. The before/after photos were incredible."</blockquote><div class="tst-au"><div class="tst-av">SM</div><div><div class="tst-nm">Sarah M.</div><div class="tst-mt">2023 Toyota RAV4 · Mississauga</div></div></div></div><div class="tst-c rv d2"><div class="tst-s"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div><blockquote>"I drive Uber full-time. GLEAM Go is the best $59 I spend each month. They come to my parking lot, and my rating went from 4.7 to 4.95."</blockquote><div class="tst-au"><div class="tst-av">RP</div><div><div class="tst-nm">Raj P.</div><div class="tst-mt">2022 Honda Civic · Etobicoke</div></div></div></div><div class="tst-c rv d3"><div class="tst-s"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div><blockquote>"The subscription is a game changer. I don't even think about it anymore — my car just stays clean. The photos after every job give me so much confidence."</blockquote><div class="tst-au"><div class="tst-av">MK</div><div><div class="tst-nm">Michelle K.</div><div class="tst-mt">2024 BMW X3 · Mississauga</div></div></div></div></div><div class="tst-bw rv"><div class="tst-bg"><span class="st"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></span> 4.9 on Google · 50+ reviews</div></div></div></section>
+
+<section class="areas" id="ar"><div class="ctn"><span class="lbl lbl-a rv">WHERE WE SERVE</span><h2 class="hd rv d1">Currently serving the West GTA. Growing fast.</h2><div class="areas-g"><div class="areas-m rv"><div class="areas-dot areas-dot-1"></div><div class="areas-dot areas-dot-2"></div><div class="areas-dot areas-dot-3"></div><div class="areas-road"></div><div class="areas-road-2"></div></div><div class="areas-l"><div class="areas-ac rv d1"><h3>Active Zones</h3><div class="ar"><div class="ar-d ar-d-on"></div><div><div class="ar-n">Etobicoke</div><div class="ar-s">Sherway Gardens, Kingsway, Humber Valley</div></div></div><div class="ar"><div class="ar-d ar-d-on"></div><div><div class="ar-n">Mississauga Central</div><div class="ar-s">City Centre, Hurontario, Erin Mills</div></div></div><div class="ar"><div class="ar-d ar-d-on"></div><div><div class="ar-n">Mississauga East</div><div class="ar-s">Port Credit, Clarkson, Lakeview</div></div></div></div><div class="rv d2"><h3 style="font-family:var(--fd);font-size:1.125rem;font-weight:600;margin-bottom:16px">Coming Soon</h3><div class="ar"><div class="ar-d ar-d-so"></div><div><div class="ar-n">Brampton</div><div class="ar-s">Q2 2026</div></div></div><div class="ar"><div class="ar-d ar-d-so"></div><div><div class="ar-n">North York</div><div class="ar-s">Q3 2026</div></div></div><div class="ar"><div class="ar-d ar-d-so"></div><div><div class="ar-n">Scarborough</div><div class="ar-s">Q4 2026</div></div></div><div class="ar"><div class="ar-d ar-d-so"></div><div><div class="ar-n">Downtown Toronto</div><div class="ar-s">2027</div></div></div></div><div class="areas-p rv d3"><input type="text" placeholder="Enter your postal code" maxlength="7"><button class="btn btn-b btn-sm">Check →</button></div></div></div></div></section>
+
+<section class="prov" id="pv"><div class="ctn"><div class="prov-g"><div><span class="lbl rv">FOR DETAILERS</span><h2 class="hd rv d1">You focus on the craft.<br>We handle everything else.</h2><p class="prov-bd rv d2">Already a car detailer? GLEAM gives you pre-scheduled, pre-paid jobs from a stream of loyal customers. No cold calling. No chasing invoices. No marketing. Just show up, do great work, and get paid within 48 hours.</p><div class="prov-bs rv d3"><div class="prov-bn"><i data-lucide="check"></i> Pre-scheduled, pre-paid jobs</div><div class="prov-bn"><i data-lucide="check"></i> No marketing needed</div><div class="prov-bn"><i data-lucide="check"></i> Flexible schedule</div><div class="prov-bn"><i data-lucide="check"></i> Payouts within 48 hours</div><div class="prov-bn"><i data-lucide="check"></i> Trusted, insured brand</div><div class="prov-bn"><i data-lucide="check"></i> Keep your own clients</div></div><a href="#" class="btn btn-w rv d4">Apply to Become a GLEAM Partner →</a></div><div class="prov-v rv d2"><div class="prov-line2"></div><div class="prov-glow"></div></div></div></div></section>
+
+<section class="faq" id="fq"><div class="ctn"><div style="text-align:center"><span class="lbl lbl-a rv">FREQUENTLY ASKED</span><h2 class="hd rv d1">Got questions? We've got answers.</h2></div><div class="faq-l"><div class="faq-i rv"><button class="faq-q">How does GLEAM work?<span class="faq-ic"><i data-lucide="plus"></i></span></button><div class="faq-a"><div class="faq-ai">You book a service through our website. A certified GLEAM provider is assigned to your job, drives to your location, and details your car. They upload before and after photos so you can see exactly what was done. You pay online — no cash, no hassle.</div></div></div><div class="faq-i rv"><button class="faq-q">What areas do you serve?<span class="faq-ic"><i data-lucide="plus"></i></span></button><div class="faq-a"><div class="faq-ai">We currently serve Etobicoke and Mississauga (West GTA). We're expanding to Brampton, North York, and Scarborough in 2026.</div></div></div><div class="faq-i rv"><button class="faq-q">Can you service my car in underground condo parking?<span class="faq-ic"><i data-lucide="plus"></i></span></button><div class="faq-a"><div class="faq-ai">Yes — it's one of our specialties. We use waterless and rinseless methods that don't require hose access or outdoor space. We'll bring insurance certificates if your building requires them.</div></div></div><div class="faq-i rv"><button class="faq-q">How is pricing determined?<span class="faq-ic"><i data-lucide="plus"></i></span></button><div class="faq-a"><div class="faq-ai">Pricing is based on your vehicle type (sedan, SUV, pickup, etc.) and the service you choose. Larger vehicles cost more because they require more time and materials. All prices are shown upfront before you book.</div></div></div><div class="faq-i rv"><button class="faq-q">What are the subscription plans?<span class="faq-ic"><i data-lucide="plus"></i></span></button><div class="faq-a"><div class="faq-ai">We offer 4 monthly plans from $59 to $299/month. Each includes a set number of services per month. Services don't roll over. You can skip, pause, or cancel anytime with 30 days notice.</div></div></div><div class="faq-i rv"><button class="faq-q">Are your providers insured?<span class="faq-ic"><i data-lucide="plus"></i></span></button><div class="faq-a"><div class="faq-ai">Yes. GLEAM carries commercial general liability insurance ($2M per occurrence). All providers are independently insured and must carry a minimum $1M liability policy.</div></div></div><div class="faq-i rv"><button class="faq-q">What if I'm not happy with the service?<span class="faq-ic"><i data-lucide="plus"></i></span></button><div class="faq-a"><div class="faq-ai">We'll send someone back to make it right at no charge. Every job is photo-documented, so we can review exactly what happened and ensure our quality standard is met.</div></div></div><div class="faq-i rv"><button class="faq-q">How do before/after photos work?<span class="faq-ic"><i data-lucide="plus"></i></span></button><div class="faq-a"><div class="faq-ai">Your provider takes 5 photos before starting (front, rear, both sides, interior) and 5 matching photos after. These are uploaded to your account in real time and sent to you via SMS when the job is complete.</div></div></div><div class="faq-i rv"><button class="faq-q">Can I book for multiple vehicles?<span class="faq-ic"><i data-lucide="plus"></i></span></button><div class="faq-a"><div class="faq-ai">Yes. You can add as many vehicles to your account as you like. Subscribers get 20% off a second vehicle's plan.</div></div></div><div class="faq-i rv"><button class="faq-q">How do I become a GLEAM provider?<span class="faq-ic"><i data-lucide="plus"></i></span></button><div class="faq-a"><div class="faq-ai">Apply on our website. We review your experience, tools, insurance, and availability. Approved partners complete a training session and 3 supervised jobs before going independent.</div></div></div></div></div></section>
+
+<section class="cta-f"><div class="ctn"><h2 class="hd rv">Your car is waiting.</h2><p class="sub rv d1">Book your first GLEAM today and see the difference — in photos, on your schedule, at your door.</p><div class="cta-fb rv d2"><a href="#" class="btn btn-w">Book Your First Detail →</a><a href="#pl" class="btn btn-ow">Explore Plans</a></div></div></section>
+
+<footer class="ft"><div class="ctn"><div class="ft-g"><div><div class="nav-l">GLEAM<em>.</em></div><p class="ft-tg">Professional car care, at your doorstep. Certified detailers. Photo proof. Serving the GTA.</p><div class="ft-sc"><a href="#" aria-label="Instagram"><i data-lucide="instagram"></i></a><a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a><a href="#" aria-label="LinkedIn"><i data-lucide="linkedin"></i></a></div></div><div class="ft-c"><h4>Services</h4><a href="#">Express Shine</a><a href="#">Interior Refresh</a><a href="#">Full Detail</a><a href="#">Deep Restoration</a><a href="#">Protection Package</a></div><div class="ft-c"><h4>Company</h4><a href="#hw">How It Works</a><a href="#pl">Plans &amp; Pricing</a><a href="#ar">Service Areas</a><a href="#pv">For Partners</a><a href="#fq">FAQ</a></div><div class="ft-c"><h4>Contact</h4><a href="mailto:hello@gleam.ca">hello@gleam.ca</a><a href="#">Etobicoke, ON</a><a href="#">Mississauga, ON</a></div></div><div class="ft-b"><div class="ft-cp">© 2026 GLEAM Auto Care Inc. · Toronto, Canada</div><div class="ft-lg"><a href="#">Terms of Service</a><a href="#">Privacy Policy</a></div></div></div></footer>
+
+<script>
+// Init Lucide icons
+document.addEventListener('DOMContentLoaded',()=>{if(window.lucide)lucide.createIcons()});
+
+// Nav scroll
+const nv=document.getElementById('nv');
+window.addEventListener('scroll',()=>nv.classList.toggle('sc',scrollY>60));
+
+// Mobile menu
+const bg=document.getElementById('bg'),mn=document.getElementById('mn');
+bg.onclick=()=>{bg.classList.toggle('on');mn.classList.toggle('on');document.body.style.overflow=mn.classList.contains('on')?'hidden':''};
+function cm(){bg.classList.remove('on');mn.classList.remove('on');document.body.style.overflow=''}
+
+// Hero vehicle selector
+const vn={sedan:'Sedan',suv:'SUV',pickup:'Pickup',minivan:'Minivan',large_suv:'Large SUV'};
+document.querySelectorAll('#hp .hp').forEach(p=>{p.onclick=()=>{document.querySelectorAll('#hp .hp').forEach(x=>x.classList.remove('on'));p.classList.add('on');document.getElementById('hpr').innerHTML=`Full Detail for your <strong>${vn[p.dataset.v]}</strong> — starting at <strong>$${p.dataset.p}</strong>`}});
+
+// Pricing table
+const pd={sedan:{e:69,i:119,f:229,d:369,p:429},coupe:{e:69,i:119,f:229,d:369,p:429},crossover:{e:79,i:139,f:259,d:419,p:489},suv:{e:89,i:149,f:289,d:459,p:539},minivan:{e:89,i:149,f:289,d:459,p:539},pickup:{e:85,i:139,f:279,d:449,p:519},large_suv:{e:99,i:169,f:319,d:519,p:599}};
+const sn={e:['Express Shine','45 min'],i:['Interior Refresh','75 min'],f:['Full Detail','3.5 hrs'],d:['Deep Restoration','5 hrs'],p:['Protection Package','4.5 hrs']};
+function up(v){const t=document.querySelector('#ptb tbody'),p=pd[v];t.innerHTML=Object.entries(p).map(([k,pr])=>`<tr><td>${sn[k][0]}</td><td>${sn[k][1]}</td><td>$${pr}</td></tr>`).join('')}
+up('sedan');
+document.querySelectorAll('#pt .pri-t').forEach(t=>{t.onclick=()=>{document.querySelectorAll('#pt .pri-t').forEach(x=>x.classList.remove('on'));t.classList.add('on');up(t.dataset.v)}});
+
+// FAQ accordion
+document.querySelectorAll('.faq-q').forEach(q=>{q.onclick=()=>{const i=q.closest('.faq-i'),w=i.classList.contains('op');document.querySelectorAll('.faq-i').forEach(x=>x.classList.remove('op'));if(!w)i.classList.add('op')}});
+
+// Before/after sliders
+document.querySelectorAll('[data-ba]').forEach(c=>{const a=c.querySelector('.ba-af'),d=c.querySelector('.ba-d');let dr=false;function u(x){const r=c.getBoundingClientRect();let p=((x-r.left)/r.width)*100;p=Math.max(5,Math.min(95,p));a.style.clipPath=`inset(0 ${100-p}% 0 0)`;d.style.left=p+'%'}c.onmousedown=e=>{dr=true;u(e.clientX)};c.onmousemove=e=>{if(dr)u(e.clientX)};document.addEventListener('mouseup',()=>dr=false);c.addEventListener('touchstart',e=>{dr=true;u(e.touches[0].clientX)},{passive:true});c.addEventListener('touchmove',e=>{if(dr)u(e.touches[0].clientX)},{passive:true});document.addEventListener('touchend',()=>dr=false)});
+
+// Scroll reveal
+const ob=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('v')}),{threshold:.08,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.rv').forEach(el=>ob.observe(el));
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.onclick=e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'})}}});
+</script>
+</body>
+</html>

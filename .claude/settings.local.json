@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(start \"\" \"c:\\\\Users\\\\Nishant Raj\\\\Desktop\\\\Luther\\\\gleam-landing.html\")",
+      "WebFetch(domain:www.uber.com)"
+    ]
+  }
+}
