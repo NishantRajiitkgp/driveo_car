@@ -1,24 +1,65 @@
+'use client';
+
 import { Star } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { reviews } from '@/lib/data';
+
+const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 50, scale: 0.95 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.5, ease },
+  },
+};
 
 export function GoogleReviews() {
   return (
-    <section className="py-16 px-6 border-b border-white/10 overflow-hidden">
+    <section id="reviews" className="py-16 px-6 border-b border-white/10 overflow-hidden">
       <div className="max-w-[1400px] mx-auto">
-        <div className="flex items-center justify-between mb-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.6 }}
+          className="flex items-center justify-between mb-10"
+        >
           <div className="flex items-center gap-3">
             <div className="flex gap-0.5">
               {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-5 h-5 fill-[#E23232] text-[#E23232]" />
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, scale: 0 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.3, delay: i * 0.1 }}
+                >
+                  <Star className="w-5 h-5 fill-[#E23232] text-[#E23232]" />
+                </motion.div>
               ))}
             </div>
             <span className="font-mono text-sm text-white/50 uppercase tracking-widest">4.9 on Google</span>
           </div>
           <span className="font-mono text-[10px] text-white/30 uppercase tracking-widest hidden md:block">Real reviews from real customers</span>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        </motion.div>
+
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ staggerChildren: 0.12 }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+        >
           {reviews.map((review, idx) => (
-            <div key={idx} className="bg-[#111] border border-white/10 rounded-2xl p-6 flex flex-col gap-4 hover:border-[#E23232]/30 transition-colors">
+            <motion.div
+              key={idx}
+              variants={cardVariants}
+              whileHover={{ y: -6, borderColor: 'rgba(226, 50, 50, 0.3)', transition: { duration: 0.25 } }}
+              className="bg-[#111] border border-white/10 rounded-2xl p-6 flex flex-col gap-4 transition-colors"
+            >
               <div className="flex gap-0.5">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-4 h-4 fill-[#E23232] text-[#E23232]" />
@@ -37,9 +78,9 @@ export function GoogleReviews() {
                 <path d="M262.02 54.48l7.56 5.04c-2.44 3.61-8.32 9.83-18.48 9.83-12.6 0-22.01-9.74-22.01-22.18 0-13.19 9.49-22.18 20.92-22.18 11.51 0 17.14 9.16 18.98 14.11l1.01 2.52-29.65 12.28c2.27 4.45 5.8 6.72 10.75 6.72 4.96 0 8.4-2.44 10.92-6.14zm-23.27-7.98l19.82-8.23c-1.09-2.77-4.37-4.7-8.23-4.7-4.95 0-11.84 4.37-11.59 12.93z" fill="#EA4335" />
                 <path d="M35.29 41.19V32H68c.31 1.64.47 3.58.47 5.68 0 7.06-1.93 15.79-8.15 22.01-6.05 6.3-13.78 9.66-24.02 9.66C16.32 69.35.36 53.89.36 33.91.36 13.93 16.32-1.53 36.3-1.53c11.01 0 18.82 4.3 24.68 9.99l-6.95 6.95c-4.21-3.95-9.92-7.03-17.73-7.03-14.48 0-25.81 11.68-25.81 25.52s11.33 25.52 25.81 25.52c9.41 0 14.78-3.78 18.22-7.23 2.78-2.78 4.6-6.75 5.32-12.18H35.29z" fill="#4285F4" />
               </svg>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

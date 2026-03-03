@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export function BeforeAfterSlider() {
   const [sliderPos, setSliderPos] = useState(50);
@@ -30,13 +31,33 @@ export function BeforeAfterSlider() {
   return (
     <section className="h-screen relative border-b border-white/10 flex flex-col">
       <div className="text-center pt-10 pb-6 px-6 shrink-0">
-        <p className="font-mono text-[11px] text-[#E23232] uppercase tracking-[0.3em] mb-3">See the difference</p>
-        <h2 className="text-4xl md:text-6xl font-display uppercase leading-[0.9]">
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="font-mono text-[11px] text-[#E23232] uppercase tracking-[0.3em] mb-3"
+        >
+          See the difference
+        </motion.p>
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="text-4xl md:text-6xl font-display uppercase leading-[0.9]"
+        >
           The GLEAM <span className="text-[#E23232]">Effect</span>
-        </h2>
+        </motion.h2>
       </div>
 
-      <div className="flex-1 min-h-0 px-4 md:px-8 pb-4 relative">
+      <motion.div
+        className="flex-1 min-h-0 px-4 md:px-8 pb-4 relative"
+        initial={{ opacity: 0, scale: 0.95 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div
           ref={sliderRef}
           className="relative w-full h-full rounded-2xl overflow-hidden cursor-col-resize select-none border border-white/10"
@@ -82,7 +103,7 @@ export function BeforeAfterSlider() {
             <span className="font-mono text-[10px] text-white/40 uppercase tracking-widest">Drag to compare</span>
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

@@ -6,6 +6,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useCursor } from './CursorProvider';
 import { faqItems } from '@/lib/data';
 
+const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
+
+const faqItemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease } },
+};
+
 export function FAQAccordion() {
   const { setIsHovering } = useCursor();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -13,12 +20,38 @@ export function FAQAccordion() {
   return (
     <section className="py-32 px-6 md:px-12 border-b border-white/10">
       <div className="max-w-[1000px] mx-auto">
-        <h2 className="text-6xl md:text-8xl font-display uppercase leading-[0.9] mb-6 text-center">Questions?<br /><span className="text-[#E23232]">Answers.</span></h2>
-        <p className="font-mono text-xs text-white/40 uppercase tracking-widest text-center mb-20">Everything you&apos;d want to know before booking</p>
+        <motion.h2
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="text-6xl md:text-8xl font-display uppercase leading-[0.9] mb-6 text-center"
+        >
+          Questions?<br /><span className="text-[#E23232]">Answers.</span>
+        </motion.h2>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="font-mono text-xs text-white/40 uppercase tracking-widest text-center mb-20"
+        >
+          Everything you&apos;d want to know before booking
+        </motion.p>
 
-        <div className="flex flex-col gap-4">
+        <motion.div
+          className="flex flex-col gap-4"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ staggerChildren: 0.08 }}
+        >
           {faqItems.map((item, idx) => (
-            <div key={idx} className="border border-white/10 rounded-2xl overflow-hidden transition-colors hover:border-white/20">
+            <motion.div
+              key={idx}
+              variants={faqItemVariants}
+              className="border border-white/10 rounded-2xl overflow-hidden transition-colors hover:border-white/20"
+            >
               <button
                 onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
                 className="w-full flex items-center justify-between p-8 text-left cursor-pointer"
@@ -41,9 +74,9 @@ export function FAQAccordion() {
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
