@@ -1,11 +1,10 @@
-@import url('https://fonts.bunny.net/css2?family=Anton&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Anton", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
-  --font-serif: "Playfair Display", serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-anton), sans-serif;
+  --font-mono: var(--font-jetbrains), monospace;
+  --font-serif: var(--font-playfair), serif;
 }
 
 body {
@@ -17,6 +16,12 @@ body {
   overflow-x: hidden;
 }
 
+@media (min-width: 768px) {
+  * {
+    cursor: none !important;
+  }
+}
+
 /* Custom Cursor */
 .cursor-dot {
   width: 8px;
@@ -24,10 +29,11 @@ body {
   background-color: #E23232;
   border-radius: 50%;
   position: fixed;
+  top: 0;
+  left: 0;
   pointer-events: none;
   z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: width 0.2s, height 0.2s, background-color 0.2s;
+  will-change: transform;
 }
 
 .cursor-outline {
@@ -36,10 +42,11 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 50%;
   position: fixed;
+  top: 0;
+  left: 0;
   pointer-events: none;
   z-index: 9998;
-  transform: translate(-50%, -50%);
-  transition: width 0.2s, height 0.2s, border-color 0.2s;
+  will-change: transform;
 }
 
 /* Noise overlay */
@@ -68,7 +75,7 @@ body {
   100% { transform: translateX(-100%); }
 }
 
-/* Hide scrollbar */
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
