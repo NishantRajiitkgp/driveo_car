@@ -3,9 +3,9 @@
   "configurations": [
     {
       "name": "landing-page",
-      "runtimeExecutable": "node",
-      "runtimeArgs": ["./landing/server.js"],
-      "port": 5050
+      "runtimeExecutable": "C:\\Program Files\\nodejs\\node.exe",
+      "runtimeArgs": ["node_modules/next/dist/bin/next", "dev", "--turbopack", "--port", "3001"],
+      "port": 3001
     }
   ]
 }
