@@ -92,15 +92,15 @@ export function BeforeAfterSlider() {
 
           {/* Labels */}
           <div className="absolute top-6 left-6 z-20 bg-black/70 backdrop-blur-sm px-5 py-2.5 rounded-full">
-            <span className="font-mono text-xs text-white/70 uppercase tracking-widest">Before</span>
+            <span className="font-mono text-xs text-white/85 uppercase tracking-widest">Before</span>
           </div>
           <div className="absolute top-6 right-6 z-20 bg-black/70 backdrop-blur-sm px-5 py-2.5 rounded-full">
-            <span className="font-mono text-xs text-white/70 uppercase tracking-widest">After</span>
+            <span className="font-mono text-xs text-white/85 uppercase tracking-widest">After</span>
           </div>
 
           {/* Bottom hint */}
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 bg-black/50 backdrop-blur-sm px-5 py-2 rounded-full">
-            <span className="font-mono text-[10px] text-white/40 uppercase tracking-widest">Drag to compare</span>
+            <span className="font-mono text-[10px] text-white/60 uppercase tracking-widest">Drag to compare</span>
           </div>
         </div>
       </motion.div>

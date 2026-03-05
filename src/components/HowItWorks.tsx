@@ -74,12 +74,12 @@ export function HowItWorks() {
                     className="w-32 h-32 rounded-full border border-white/10 flex items-center justify-center bg-[#0a0a0a] group-hover:border-[#E23232]/50 group-hover:bg-[#E23232]/[0.08] transition-all duration-500 relative z-10"
                     whileHover={{ scale: 1.08, transition: { duration: 0.3 } }}
                   >
-                    <step.Icon className="w-10 h-10 text-white/20 group-hover:text-[#E23232] transition-all duration-500 group-hover:scale-110" />
+                    <step.Icon className="w-10 h-10 text-white/40 group-hover:text-[#E23232] transition-all duration-500 group-hover:scale-110" />
                   </motion.div>
                   <span className="absolute -top-2 -right-2 font-display text-3xl text-[#E23232]/30 group-hover:text-[#E23232] transition-colors duration-300 z-20">{step.num}</span>
                 </div>
                 <h3 className="font-display text-xl uppercase mb-2 group-hover:text-[#E23232] transition-colors duration-300">{step.label}</h3>
-                <p className="font-mono text-[10px] text-white/30 uppercase tracking-widest">{step.sub}</p>
+                <p className="font-mono text-[10px] text-white/50 uppercase tracking-widest">{step.sub}</p>
                 {idx < 4 && (
                   <motion.div
                     className="hidden lg:block absolute top-16 -right-4 z-20"
@@ -88,12 +88,12 @@ export function HowItWorks() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: 0.3 + idx * 0.15 }}
                   >
-                    <ArrowRight className="w-4 h-4 text-white/10" />
+                    <ArrowRight className="w-4 h-4 text-white/20" />
                   </motion.div>
                 )}
                 {idx < 4 && (
                   <div className="lg:hidden flex justify-center my-4">
-                    <ChevronDown className="w-5 h-5 text-white/10" />
+                    <ChevronDown className="w-5 h-5 text-white/20" />
                   </div>
                 )}
               </motion.div>

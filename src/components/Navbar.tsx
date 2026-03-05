@@ -46,7 +46,7 @@ export function Navbar() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="hidden lg:block font-mono text-[10px] text-white/40 uppercase tracking-widest border-l border-white/10 pl-6"
+          className="hidden lg:block font-mono text-[10px] text-white/60 uppercase tracking-widest border-l border-white/10 pl-6"
         >
           Serving Etobicoke &amp; Mississauga
         </motion.span>

@@ -41,9 +41,9 @@ export function GoogleReviews() {
                 </motion.div>
               ))}
             </div>
-            <span className="font-mono text-sm text-white/50 uppercase tracking-widest">4.9 on Google</span>
+            <span className="font-mono text-sm text-white/70 uppercase tracking-widest">4.9 on Google</span>
           </div>
-          <span className="font-mono text-[10px] text-white/30 uppercase tracking-widest hidden md:block">Real reviews from real customers</span>
+          <span className="font-mono text-[10px] text-white/50 uppercase tracking-widest hidden md:block">Real reviews from real customers</span>
         </motion.div>
 
         <motion.div
@@ -65,10 +65,10 @@ export function GoogleReviews() {
                   <Star key={i} className="w-4 h-4 fill-[#E23232] text-[#E23232]" />
                 ))}
               </div>
-              <p className="font-serif italic text-sm text-white/60 leading-relaxed line-clamp-4">{review.text}</p>
+              <p className="font-serif italic text-sm text-white/80 leading-relaxed line-clamp-4">{review.text}</p>
               <div className="mt-auto pt-3 border-t border-white/5 flex items-center justify-between">
-                <span className="font-mono text-xs text-white/50 uppercase tracking-wider">{review.name}</span>
-                <span className="font-mono text-[10px] text-white/30">{review.time}</span>
+                <span className="font-mono text-xs text-white/70 uppercase tracking-wider">{review.name}</span>
+                <span className="font-mono text-[10px] text-white/50">{review.time}</span>
               </div>
               <svg className="w-14 h-5 mt-1" viewBox="0 0 272 92" xmlns="http://www.w3.org/2000/svg">
                 <path d="M115.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18C71.25 34.32 81.24 25 93.5 25s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44S80.99 39.2 80.99 47.18c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" fill="#EA4335" />

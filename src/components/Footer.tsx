@@ -18,7 +18,7 @@ export function Footer() {
     <footer className="pt-32 pb-10 px-6 md:px-12 border-t border-white/10 bg-[#0a0a0a]">
       <div className="max-w-[1600px] mx-auto">
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-4 gap-12 font-mono text-xs uppercase tracking-widest text-white/50"
+          className="grid grid-cols-1 md:grid-cols-4 gap-12 font-mono text-xs uppercase tracking-widest text-white/70"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-60px' }}
@@ -64,7 +64,7 @@ export function Footer() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-24 text-center font-mono text-xs text-white/30 uppercase tracking-widest"
+          className="mt-24 text-center font-mono text-xs text-white/50 uppercase tracking-widest"
         >
           &copy; 2026 GLEAM Auto Care Inc. $2M insured. Satisfaction guaranteed. Serving the Greater Toronto Area.
         </motion.div>

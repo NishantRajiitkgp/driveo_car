@@ -34,7 +34,7 @@ export function FAQAccordion() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="font-mono text-xs text-white/40 uppercase tracking-widest text-center mb-20"
+          className="font-mono text-xs text-white/60 uppercase tracking-widest text-center mb-20"
         >
           Everything you&apos;d want to know before booking
         </motion.p>
@@ -70,7 +70,7 @@ export function FAQAccordion() {
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                     className="overflow-hidden"
                   >
-                    <p className="px-8 pb-8 font-sans text-white/60 leading-relaxed">{item.a}</p>
+                    <p className="px-8 pb-8 font-sans text-white/80 leading-relaxed">{item.a}</p>
                   </motion.div>
                 )}
               </AnimatePresence>

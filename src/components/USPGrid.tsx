@@ -64,7 +64,7 @@ export function USPGrid() {
               </motion.div>
               <div>
                 <span className="font-display text-lg uppercase block leading-tight">{title}</span>
-                <span className="font-mono text-[10px] text-white/40 uppercase tracking-widest mt-1.5 block leading-relaxed">{sub}</span>
+                <span className="font-mono text-[10px] text-white/60 uppercase tracking-widest mt-1.5 block leading-relaxed">{sub}</span>
               </div>
             </motion.div>
           ))}

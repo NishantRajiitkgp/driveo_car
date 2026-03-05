@@ -62,9 +62,9 @@ export function CondoSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.25 }}
-            className="font-serif italic text-xl md:text-2xl text-white/60 leading-relaxed mb-10 max-w-lg"
+            className="font-serif italic text-xl md:text-2xl text-white/80 leading-relaxed mb-10 max-w-lg"
           >
-            <span className="text-white/80">30% of Toronto homes are condos.</span> Other guys show up with a hose and leave. We show up with waterless products — built for underground parking.
+            <span className="text-white/90">30% of Toronto homes are condos.</span> Other guys show up with a hose and leave. We show up with waterless products — built for underground parking.
           </motion.p>
 
           <motion.div
@@ -126,7 +126,7 @@ export function CondoSection() {
               </div>
               <div className="text-right">
                 <span className="font-display text-7xl md:text-8xl text-white/20 leading-none block">0</span>
-                <span className="font-mono text-xs text-white/50 uppercase tracking-widest mt-2 block">Complaints filed</span>
+                <span className="font-mono text-xs text-white/70 uppercase tracking-widest mt-2 block">Complaints filed</span>
               </div>
             </div>
           </motion.div>
@@ -154,7 +154,7 @@ export function CondoSection() {
                   className="group flex items-center gap-3 bg-[#111] border border-white/5 rounded-xl px-4 py-3 hover:border-[#E23232]/30 transition-colors"
                 >
                   <div className="w-2 h-2 rounded-full bg-[#E23232]/40 group-hover:bg-[#E23232] transition-colors shrink-0" />
-                  <span className="font-mono text-[11px] text-white/50 uppercase tracking-wider group-hover:text-white/80 transition-colors">{building}</span>
+                  <span className="font-mono text-[11px] text-white/70 uppercase tracking-wider group-hover:text-white/90 transition-colors">{building}</span>
                 </motion.div>
               ))}
             </motion.div>
@@ -175,7 +175,7 @@ export function CondoSection() {
               <ShieldCheck className="w-6 h-6 text-[#E23232] shrink-0" />
               <div>
                 <span className="font-mono text-xs text-white/80 uppercase tracking-wider block">$2M Insured</span>
-                <span className="font-mono text-[10px] text-white/30 uppercase tracking-wider">Every pro, every wash</span>
+                <span className="font-mono text-[10px] text-white/50 uppercase tracking-wider">Every pro, every wash</span>
               </div>
             </motion.div>
             <motion.div
@@ -185,7 +185,7 @@ export function CondoSection() {
               <Sparkles className="w-6 h-6 text-[#E23232] shrink-0" />
               <div>
                 <span className="font-mono text-xs text-white/80 uppercase tracking-wider block">Waterless</span>
-                <span className="font-mono text-[10px] text-white/30 uppercase tracking-wider">Zero runoff, zero mess</span>
+                <span className="font-mono text-[10px] text-white/50 uppercase tracking-wider">Zero runoff, zero mess</span>
               </div>
             </motion.div>
           </motion.div>

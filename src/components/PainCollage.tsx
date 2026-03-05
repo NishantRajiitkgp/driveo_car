@@ -53,9 +53,9 @@ export function PainCollage() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="font-serif italic text-2xl md:text-3xl text-white/50 max-w-2xl mx-auto leading-relaxed mb-10"
+          className="font-serif italic text-2xl md:text-3xl text-white/70 max-w-2xl mx-auto leading-relaxed mb-10"
         >
-          Automated brushes grind dirt into your paint. Mobile guys never call back.<br className="hidden md:block" /> <span className="text-white/80 font-medium">You deserve better.</span>
+          Automated brushes grind dirt into your paint. Mobile guys never call back.<br className="hidden md:block" /> <span className="text-white/90 font-medium">You deserve better.</span>
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -64,11 +64,11 @@ export function PainCollage() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="flex flex-wrap justify-center gap-x-8 gap-y-4 font-mono text-sm md:text-base uppercase tracking-widest mb-24"
         >
-          <span className="text-white/30">No spinning brushes</span>
+          <span className="text-white/50">No spinning brushes</span>
           <span className="text-[#E23232]">Hand wash only</span>
-          <span className="text-white/30">No scratches</span>
+          <span className="text-white/50">No scratches</span>
           <span className="text-[#E23232]">Photo proof</span>
-          <span className="text-white/30">No wasted Saturdays</span>
+          <span className="text-white/50">No wasted Saturdays</span>
         </motion.div>
 
         <div ref={collageRef2} className="flex justify-center items-center h-[300px] lg:h-[450px] relative w-full max-w-5xl mx-auto">
