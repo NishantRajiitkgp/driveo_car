@@ -385,7 +385,7 @@ export default function OnboardingPage() {
 function InputField({ label, error, ...props }: { label: string; error?: string } & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <div className="w-full">
-      <label className="font-mono text-[10px] text-white/60 uppercase tracking-widest block mb-2">{label}</label>
+      <label className="font-mono text-[11px] text-white/80 uppercase tracking-widest block mb-2">{label}</label>
       <input
         {...props}
         className={`w-full bg-[#111] border ${error ? 'border-[#E23232]/60' : 'border-white/10'} rounded-xl px-5 py-4 font-mono text-sm outline-none focus:border-[#E23232] transition-colors text-white placeholder:text-white/30`}
@@ -400,7 +400,7 @@ function StepBasicInfo({ formData, update, errors }: { formData: FormData; updat
     <div className="space-y-6">
       <div className="mb-8">
         <h3 className="font-display text-3xl lg:text-4xl uppercase mb-2">Tell Us About<br /><span className="text-[#E23232]">Yourself</span></h3>
-        <p className="font-mono text-[11px] text-white/40 tracking-wider">We&apos;ll use this to reach out to you.</p>
+        <p className="font-mono text-[12px] text-white/65 tracking-wider">We&apos;ll use this to reach out to you.</p>
       </div>
       <InputField label="Full Name" placeholder="John Doe" value={formData.fullName} onChange={e => update('fullName', e.target.value)} error={errors.fullName} />
       <InputField label="Email Address" placeholder="john@example.com" type="email" value={formData.email} onChange={e => update('email', e.target.value)} error={errors.email} />
@@ -414,7 +414,7 @@ function StepLocation({ formData, update, errors }: { formData: FormData; update
     <div className="space-y-6">
       <div className="mb-8">
         <h3 className="font-display text-3xl lg:text-4xl uppercase mb-2">Where Are<br /><span className="text-[#E23232]">You Based?</span></h3>
-        <p className="font-mono text-[11px] text-white/40 tracking-wider">We match you with jobs near your location.</p>
+        <p className="font-mono text-[12px] text-white/65 tracking-wider">We match you with jobs near your location.</p>
       </div>
       <InputField label="Street Address" placeholder="123 Main Street" value={formData.streetAddress} onChange={e => update('streetAddress', e.target.value)} error={errors.streetAddress} />
       <div className="flex gap-4">
@@ -422,7 +422,7 @@ function StepLocation({ formData, update, errors }: { formData: FormData; update
         <InputField label="Postal Code" placeholder="M5V 2T6" value={formData.postalCode} onChange={e => update('postalCode', e.target.value)} error={errors.postalCode} />
       </div>
       <div className="w-full">
-        <label className="font-mono text-[10px] text-white/60 uppercase tracking-widest block mb-2">Province</label>
+        <label className="font-mono text-[11px] text-white/80 uppercase tracking-widest block mb-2">Province</label>
         <select
           value={formData.province}
           onChange={e => update('province', e.target.value)}
@@ -442,12 +442,12 @@ function StepExperience({ formData, update, errors }: { formData: FormData; upda
     <div className="space-y-6">
       <div className="mb-8">
         <h3 className="font-display text-3xl lg:text-4xl uppercase mb-2">Your<br /><span className="text-[#E23232]">Experience</span></h3>
-        <p className="font-mono text-[11px] text-white/40 tracking-wider">Fresher or pro — both welcome.</p>
+        <p className="font-mono text-[12px] text-white/65 tracking-wider">Fresher or pro — both welcome.</p>
       </div>
 
       {/* Experience level cards */}
       <div>
-        <label className="font-mono text-[10px] text-white/60 uppercase tracking-widest block mb-3">Experience Level</label>
+        <label className="font-mono text-[11px] text-white/80 uppercase tracking-widest block mb-3">Experience Level</label>
         <div className="grid grid-cols-2 gap-4">
           {[
             { value: 'trained', label: 'Trained Pro', desc: '2+ years of detailing experience' },
@@ -466,7 +466,7 @@ function StepExperience({ formData, update, errors }: { formData: FormData; upda
               whileTap={{ scale: 0.98 }}
             >
               <span className="font-display text-lg uppercase block mb-1">{opt.label}</span>
-              <span className="font-mono text-[10px] text-white/50 tracking-wider">{opt.desc}</span>
+              <span className="font-mono text-[11px] text-white/70 tracking-wider">{opt.desc}</span>
             </motion.button>
           ))}
         </div>
@@ -498,7 +498,7 @@ function StepExperience({ formData, update, errors }: { formData: FormData; upda
 
       {/* Max washes per day */}
       <div>
-        <label className="font-mono text-[10px] text-white/60 uppercase tracking-widest block mb-3">
+        <label className="font-mono text-[11px] text-white/80 uppercase tracking-widest block mb-3">
           Max Car Washes Per Day — <span className="text-[#E23232]">{formData.maxWashesPerDay}</span>
         </label>
         <input
@@ -524,12 +524,12 @@ function StepDocuments({ formData, handleFileChange, errors }: { formData: FormD
     <div className="space-y-6">
       <div className="mb-8">
         <h3 className="font-display text-3xl lg:text-4xl uppercase mb-2">Upload Your<br /><span className="text-[#E23232]">Documents</span></h3>
-        <p className="font-mono text-[11px] text-white/40 tracking-wider">Securely uploaded. Only reviewed by our team.</p>
+        <p className="font-mono text-[12px] text-white/65 tracking-wider">Securely uploaded. Only reviewed by our team.</p>
       </div>
 
       {/* Government ID */}
       <div>
-        <label className="font-mono text-[10px] text-white/60 uppercase tracking-widest block mb-3">
+        <label className="font-mono text-[11px] text-white/80 uppercase tracking-widest block mb-3">
           Government-Issued ID <span className="text-[#E23232]">*</span>
         </label>
         <label className={`block border-2 border-dashed ${errors.governmentId ? 'border-[#E23232]/60' : 'border-white/10 hover:border-white/20'} rounded-xl p-8 text-center cursor-pointer transition-colors group`}>
@@ -544,10 +544,10 @@ function StepDocuments({ formData, handleFileChange, errors }: { formData: FormD
               <div className="w-12 h-12 rounded-xl bg-white/5 group-hover:bg-[#E23232]/10 flex items-center justify-center mx-auto mb-3 transition-colors">
                 <svg className="w-6 h-6 text-white/40 group-hover:text-[#E23232] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 16V4m0 0l-4 4m4-4l4 4M4 20h16" /></svg>
               </div>
-              <span className="font-mono text-[11px] text-white/40 tracking-wider block">
+              <span className="font-mono text-[13px] text-white/75 tracking-wider block">
                 Drop file here or click to upload
               </span>
-              <span className="font-mono text-[9px] text-white/25 tracking-wider block mt-1">
+              <span className="font-mono text-[11px] text-white/55 tracking-wider block mt-1">
                 JPG, PNG, or PDF — max 10MB
               </span>
             </>
@@ -558,8 +558,8 @@ function StepDocuments({ formData, handleFileChange, errors }: { formData: FormD
 
       {/* Insurance */}
       <div>
-        <label className="font-mono text-[10px] text-white/60 uppercase tracking-widest block mb-3">
-          Insurance Certificate <span className="text-white/30">(optional)</span>
+        <label className="font-mono text-[11px] text-white/80 uppercase tracking-widest block mb-3">
+          Insurance Certificate <span className="text-white/50">(optional)</span>
         </label>
         <label className="block border-2 border-dashed border-white/10 hover:border-white/20 rounded-xl p-8 text-center cursor-pointer transition-colors group">
           <input type="file" accept=".pdf,image/*" onChange={e => handleFileChange('insurance', e)} className="hidden" />
@@ -573,10 +573,10 @@ function StepDocuments({ formData, handleFileChange, errors }: { formData: FormD
               <div className="w-12 h-12 rounded-xl bg-white/5 group-hover:bg-[#E23232]/10 flex items-center justify-center mx-auto mb-3 transition-colors">
                 <svg className="w-6 h-6 text-white/40 group-hover:text-[#E23232] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 16V4m0 0l-4 4m4-4l4 4M4 20h16" /></svg>
               </div>
-              <span className="font-mono text-[11px] text-white/40 tracking-wider block">
+              <span className="font-mono text-[13px] text-white/75 tracking-wider block">
                 Drop file here or click to upload
               </span>
-              <span className="font-mono text-[9px] text-white/25 tracking-wider block mt-1">
+              <span className="font-mono text-[11px] text-white/55 tracking-wider block mt-1">
                 PDF or image — max 10MB
               </span>
             </>
@@ -626,7 +626,7 @@ function StepReview({ formData, update, errors, goToStep }: { formData: FormData
     <div className="space-y-6">
       <div className="mb-8">
         <h3 className="font-display text-3xl lg:text-4xl uppercase mb-2">Review Your<br /><span className="text-[#E23232]">Application</span></h3>
-        <p className="font-mono text-[11px] text-white/40 tracking-wider">Make sure everything looks good.</p>
+        <p className="font-mono text-[12px] text-white/65 tracking-wider">Make sure everything looks good.</p>
       </div>
 
       {sections.map((section) => (
@@ -643,7 +643,7 @@ function StepReview({ formData, update, errors, goToStep }: { formData: FormData
           <div className="space-y-2">
             {section.items.map((item) => (
               <div key={item.label} className="flex justify-between">
-                <span className="font-mono text-[10px] text-white/40 uppercase tracking-widest">{item.label}</span>
+                <span className="font-mono text-[11px] text-white/60 uppercase tracking-widest">{item.label}</span>
                 <span className="font-mono text-sm text-white/80">{item.value}</span>
               </div>
             ))}
@@ -662,7 +662,7 @@ function StepReview({ formData, update, errors, goToStep }: { formData: FormData
         >
           {formData.agreedToTerms && <Check className="w-3 h-3 text-white" />}
         </button>
-        <span className="font-mono text-[11px] text-white/50 tracking-wider leading-relaxed">
+        <span className="font-mono text-[12px] text-white/70 tracking-wider leading-relaxed">
           I agree to the DRIVEO Partner Terms of Service and acknowledge that my information will be reviewed by the DRIVEO team.
         </span>
       </div>

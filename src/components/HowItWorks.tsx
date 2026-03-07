@@ -112,45 +112,45 @@ function StepCard({ step, idx }: { step: typeof steps[number]; idx: number }) {
   return (
     <motion.div
       variants={cardVariants}
-      className="group relative overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/[0.06] hover:border-[#E23232]/30 transition-all duration-500"
-      whileHover={{ y: -6, transition: { duration: 0.3 } }}
+      className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#141414] to-[#0e0e0e] border border-white/10 hover:border-[#E23232]/50 transition-all duration-500 shadow-lg shadow-black/30 hover:shadow-[#E23232]/10"
+      whileHover={{ y: -8, transition: { duration: 0.3 } }}
     >
       {/* Top gradient accent bar */}
-      <div className="h-[2px] w-full bg-gradient-to-r from-[#E23232]/40 via-[#E23232] to-[#E23232]/40 opacity-30 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="h-[3px] w-full bg-gradient-to-r from-transparent via-[#E23232] to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
 
       <div className="p-8 md:p-10 relative">
         {/* Large watermark number */}
-        <span className="absolute top-2 right-4 font-display text-[100px] leading-none text-white/[0.03] group-hover:text-[#E23232]/[0.07] transition-colors duration-700 select-none pointer-events-none">
+        <span className="absolute top-2 right-4 font-display text-[110px] leading-none text-white/[0.06] group-hover:text-[#E23232]/15 transition-colors duration-700 select-none pointer-events-none">
           {step.num}
         </span>
 
         {/* Icon with glow */}
         <div className="relative mb-7 inline-flex">
-          <div className="w-14 h-14 rounded-2xl bg-[#E23232]/[0.08] group-hover:bg-[#E23232]/20 flex items-center justify-center transition-all duration-500 relative z-10">
-            <step.Icon className="w-7 h-7 text-[#E23232]/60 group-hover:text-[#E23232] transition-all duration-500" />
+          <div className="w-14 h-14 rounded-2xl bg-[#E23232]/15 group-hover:bg-[#E23232]/25 flex items-center justify-center transition-all duration-500 relative z-10 ring-1 ring-[#E23232]/20 group-hover:ring-[#E23232]/40">
+            <step.Icon className="w-7 h-7 text-[#E23232] group-hover:text-[#ff4444] transition-all duration-500" />
           </div>
-          <div className="absolute inset-0 bg-[#E23232]/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute inset-0 bg-[#E23232]/25 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         </div>
 
         {/* Step label */}
         <div className="flex items-center gap-3 mb-4">
-          <span className="font-mono text-[10px] text-[#E23232]/80 uppercase tracking-[0.3em]">Step {step.num}</span>
-          <div className="h-[1px] flex-1 bg-gradient-to-r from-white/10 to-transparent" />
+          <span className="font-mono text-[11px] text-[#E23232] uppercase tracking-[0.3em] font-medium">Step {step.num}</span>
+          <div className="h-[1px] flex-1 bg-gradient-to-r from-white/15 to-transparent" />
         </div>
 
         {/* Title */}
-        <h3 className="font-display text-2xl uppercase mb-3 group-hover:text-[#E23232] transition-colors duration-300">
+        <h3 className="font-display text-2xl uppercase mb-3 text-white group-hover:text-[#E23232] transition-colors duration-300">
           {step.label}
         </h3>
 
         {/* Description */}
-        <p className="font-mono text-[11px] text-white/45 leading-[1.8] tracking-wider group-hover:text-white/65 transition-colors duration-500">
+        <p className="font-mono text-[13px] text-white/80 leading-[1.8] tracking-wide group-hover:text-white/95 transition-colors duration-500">
           {step.sub}
         </p>
       </div>
 
       {/* Bottom corner glow on hover */}
-      <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-[#E23232]/10 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+      <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-[#E23232]/15 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
     </motion.div>
   );
 }
