@@ -41,6 +41,10 @@ export const metadata: Metadata = {
   title: 'DRIVEO — Mobile Car Detailing Across the GTA | We Come to You',
   description: 'Pro hand-wash at your door. Book in 30 seconds. Before/after photo proof. No scratches. Ever. Serving Etobicoke, Mississauga, and the Greater Toronto Area.',
   keywords: ['car detailing', 'mobile car wash', 'GTA', 'Etobicoke', 'Mississauga', 'condo car wash'],
+  icons: {
+    icon: '/Driveo-logo.png',
+    apple: '/Driveo-logo.png',
+  },
   openGraph: {
     title: 'DRIVEO — Mobile Car Detailing Across the GTA',
     description: 'Pro hand-wash at your door. Book in 30 seconds. Before/after photo proof.',
