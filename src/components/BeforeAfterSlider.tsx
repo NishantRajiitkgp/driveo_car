@@ -29,7 +29,7 @@ export function BeforeAfterSlider() {
   };
 
   return (
-    <section className="h-screen relative border-b border-white/10 flex flex-col">
+    <section className="relative border-b border-white/10 flex flex-col">
       <div className="text-center pt-10 pb-6 px-6 shrink-0">
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -52,7 +52,7 @@ export function BeforeAfterSlider() {
       </div>
 
       <motion.div
-        className="flex-1 min-h-0 px-4 md:px-8 pb-4 relative"
+        className="px-4 md:px-8 pb-4 relative"
         initial={{ opacity: 0, scale: 0.95 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true, margin: '-80px' }}
@@ -60,7 +60,7 @@ export function BeforeAfterSlider() {
       >
         <div
           ref={sliderRef}
-          className="relative w-full h-full rounded-2xl overflow-hidden cursor-col-resize select-none border border-white/10"
+          className="relative w-full rounded-2xl overflow-hidden cursor-col-resize select-none border border-white/10"
           onMouseDown={() => { isDragging.current = true; }}
           onMouseUp={() => { isDragging.current = false; }}
           onMouseLeave={() => { isDragging.current = false; }}
@@ -71,11 +71,11 @@ export function BeforeAfterSlider() {
           onClick={(e) => handleSliderMove(e.clientX)}
         >
           {/* After image (full, sits behind) */}
-          <img src="/after-wash.jpeg" alt="After DRIVEO wash" className="absolute inset-0 w-full h-full object-cover" />
+          <img src="/Driveo Effect After.png" alt="After DRIVEO wash" className="w-full h-auto block" />
 
           {/* Before image (clipped) */}
           <div className="absolute inset-0 overflow-hidden" style={{ width: `${sliderPos}%` }}>
-            <img src="/before-wash.jpeg" alt="Before DRIVEO wash" className="absolute inset-0 w-full h-full object-cover" style={{ width: `${containerWidth}px`, maxWidth: 'none' }} />
+            <img src="/Driveo Effect Before.png" alt="Before DRIVEO wash" className="h-full object-cover" style={{ width: `${containerWidth}px`, maxWidth: 'none' }} />
           </div>
 
           {/* Slider line */}
