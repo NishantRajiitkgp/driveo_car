@@ -103,97 +103,121 @@ export default function AdminPayoutsPage() {
   const totalPending = washers.reduce((sum, w) => sum + w.pending_earnings, 0);
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <DollarSign className="w-6 h-6 text-[#E23232]" />
-            <h1 className="text-2xl font-bold">Payouts</h1>
+    <div className="space-y-8 md:pt-0 pt-14 animate-fade-in">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[#E23232]/10 flex items-center justify-center">
+            <DollarSign className="w-5 h-5 text-[#E23232]" />
           </div>
-          <Card className="bg-[#0a0a0a] border-[#E23232]/30">
-            <CardContent className="px-4 py-2">
-              <p className="text-xs text-white/40">Total Pending</p>
-              <p className="text-lg font-bold text-[#E23232]">
-                ${(totalPending / 100).toFixed(2)}
-              </p>
-            </CardContent>
-          </Card>
+          <div>
+            <h1 className="text-3xl font-display text-white tracking-tight">Payouts</h1>
+            <p className="text-white/30 text-sm mt-0.5">Manage washer earnings and transfers</p>
+          </div>
         </div>
+        <div className="glass-card rounded-2xl px-5 py-3 border-l-4 border-l-[#E23232]">
+          <p className="text-[10px] text-white/30 uppercase tracking-widest">Total Pending</p>
+          <p className="text-xl font-bold gradient-text mt-0.5">
+            ${(totalPending / 100).toFixed(2)}
+          </p>
+        </div>
+      </div>
 
-        {loading ? (
-          <div className="space-y-3">
-            {[...Array(4)].map((_, i) => (
-              <Skeleton key={i} className="h-20 w-full bg-white/5 rounded-xl" />
-            ))}
+      {/* Stats Overview */}
+      <div className="grid grid-cols-3 gap-4 animate-fade-in-up">
+        <div className="glass-card stat-card rounded-2xl p-4 text-center">
+          <p className="text-2xl font-bold text-white">{washers.length}</p>
+          <p className="text-[10px] text-white/25 uppercase tracking-widest mt-1">Washers</p>
+        </div>
+        <div className="glass-card stat-card rounded-2xl p-4 text-center">
+          <p className="text-2xl font-bold text-white">{washers.filter(w => w.pending_earnings > 0).length}</p>
+          <p className="text-[10px] text-white/25 uppercase tracking-widest mt-1">With Pending</p>
+        </div>
+        <div className="glass-card stat-card rounded-2xl p-4 text-center">
+          <p className="text-2xl font-bold text-white">{washers.filter(w => w.stripe_account_id).length}</p>
+          <p className="text-[10px] text-white/25 uppercase tracking-widest mt-1">Stripe Connected</p>
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="space-y-3">
+          {[...Array(4)].map((_, i) => (
+            <Skeleton key={i} className="h-24 w-full bg-white/5 rounded-2xl" />
+          ))}
+        </div>
+      ) : washers.length === 0 ? (
+        <div className="glass-card rounded-2xl p-12 text-center">
+          <div className="w-16 h-16 rounded-2xl bg-white/[0.03] flex items-center justify-center mx-auto mb-4">
+            <User className="w-7 h-7 text-white/10" />
           </div>
-        ) : washers.length === 0 ? (
-          <Card className="bg-[#0a0a0a] border-white/10">
-            <CardContent className="py-12 text-center">
-              <p className="text-white/40">No washers found</p>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="space-y-3">
-            {washers.map((washer) => (
-              <Card
-                key={washer.id}
-                className="bg-[#0a0a0a] border-white/10"
-              >
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3 flex-1">
-                      <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
-                        <User className="w-5 h-5 text-white/40" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <p className="font-medium text-white">
-                            {washer.full_name}
-                          </p>
-                          {!washer.stripe_account_id && (
-                            <span className="flex items-center gap-1 text-xs text-orange-400">
-                              <AlertCircle className="w-3 h-3" />
-                              No Stripe
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-xs text-white/40 truncate">
-                          {washer.email}
-                        </p>
-                        <p className="text-xs text-white/30 mt-0.5">
-                          {washer.completed_jobs} completed jobs pending payout
-                        </p>
-                      </div>
+          <p className="text-white/30 text-sm">No washers found</p>
+        </div>
+      ) : (
+        <div className="space-y-3 stagger-children">
+          {washers.map((washer) => (
+            <div
+              key={washer.id}
+              className="glass-card rounded-2xl hover:bg-white/[0.04] transition-all duration-300 group animate-fade-in-up"
+            >
+              <div className="p-5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4 flex-1">
+                    <div className="w-11 h-11 rounded-xl bg-white/[0.06] flex items-center justify-center shrink-0 group-hover:bg-[#E23232]/10 transition-colors">
+                      <User className="w-5 h-5 text-white/30 group-hover:text-[#E23232] transition-colors" />
                     </div>
-
-                    <div className="flex items-center gap-4 shrink-0">
-                      <div className="text-right">
-                        <p className="text-lg font-bold text-white">
-                          ${(washer.pending_earnings / 100).toFixed(2)}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2.5">
+                        <p className="font-medium text-white">
+                          {washer.full_name}
                         </p>
-                        <p className="text-xs text-white/30">pending</p>
+                        {washer.stripe_account_id ? (
+                          <span className="text-[10px] text-green-400 bg-green-500/10 px-2 py-0.5 rounded-full flex items-center gap-1 shadow-[0_0_8px_rgba(34,197,94,0.1)]">
+                            <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                            Stripe
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-1 text-[10px] text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded-full shadow-[0_0_8px_rgba(249,115,22,0.1)]">
+                            <AlertCircle className="w-2.5 h-2.5" />
+                            No Stripe
+                          </span>
+                        )}
                       </div>
-                      <Button
-                        size="sm"
-                        onClick={() => handlePayout(washer.id)}
-                        disabled={
-                          washer.pending_earnings === 0 ||
-                          !washer.stripe_account_id ||
-                          processingId === washer.id
-                        }
-                        className="bg-[#E23232] hover:bg-[#E23232]/80 text-white disabled:opacity-30"
-                      >
-                        <Send className="w-3.5 h-3.5 mr-1.5" />
-                        {processingId === washer.id ? 'Sending...' : 'Payout'}
-                      </Button>
+                      <p className="text-xs text-white/20 truncate mt-0.5 font-mono">
+                        {washer.email}
+                      </p>
+                      <p className="text-xs text-white/15 mt-1">
+                        {washer.completed_jobs} completed jobs pending payout
+                      </p>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
-      </div>
+
+                  <div className="flex items-center gap-5 shrink-0">
+                    <div className="text-right">
+                      <p className={`text-xl font-bold ${washer.pending_earnings > 0 ? 'gradient-text' : 'text-white/20'}`}>
+                        ${(washer.pending_earnings / 100).toFixed(2)}
+                      </p>
+                      <p className="text-[10px] text-white/20 uppercase tracking-widest">pending</p>
+                    </div>
+                    <Button
+                      size="sm"
+                      onClick={() => handlePayout(washer.id)}
+                      disabled={
+                        washer.pending_earnings === 0 ||
+                        !washer.stripe_account_id ||
+                        processingId === washer.id
+                      }
+                      className="bg-[#E23232] hover:bg-[#E23232]/80 text-white disabled:opacity-20 rounded-xl shadow-[0_0_20px_rgba(226,50,50,0.2)] hover:shadow-[0_0_30px_rgba(226,50,50,0.3)] disabled:shadow-none transition-all px-5"
+                    >
+                      <Send className="w-3.5 h-3.5 mr-2" />
+                      {processingId === washer.id ? 'Sending...' : 'Payout'}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

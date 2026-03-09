@@ -84,58 +84,70 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#050505] text-white">
+      <div className="min-h-screen text-white">
         <div className="max-w-lg mx-auto px-4 py-8 space-y-4">
-          <Skeleton className="h-8 w-48 bg-white/5" />
-          <Skeleton className="h-64 w-full bg-white/5 rounded-xl" />
+          <Skeleton className="h-10 w-48 bg-white/5 rounded-lg" />
+          <Skeleton className="h-32 w-full bg-white/5 rounded-2xl" />
+          <Skeleton className="h-64 w-full bg-white/5 rounded-2xl" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
-      <div className="max-w-lg mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Profile</h1>
-          {!editing ? (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setEditing(true)}
-              className="border-white/10 text-white hover:bg-white/5"
-            >
-              <Pencil className="w-3.5 h-3.5 mr-2" />
-              Edit
-            </Button>
-          ) : (
-            <Button
-              size="sm"
-              onClick={handleSave}
-              disabled={saving}
-              className="bg-[#E23232] hover:bg-[#E23232]/80 text-white"
-            >
-              <Save className="w-3.5 h-3.5 mr-2" />
-              {saving ? 'Saving...' : 'Save'}
-            </Button>
-          )}
-        </div>
+    <div className="min-h-screen text-white">
+      <div className="max-w-lg mx-auto px-4 py-8 animate-fade-in-up">
+        <div className="stagger-children space-y-6">
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-display text-white tracking-tight">Profile</h1>
+            {!editing ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setEditing(true)}
+                className="border-white/[0.08] text-white/70 hover:bg-white/5 hover:text-white rounded-xl gap-2 transition-all"
+              >
+                <Pencil className="w-3.5 h-3.5" />
+                Edit
+              </Button>
+            ) : (
+              <Button
+                size="sm"
+                onClick={handleSave}
+                disabled={saving}
+                className="bg-[#E23232] hover:bg-[#c92a2a] text-white rounded-xl gap-2 shadow-lg shadow-[#E23232]/20 transition-all"
+              >
+                <Save className="w-3.5 h-3.5" />
+                {saving ? 'Saving...' : 'Save'}
+              </Button>
+            )}
+          </div>
 
-        <Card className="bg-[#0a0a0a] border-white/10 mb-4">
-          <CardContent className="p-6 space-y-5">
-            <div className="flex items-center gap-4 mb-2">
-              <div className="w-16 h-16 rounded-full bg-[#E23232]/20 flex items-center justify-center">
-                <User className="w-8 h-8 text-[#E23232]" />
+          {/* Avatar + Name Hero */}
+          <div className="glass-card rounded-2xl p-6">
+            <div className="flex items-center gap-5">
+              {/* Avatar with gradient ring */}
+              <div className="relative">
+                <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-[#E23232] to-[#E23232]/40 opacity-80 blur-sm" />
+                <div className="relative w-18 h-18 rounded-full bg-gradient-to-br from-[#E23232]/30 to-[#E23232]/10 border-2 border-[#E23232]/30 flex items-center justify-center" style={{ width: '72px', height: '72px' }}>
+                  <User className="w-8 h-8 text-[#E23232]" />
+                </div>
               </div>
               <div>
-                <p className="text-lg font-semibold">{profile?.full_name}</p>
-                <p className="text-sm text-white/40">Customer</p>
+                <p className="text-xl font-semibold text-white tracking-tight">{profile?.full_name}</p>
+                <p className="text-sm text-white/30 mt-0.5">Customer</p>
               </div>
             </div>
+          </div>
 
-            <div className="space-y-4">
+          {/* Profile Details */}
+          <div className="glass-card rounded-2xl p-6">
+            <h2 className="text-xs uppercase tracking-[0.2em] text-white/30 font-semibold mb-5">Personal Information</h2>
+            <div className="space-y-5">
+              {/* Full Name */}
               <div>
-                <Label className="text-white/50 text-xs uppercase tracking-wide">
+                <Label className="text-white/40 text-xs uppercase tracking-widest font-medium">
                   Full Name
                 </Label>
                 {editing ? (
@@ -144,25 +156,29 @@ export default function ProfilePage() {
                     onChange={(e) =>
                       setForm({ ...form, full_name: e.target.value })
                     }
-                    className="mt-1 bg-white/5 border-white/10 text-white"
+                    className="mt-2 premium-input bg-white/[0.03] border-white/[0.08] text-white rounded-xl"
                   />
                 ) : (
-                  <p className="mt-1 text-white">{profile?.full_name}</p>
+                  <p className="mt-2 text-white font-medium">{profile?.full_name}</p>
                 )}
               </div>
 
+              {/* Email */}
               <div>
-                <Label className="text-white/50 text-xs uppercase tracking-wide">
+                <Label className="text-white/40 text-xs uppercase tracking-widest font-medium">
                   Email
                 </Label>
-                <div className="flex items-center gap-2 mt-1 text-white/80">
-                  <Mail className="w-4 h-4 text-white/40" />
-                  <span>{profile?.email}</span>
+                <div className="flex items-center gap-3 mt-2">
+                  <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
+                    <Mail className="w-4 h-4 text-white/30" />
+                  </div>
+                  <span className="text-white/70">{profile?.email}</span>
                 </div>
               </div>
 
+              {/* Phone */}
               <div>
-                <Label className="text-white/50 text-xs uppercase tracking-wide">
+                <Label className="text-white/40 text-xs uppercase tracking-widest font-medium">
                   Phone
                 </Label>
                 {editing ? (
@@ -172,50 +188,53 @@ export default function ProfilePage() {
                       setForm({ ...form, phone: e.target.value })
                     }
                     placeholder="+1 (416) 555-0123"
-                    className="mt-1 bg-white/5 border-white/10 text-white"
+                    className="mt-2 premium-input bg-white/[0.03] border-white/[0.08] text-white rounded-xl placeholder:text-white/20"
                   />
                 ) : (
-                  <div className="flex items-center gap-2 mt-1 text-white/80">
-                    <Phone className="w-4 h-4 text-white/40" />
-                    <span>{profile?.phone || 'Not set'}</span>
+                  <div className="flex items-center gap-3 mt-2">
+                    <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
+                      <Phone className="w-4 h-4 text-white/30" />
+                    </div>
+                    <span className="text-white/70">{profile?.phone || 'Not set'}</span>
                   </div>
                 )}
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {profile?.customer_profiles?.referral_code && (
-          <Card className="bg-[#0a0a0a] border-white/10">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-white/50 uppercase tracking-wide">
-                Referral Code
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pb-6">
-              <div className="flex items-center gap-3">
-                <code className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-lg font-mono text-[#E23232] tracking-widest">
-                  {profile.customer_profiles.referral_code}
-                </code>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={copyReferral}
-                  className="border-white/10 text-white hover:bg-white/5 shrink-0"
-                >
-                  {copied ? (
-                    <Check className="w-4 h-4 text-green-400" />
-                  ) : (
-                    <Copy className="w-4 h-4" />
-                  )}
-                </Button>
+          {/* Referral Code */}
+          {profile?.customer_profiles?.referral_code && (
+            <div className="gradient-border rounded-2xl">
+              <div className="glass-card rounded-2xl overflow-hidden">
+                <div className="p-6">
+                  <h2 className="text-xs uppercase tracking-[0.2em] text-white/30 font-semibold mb-4">
+                    Referral Code
+                  </h2>
+                  <div className="flex items-center gap-3">
+                    <code className="flex-1 bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3.5 text-lg font-mono text-[#E23232] tracking-[0.2em] text-center font-bold">
+                      {profile.customer_profiles.referral_code}
+                    </code>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={copyReferral}
+                      className="border-white/[0.08] text-white hover:bg-white/5 shrink-0 rounded-xl w-12 h-12 transition-all"
+                    >
+                      {copied ? (
+                        <Check className="w-4 h-4 text-green-400" />
+                      ) : (
+                        <Copy className="w-4 h-4" />
+                      )}
+                    </Button>
+                  </div>
+                  <p className="text-xs text-white/25 mt-3">
+                    Share this code with friends to earn rewards
+                  </p>
+                </div>
               </div>
-              <p className="text-xs text-white/30 mt-2">
-                Share this code with friends to earn rewards
-              </p>
-            </CardContent>
-          </Card>
-        )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

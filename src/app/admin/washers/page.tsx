@@ -111,32 +111,61 @@ export default function AdminWashersPage() {
     }
   };
 
+  const statusGlow = (status: string) => {
+    switch (status) {
+      case 'pending': return 'shadow-[0_0_12px_rgba(234,179,8,0.15)]';
+      case 'approved': return 'shadow-[0_0_12px_rgba(34,197,94,0.15)]';
+      case 'suspended': case 'rejected': return 'shadow-[0_0_12px_rgba(239,68,68,0.15)]';
+      case 'query': return 'shadow-[0_0_12px_rgba(59,130,246,0.15)]';
+      default: return '';
+    }
+  };
+
   return (
-    <div className="space-y-6 md:pt-0 pt-14">
+    <div className="space-y-8 md:pt-0 pt-14 animate-fade-in">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-display text-white">Washers</h1>
-        <span className="text-white/30 text-xs">{washers.length} {filter === 'all' ? 'total' : filter}</span>
+        <div>
+          <h1 className="text-3xl font-display text-white tracking-tight">Washers</h1>
+          <p className="text-white/30 text-sm mt-1">
+            <span className="text-white/50 font-medium">{washers.length}</span> {filter === 'all' ? 'total' : filter}
+          </p>
+        </div>
       </div>
 
+      {/* Filter Tabs */}
       <Tabs value={filter} onValueChange={setFilter}>
-        <TabsList className="bg-white/5 border border-white/10">
-          <TabsTrigger value="all" className="text-xs data-[state=active]:bg-[#E23232] data-[state=active]:text-white">All</TabsTrigger>
-          <TabsTrigger value="pending" className="text-xs data-[state=active]:bg-[#E23232] data-[state=active]:text-white">Pending</TabsTrigger>
-          <TabsTrigger value="approved" className="text-xs data-[state=active]:bg-[#E23232] data-[state=active]:text-white">Approved</TabsTrigger>
-          <TabsTrigger value="suspended" className="text-xs data-[state=active]:bg-[#E23232] data-[state=active]:text-white">Suspended</TabsTrigger>
+        <TabsList className="glass rounded-full p-1 border border-white/[0.06] gap-1">
+          {[
+            { value: 'all', label: 'All' },
+            { value: 'pending', label: 'Pending' },
+            { value: 'approved', label: 'Approved' },
+            { value: 'suspended', label: 'Suspended' },
+          ].map((tab) => (
+            <TabsTrigger
+              key={tab.value}
+              value={tab.value}
+              className="text-xs rounded-full px-4 py-1.5 data-[state=active]:bg-[#E23232] data-[state=active]:text-white data-[state=active]:shadow-[0_0_20px_rgba(226,50,50,0.3)] transition-all duration-300 text-white/40 hover:text-white/60"
+            >
+              {tab.label}
+            </TabsTrigger>
+          ))}
         </TabsList>
       </Tabs>
 
       {loading ? (
         <div className="space-y-3">
-          {[1, 2, 3].map((i) => <Skeleton key={i} className="h-24 bg-white/5" />)}
+          {[1, 2, 3].map((i) => <Skeleton key={i} className="h-28 bg-white/5 rounded-2xl" />)}
         </div>
       ) : washers.length === 0 ? (
-        <Card className="bg-[#0a0a0a] border-white/10">
-          <CardContent className="p-8 text-center text-white/30">No washers found</CardContent>
-        </Card>
+        <div className="glass-card rounded-2xl p-12 text-center">
+          <div className="w-16 h-16 rounded-2xl bg-white/[0.03] flex items-center justify-center mx-auto mb-4">
+            <UserCheck className="w-7 h-7 text-white/10" />
+          </div>
+          <p className="text-white/30 text-sm">No washers found</p>
+        </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-3 stagger-children">
           {washers.map((w) => {
             const wp = w.washer_profiles;
             const appData = wp.application_data;
@@ -144,94 +173,100 @@ export default function AdminWashersPage() {
             const bioText = appData ? null : wp.bio;
 
             return (
-              <Card key={w.id} className="bg-[#0a0a0a] border-white/10 overflow-hidden">
-                <CardContent className="p-0">
-                  {/* Header row — click to expand */}
-                  <div
-                    className="p-4 cursor-pointer hover:bg-white/[0.02] transition-colors"
-                    onClick={() => setExpandedId(isExpanded ? null : w.id)}
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/50 font-display text-lg shrink-0">
-                        {w.full_name.charAt(0)}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <p className="text-white font-medium">{w.full_name}</p>
-                          <Badge variant="outline" className={cn(statusColor(wp.status))}>
-                            {wp.status}
-                          </Badge>
-                          {wp.is_online && (
-                            <span className="text-[10px] text-green-400 bg-green-500/10 px-1.5 py-0.5 rounded">online</span>
-                          )}
-                        </div>
-                        <p className="text-white/40 text-xs mt-0.5">{w.email} · {w.phone}</p>
-                        <div className="flex items-center gap-4 mt-2 text-white/30 text-xs">
-                          <span className="flex items-center gap-1">
-                            <Star className="w-3 h-3 text-yellow-500" /> {wp.rating_avg?.toFixed(1) || '—'}
+              <div key={w.id} className="glass-card rounded-2xl overflow-hidden animate-fade-in-up">
+                {/* Header row */}
+                <div
+                  className="p-5 cursor-pointer hover:bg-white/[0.02] transition-all duration-300"
+                  onClick={() => setExpandedId(isExpanded ? null : w.id)}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="w-11 h-11 rounded-xl bg-white/[0.06] flex items-center justify-center text-white/50 font-display text-lg shrink-0">
+                      {w.full_name.charAt(0)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2.5 flex-wrap">
+                        <p className="text-white font-medium">{w.full_name}</p>
+                        <Badge
+                          variant="outline"
+                          className={cn('text-[10px] rounded-full px-2.5 py-0.5', statusColor(wp.status), statusGlow(wp.status))}
+                        >
+                          {wp.status}
+                        </Badge>
+                        {wp.is_online && (
+                          <span className="text-[10px] text-green-400 bg-green-500/10 px-2 py-0.5 rounded-full flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                            online
                           </span>
-                          <span>{wp.jobs_completed} washes</span>
-                          {wp.service_zones && wp.service_zones.length > 0 && (
-                            <span className="flex items-center gap-1">
-                              <MapPin className="w-3 h-3" /> {wp.service_zones.join(', ')}
-                            </span>
-                          )}
-                          {appData?.appliedAt && (
-                            <span className="flex items-center gap-1">
-                              <Clock className="w-3 h-3" /> Applied {new Date(appData.appliedAt).toLocaleDateString()}
-                            </span>
-                          )}
-                        </div>
+                        )}
                       </div>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <div className="flex gap-2 flex-wrap justify-end">
-                          {(wp.status === 'pending' || wp.status === 'query') && (
-                            <>
-                              <Button
-                                size="sm"
-                                onClick={(e) => { e.stopPropagation(); updateWasherStatus(w.id, 'approved'); }}
-                                className="bg-green-600 hover:bg-green-700 text-white text-xs"
-                              >
-                                <UserCheck className="w-3 h-3 mr-1" /> Approve
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={(e) => { e.stopPropagation(); updateWasherStatus(w.id, 'rejected'); }}
-                                className="border-red-500/30 text-red-400 hover:bg-red-500/10 text-xs"
-                              >
-                                <UserX className="w-3 h-3 mr-1" /> Reject
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={(e) => { e.stopPropagation(); openQuery(w.id); }}
-                                className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10 text-xs"
-                              >
-                                <MessageSquare className="w-3 h-3 mr-1" /> Query
-                              </Button>
-                            </>
-                          )}
-                          {wp.status === 'approved' && (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={(e) => { e.stopPropagation(); updateWasherStatus(w.id, 'suspended'); }}
-                              className="border-red-500/30 text-red-400 hover:bg-red-500/10 text-xs"
-                            >
-                              Suspend
-                            </Button>
-                          )}
-                          {(wp.status === 'suspended' || wp.status === 'rejected') && (
+                      <p className="text-white/25 text-xs mt-1 font-mono">{w.email} · {w.phone}</p>
+                      <div className="flex items-center gap-4 mt-2.5 text-white/25 text-xs">
+                        <span className="flex items-center gap-1.5 glass rounded-full px-2.5 py-1">
+                          <Star className="w-3 h-3 text-yellow-500" /> {wp.rating_avg?.toFixed(1) || '--'}
+                        </span>
+                        <span className="glass rounded-full px-2.5 py-1">{wp.jobs_completed} washes</span>
+                        {wp.service_zones && wp.service_zones.length > 0 && (
+                          <span className="flex items-center gap-1 glass rounded-full px-2.5 py-1">
+                            <MapPin className="w-3 h-3" /> {wp.service_zones.join(', ')}
+                          </span>
+                        )}
+                        {appData?.appliedAt && (
+                          <span className="flex items-center gap-1 glass rounded-full px-2.5 py-1">
+                            <Clock className="w-3 h-3" /> Applied {new Date(appData.appliedAt).toLocaleDateString()}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 shrink-0">
+                      <div className="flex gap-2 flex-wrap justify-end">
+                        {(wp.status === 'pending' || wp.status === 'query') && (
+                          <>
                             <Button
                               size="sm"
                               onClick={(e) => { e.stopPropagation(); updateWasherStatus(w.id, 'approved'); }}
-                              className="bg-green-600 hover:bg-green-700 text-white text-xs"
+                              className="bg-green-600 hover:bg-green-500 text-white text-xs rounded-xl shadow-[0_0_20px_rgba(34,197,94,0.2)] hover:shadow-[0_0_30px_rgba(34,197,94,0.3)] transition-all"
                             >
-                              Reactivate
+                              <UserCheck className="w-3.5 h-3.5 mr-1.5" /> Approve
                             </Button>
-                          )}
-                        </div>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={(e) => { e.stopPropagation(); updateWasherStatus(w.id, 'rejected'); }}
+                              className="border-red-500/30 text-red-400 hover:bg-red-500/10 text-xs rounded-xl"
+                            >
+                              <UserX className="w-3.5 h-3.5 mr-1.5" /> Reject
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={(e) => { e.stopPropagation(); openQuery(w.id); }}
+                              className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10 text-xs rounded-xl"
+                            >
+                              <MessageSquare className="w-3.5 h-3.5 mr-1.5" /> Query
+                            </Button>
+                          </>
+                        )}
+                        {wp.status === 'approved' && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => { e.stopPropagation(); updateWasherStatus(w.id, 'suspended'); }}
+                            className="border-red-500/30 text-red-400 hover:bg-red-500/10 text-xs rounded-xl"
+                          >
+                            Suspend
+                          </Button>
+                        )}
+                        {(wp.status === 'suspended' || wp.status === 'rejected') && (
+                          <Button
+                            size="sm"
+                            onClick={(e) => { e.stopPropagation(); updateWasherStatus(w.id, 'approved'); }}
+                            className="bg-green-600 hover:bg-green-500 text-white text-xs rounded-xl shadow-[0_0_20px_rgba(34,197,94,0.2)]"
+                          >
+                            Reactivate
+                          </Button>
+                        )}
+                      </div>
+                      <div className="w-8 h-8 rounded-lg bg-white/[0.03] flex items-center justify-center">
                         {isExpanded ? (
                           <ChevronUp className="w-4 h-4 text-white/30" />
                         ) : (
@@ -240,160 +275,160 @@ export default function AdminWashersPage() {
                       </div>
                     </div>
                   </div>
+                </div>
 
-                  {/* Expanded details panel */}
-                  {isExpanded && (
-                    <div className="border-t border-white/[0.06] bg-[#080808]">
-                      {appData ? (
-                        <div className="p-5 grid grid-cols-1 md:grid-cols-3 gap-5">
-                          {/* Personal Info */}
-                          <div className="space-y-3">
-                            <h4 className="text-white/50 text-[10px] font-mono uppercase tracking-widest flex items-center gap-1.5">
-                              <Phone className="w-3 h-3" /> Personal Info
-                            </h4>
-                            <div className="space-y-2">
-                              <DetailRow label="Full Name" value={appData.fullName} />
-                              <DetailRow label="Phone" value={appData.phone} />
-                              <DetailRow label="Email" value={w.email || '—'} />
-                            </div>
+                {/* Expanded details panel */}
+                {isExpanded && (
+                  <div className="border-t border-white/[0.04] bg-white/[0.01]">
+                    {appData ? (
+                      <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-5">
+                        {/* Personal Info */}
+                        <div className="glass rounded-xl p-4 space-y-3">
+                          <h4 className="text-white/40 text-[10px] font-mono uppercase tracking-widest flex items-center gap-2">
+                            <Phone className="w-3 h-3" /> Personal Info
+                          </h4>
+                          <div className="space-y-2.5">
+                            <DetailRow label="Full Name" value={appData.fullName} />
+                            <DetailRow label="Phone" value={appData.phone} />
+                            <DetailRow label="Email" value={w.email || '--'} />
                           </div>
+                        </div>
 
-                          {/* Location */}
-                          <div className="space-y-3">
-                            <h4 className="text-white/50 text-[10px] font-mono uppercase tracking-widest flex items-center gap-1.5">
-                              <Home className="w-3 h-3" /> Location
-                            </h4>
-                            <div className="space-y-2">
-                              <DetailRow label="Address" value={appData.streetAddress} />
-                              <DetailRow label="City" value={appData.city} />
-                              <DetailRow label="Province" value={appData.province} />
-                              <DetailRow label="Postal Code" value={appData.postalCode} />
-                            </div>
+                        {/* Location */}
+                        <div className="glass rounded-xl p-4 space-y-3">
+                          <h4 className="text-white/40 text-[10px] font-mono uppercase tracking-widest flex items-center gap-2">
+                            <Home className="w-3 h-3" /> Location
+                          </h4>
+                          <div className="space-y-2.5">
+                            <DetailRow label="Address" value={appData.streetAddress} />
+                            <DetailRow label="City" value={appData.city} />
+                            <DetailRow label="Province" value={appData.province} />
+                            <DetailRow label="Postal Code" value={appData.postalCode} />
                           </div>
+                        </div>
 
-                          {/* Experience */}
-                          <div className="space-y-3">
-                            <h4 className="text-white/50 text-[10px] font-mono uppercase tracking-widest flex items-center gap-1.5">
-                              <Briefcase className="w-3 h-3" /> Experience
-                            </h4>
-                            <div className="space-y-2">
-                              <DetailRow
-                                label="Level"
-                                value={appData.experienceLevel === 'trained' ? 'Trained Professional' : 'Fresher'}
-                              />
-                              {appData.yearsExperience && (
-                                <DetailRow label="Years" value={`${appData.yearsExperience} years`} />
-                              )}
-                              <DetailRow label="Max Washes/Day" value={appData.maxWashesPerDay} />
-                              <DetailRow
-                                label="Applied"
-                                value={new Date(appData.appliedAt).toLocaleDateString('en-CA', {
-                                  year: 'numeric', month: 'short', day: 'numeric',
-                                  hour: '2-digit', minute: '2-digit',
+                        {/* Experience */}
+                        <div className="glass rounded-xl p-4 space-y-3">
+                          <h4 className="text-white/40 text-[10px] font-mono uppercase tracking-widest flex items-center gap-2">
+                            <Briefcase className="w-3 h-3" /> Experience
+                          </h4>
+                          <div className="space-y-2.5">
+                            <DetailRow
+                              label="Level"
+                              value={appData.experienceLevel === 'trained' ? 'Trained Professional' : 'Fresher'}
+                            />
+                            {appData.yearsExperience && (
+                              <DetailRow label="Years" value={`${appData.yearsExperience} years`} />
+                            )}
+                            <DetailRow label="Max Washes/Day" value={appData.maxWashesPerDay} />
+                            <DetailRow
+                              label="Applied"
+                              value={new Date(appData.appliedAt).toLocaleDateString('en-CA', {
+                                year: 'numeric', month: 'short', day: 'numeric',
+                                hour: '2-digit', minute: '2-digit',
+                              })}
+                            />
+                          </div>
+                        </div>
+
+                        {/* Documents */}
+                        <div className="md:col-span-3 space-y-3 pt-2 border-t border-white/[0.04]">
+                          <h4 className="text-white/40 text-[10px] font-mono uppercase tracking-widest flex items-center gap-2">
+                            <FileText className="w-3 h-3" /> Documents
+                          </h4>
+                          <div className="flex gap-4 flex-wrap">
+                            {appData.governmentIdPath ? (
+                              <button
+                                onClick={() => setDocPreview({
+                                  url: appData.governmentIdUrl || '',
+                                  title: 'Government ID',
                                 })}
-                              />
-                            </div>
-                          </div>
-
-                          {/* Documents — full width row */}
-                          <div className="md:col-span-3 space-y-3 pt-2 border-t border-white/[0.06]">
-                            <h4 className="text-white/50 text-[10px] font-mono uppercase tracking-widest flex items-center gap-1.5">
-                              <FileText className="w-3 h-3" /> Documents
-                            </h4>
-                            <div className="flex gap-4 flex-wrap">
-                              {appData.governmentIdPath ? (
-                                <button
-                                  onClick={() => setDocPreview({
-                                    url: appData.governmentIdUrl || '',
-                                    title: 'Government ID',
-                                  })}
-                                  className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-lg px-4 py-3 hover:border-[#E23232]/40 transition-colors group"
-                                >
-                                  <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                                    <Shield className="w-5 h-5 text-blue-400" />
-                                  </div>
-                                  <div className="text-left">
-                                    <p className="text-white text-sm font-medium">Government ID</p>
-                                    <p className="text-green-400 text-[10px] uppercase tracking-wider">Uploaded</p>
-                                  </div>
-                                  <ExternalLink className="w-3.5 h-3.5 text-white/20 group-hover:text-[#E23232] ml-2" />
-                                </button>
-                              ) : (
-                                <div className="flex items-center gap-3 bg-white/5 border border-red-500/20 rounded-lg px-4 py-3">
-                                  <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center">
-                                    <Shield className="w-5 h-5 text-red-400" />
-                                  </div>
-                                  <div>
-                                    <p className="text-white text-sm font-medium">Government ID</p>
-                                    <p className="text-red-400 text-[10px] uppercase tracking-wider">Not uploaded</p>
-                                  </div>
+                                className="flex items-center gap-3 glass-card rounded-xl px-5 py-4 hover:border-[#E23232]/40 transition-all duration-300 group"
+                              >
+                                <div className="w-11 h-11 rounded-xl bg-blue-500/10 flex items-center justify-center">
+                                  <Shield className="w-5 h-5 text-blue-400" />
                                 </div>
-                              )}
-
-                              {appData.insurancePath ? (
-                                <button
-                                  onClick={() => setDocPreview({
-                                    url: appData.insuranceUrl || '',
-                                    title: 'Insurance Certificate',
-                                  })}
-                                  className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-lg px-4 py-3 hover:border-[#E23232]/40 transition-colors group"
-                                >
-                                  <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
-                                    <FileText className="w-5 h-5 text-purple-400" />
-                                  </div>
-                                  <div className="text-left">
-                                    <p className="text-white text-sm font-medium">Insurance Certificate</p>
-                                    <p className="text-green-400 text-[10px] uppercase tracking-wider">Uploaded</p>
-                                  </div>
-                                  <ExternalLink className="w-3.5 h-3.5 text-white/20 group-hover:text-[#E23232] ml-2" />
-                                </button>
-                              ) : (
-                                <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-lg px-4 py-3 opacity-50">
-                                  <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center">
-                                    <FileText className="w-5 h-5 text-white/30" />
-                                  </div>
-                                  <div>
-                                    <p className="text-white text-sm font-medium">Insurance Certificate</p>
-                                    <p className="text-white/30 text-[10px] uppercase tracking-wider">Not provided</p>
-                                  </div>
+                                <div className="text-left">
+                                  <p className="text-white text-sm font-medium">Government ID</p>
+                                  <p className="text-green-400 text-[10px] uppercase tracking-wider">Uploaded</p>
                                 </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      ) : (
-                        /* Legacy plain-text bio fallback */
-                        <div className="p-5">
-                          {bioText ? (
-                            <div className="space-y-2">
-                              <h4 className="text-white/50 text-[10px] font-mono uppercase tracking-widest">Bio</h4>
-                              <p className="text-white/70 text-sm">{bioText}</p>
-                            </div>
-                          ) : (
-                            <p className="text-white/30 text-sm">No application details available</p>
-                          )}
-                          {wp.tools_owned && wp.tools_owned.length > 0 && (
-                            <div className="mt-3 space-y-2">
-                              <h4 className="text-white/50 text-[10px] font-mono uppercase tracking-widest">Tools Owned</h4>
-                              <div className="flex gap-2 flex-wrap">
-                                {wp.tools_owned.map((t: string) => (
-                                  <span key={t} className="text-xs bg-white/5 border border-white/10 rounded px-2 py-1 text-white/60">{t}</span>
-                                ))}
+                                <ExternalLink className="w-3.5 h-3.5 text-white/15 group-hover:text-[#E23232] ml-2 transition-colors" />
+                              </button>
+                            ) : (
+                              <div className="flex items-center gap-3 glass rounded-xl px-5 py-4 border-l-2 border-l-red-500/40">
+                                <div className="w-11 h-11 rounded-xl bg-red-500/10 flex items-center justify-center">
+                                  <Shield className="w-5 h-5 text-red-400" />
+                                </div>
+                                <div>
+                                  <p className="text-white text-sm font-medium">Government ID</p>
+                                  <p className="text-red-400 text-[10px] uppercase tracking-wider">Not uploaded</p>
+                                </div>
                               </div>
-                            </div>
-                          )}
-                          {wp.vehicle_make && (
-                            <div className="mt-3 space-y-2">
-                              <h4 className="text-white/50 text-[10px] font-mono uppercase tracking-widest">Vehicle</h4>
-                              <p className="text-white/70 text-sm">{wp.vehicle_year} {wp.vehicle_make} {wp.vehicle_model} · {wp.vehicle_plate}</p>
-                            </div>
-                          )}
+                            )}
+
+                            {appData.insurancePath ? (
+                              <button
+                                onClick={() => setDocPreview({
+                                  url: appData.insuranceUrl || '',
+                                  title: 'Insurance Certificate',
+                                })}
+                                className="flex items-center gap-3 glass-card rounded-xl px-5 py-4 hover:border-[#E23232]/40 transition-all duration-300 group"
+                              >
+                                <div className="w-11 h-11 rounded-xl bg-purple-500/10 flex items-center justify-center">
+                                  <FileText className="w-5 h-5 text-purple-400" />
+                                </div>
+                                <div className="text-left">
+                                  <p className="text-white text-sm font-medium">Insurance Certificate</p>
+                                  <p className="text-green-400 text-[10px] uppercase tracking-wider">Uploaded</p>
+                                </div>
+                                <ExternalLink className="w-3.5 h-3.5 text-white/15 group-hover:text-[#E23232] ml-2 transition-colors" />
+                              </button>
+                            ) : (
+                              <div className="flex items-center gap-3 glass rounded-xl px-5 py-4 opacity-40">
+                                <div className="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center">
+                                  <FileText className="w-5 h-5 text-white/30" />
+                                </div>
+                                <div>
+                                  <p className="text-white text-sm font-medium">Insurance Certificate</p>
+                                  <p className="text-white/30 text-[10px] uppercase tracking-wider">Not provided</p>
+                                </div>
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      )}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+                      </div>
+                    ) : (
+                      /* Legacy plain-text bio fallback */
+                      <div className="p-6">
+                        {bioText ? (
+                          <div className="glass rounded-xl p-4 space-y-2">
+                            <h4 className="text-white/40 text-[10px] font-mono uppercase tracking-widest">Bio</h4>
+                            <p className="text-white/60 text-sm leading-relaxed">{bioText}</p>
+                          </div>
+                        ) : (
+                          <p className="text-white/20 text-sm">No application details available</p>
+                        )}
+                        {wp.tools_owned && wp.tools_owned.length > 0 && (
+                          <div className="mt-4 glass rounded-xl p-4 space-y-2">
+                            <h4 className="text-white/40 text-[10px] font-mono uppercase tracking-widest">Tools Owned</h4>
+                            <div className="flex gap-2 flex-wrap">
+                              {wp.tools_owned.map((t: string) => (
+                                <span key={t} className="text-xs glass rounded-full px-3 py-1 text-white/50">{t}</span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        {wp.vehicle_make && (
+                          <div className="mt-4 glass rounded-xl p-4 space-y-2">
+                            <h4 className="text-white/40 text-[10px] font-mono uppercase tracking-widest">Vehicle</h4>
+                            <p className="text-white/60 text-sm">{wp.vehicle_year} {wp.vehicle_make} {wp.vehicle_model} · {wp.vehicle_plate}</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             );
           })}
         </div>
@@ -401,27 +436,29 @@ export default function AdminWashersPage() {
 
       {/* Query Dialog */}
       <Dialog open={queryDialogOpen} onOpenChange={setQueryDialogOpen}>
-        <DialogContent className="bg-[#0a0a0a] border-white/10 text-white">
+        <DialogContent className="glass-strong border-white/[0.08] text-white rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Mail className="w-5 h-5 text-blue-400" />
+            <DialogTitle className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                <Mail className="w-4 h-4 text-blue-400" />
+              </div>
               Send Query to Washer
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <p className="text-white/50 text-sm">This message will be sent to the washer via email.</p>
+            <p className="text-white/40 text-sm">This message will be sent to the washer via email.</p>
             <textarea
               value={queryMessage}
               onChange={(e) => setQueryMessage(e.target.value)}
               placeholder="e.g., Please provide a clearer photo of your government ID..."
               rows={4}
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-blue-500/50 resize-none"
+              className="w-full glass rounded-xl px-4 py-3 text-white text-sm placeholder:text-white/20 focus:outline-none focus:ring-1 focus:ring-blue-500/50 resize-none border border-white/[0.06]"
             />
             <div className="flex gap-3 justify-end">
-              <Button variant="outline" onClick={() => setQueryDialogOpen(false)} className="border-white/10 text-white/60">
+              <Button variant="outline" onClick={() => setQueryDialogOpen(false)} className="border-white/[0.08] text-white/50 rounded-xl hover:bg-white/[0.03]">
                 Cancel
               </Button>
-              <Button onClick={submitQuery} className="bg-blue-600 hover:bg-blue-700 text-white">
+              <Button onClick={submitQuery} className="bg-blue-600 hover:bg-blue-500 text-white rounded-xl shadow-[0_0_20px_rgba(59,130,246,0.2)]">
                 Send Query
               </Button>
             </div>
@@ -431,22 +468,24 @@ export default function AdminWashersPage() {
 
       {/* Document Preview Dialog */}
       <Dialog open={!!docPreview} onOpenChange={() => setDocPreview(null)}>
-        <DialogContent className="bg-[#0a0a0a] border-white/10 text-white max-w-3xl">
+        <DialogContent className="glass-strong border-white/[0.08] text-white max-w-3xl rounded-2xl">
           <DialogHeader>
             <DialogTitle>{docPreview?.title}</DialogTitle>
           </DialogHeader>
           {docPreview?.url ? (
             <div className="space-y-3">
               {docPreview.url.match(/\.pdf/) ? (
-                <div className="text-center py-8">
-                  <FileText className="w-12 h-12 text-white/30 mx-auto mb-3" />
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 rounded-2xl bg-white/[0.03] flex items-center justify-center mx-auto mb-4">
+                    <FileText className="w-8 h-8 text-white/20" />
+                  </div>
                   <a
                     href={docPreview.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[#E23232] hover:underline text-sm inline-flex items-center gap-1"
+                    className="text-[#E23232] hover:text-[#E23232]/80 text-sm inline-flex items-center gap-1.5 transition-colors"
                   >
-                    Open PDF in new tab <ExternalLink className="w-3 h-3" />
+                    Open PDF in new tab <ExternalLink className="w-3.5 h-3.5" />
                   </a>
                 </div>
               ) : (
@@ -454,12 +493,12 @@ export default function AdminWashersPage() {
                 <img
                   src={docPreview.url}
                   alt={docPreview.title}
-                  className="w-full rounded-lg border border-white/10 max-h-[70vh] object-contain bg-black"
+                  className="w-full rounded-xl border border-white/[0.06] max-h-[70vh] object-contain bg-black"
                 />
               )}
             </div>
           ) : (
-            <p className="text-white/30 text-center py-8">Document not available. The storage bucket may not be configured.</p>
+            <p className="text-white/20 text-center py-12">Document not available. The storage bucket may not be configured.</p>
           )}
         </DialogContent>
       </Dialog>
@@ -469,9 +508,9 @@ export default function AdminWashersPage() {
 
 function DetailRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex justify-between items-center">
-      <span className="text-white/40 text-xs">{label}</span>
-      <span className="text-white/80 text-sm text-right">{value || '—'}</span>
+    <div className="flex justify-between items-center py-1">
+      <span className="text-white/25 text-xs">{label}</span>
+      <span className="text-white/70 text-sm text-right">{value || '--'}</span>
     </div>
   );
 }

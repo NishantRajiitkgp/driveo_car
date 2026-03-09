@@ -96,6 +96,12 @@ const planIcons: Record<string, React.ReactNode> = {
   detailing: <Crown className="w-6 h-6" />,
 };
 
+const planAccentGradients: Record<string, string> = {
+  regular: 'linear-gradient(135deg, #E23232 0%, #ff6b3d 100%)',
+  interior_exterior: 'linear-gradient(135deg, #E23232 0%, #c026d3 100%)',
+  detailing: 'linear-gradient(135deg, #f59e0b 0%, #E23232 100%)',
+};
+
 export default function MembershipPage() {
   const [subscription, setSubscription] = useState<SubscriptionData | null>(
     null
@@ -182,164 +188,201 @@ export default function MembershipPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#050505] text-white flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-[#E23232]" />
+      <div className="min-h-screen page-bg text-white">
+        <div className="max-w-lg mx-auto px-4 py-8 space-y-6">
+          {/* Header shimmer */}
+          <div className="space-y-2">
+            <div className="h-8 w-48 shimmer rounded-lg" />
+            <div className="h-4 w-64 shimmer rounded-md" />
+          </div>
+          {/* Card shimmer */}
+          <div className="h-52 w-full shimmer rounded-2xl" />
+          <div className="h-6 w-40 shimmer rounded-lg" />
+          <div className="h-72 w-full shimmer rounded-2xl" />
+          <div className="h-72 w-full shimmer rounded-2xl" />
+          <div className="h-72 w-full shimmer rounded-2xl" />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen page-bg text-white">
       <div className="max-w-lg mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-2">Membership</h1>
-        <p className="text-white/50 text-sm mb-8">
-          8 washes per month, delivered to your door.
-        </p>
+        {/* Page Header */}
+        <div className="animate-fade-in-up mb-8">
+          <h1 className="text-3xl font-bold tracking-tight gradient-text mb-1">
+            Membership
+          </h1>
+          <p className="text-white/40 text-sm">
+            8 washes per month, delivered to your door.
+          </p>
+        </div>
 
         {/* Active Subscription Section */}
         {subscription && (
-          <Card className="bg-[#0a0a0a] border-[#E23232]/30 mb-8">
-            <CardContent className="p-5">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-3 rounded-xl bg-[#E23232]/20 text-[#E23232]">
-                    {planIcons[subscription.plan.wash_plan] || (
-                      <Sparkles className="w-6 h-6" />
+          <div className="animate-fade-in-up mb-10" style={{ animationDelay: '60ms' }}>
+            <Card className="gradient-border rounded-2xl overflow-hidden animate-glow-pulse">
+              <CardContent className="p-6 relative z-10">
+                <div className="flex items-center justify-between mb-5">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3.5 rounded-2xl bg-gradient-to-br from-[#E23232]/25 to-[#E23232]/10 text-[#E23232] shadow-lg shadow-[#E23232]/10">
+                      {planIcons[subscription.plan.wash_plan] || (
+                        <Sparkles className="w-6 h-6" />
+                      )}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-white text-lg">
+                        {subscription.plan.name}
+                      </p>
+                      <div className="flex items-baseline gap-0.5">
+                        <span className="text-2xl font-bold text-white">
+                          ${(subscription.plan.monthly_price / 100).toFixed(0)}
+                        </span>
+                        <span className="text-sm text-white/30">/month</span>
+                      </div>
+                    </div>
+                  </div>
+                  <Badge
+                    className={
+                      subscription.cancelAtPeriodEnd
+                        ? 'bg-yellow-500/15 text-yellow-400 border border-yellow-500/20 backdrop-blur-sm'
+                        : 'bg-green-500/15 text-green-400 border border-green-500/20 backdrop-blur-sm'
+                    }
+                  >
+                    {subscription.cancelAtPeriodEnd ? 'Cancelling' : 'Active'}
+                  </Badge>
+                </div>
+
+                {/* Usage Progress Bar */}
+                {usage && (
+                  <div className="glass rounded-xl p-4 mb-4">
+                    <div className="flex items-center justify-between text-sm mb-3">
+                      <span className="text-white/50">Washes used</span>
+                      <span className="text-white font-semibold">
+                        {usage.used} of {usage.allocated}
+                      </span>
+                    </div>
+                    <div className="h-3 bg-white/[0.06] rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all duration-700 ease-out"
+                        style={{
+                          width: `${Math.min(
+                            (usage.used / usage.allocated) * 100,
+                            100
+                          )}%`,
+                          background: 'linear-gradient(90deg, #E23232 0%, #ff6b3d 100%)',
+                          boxShadow: '0 0 12px rgba(226, 50, 50, 0.4)',
+                        }}
+                      />
+                    </div>
+                    <p className="text-xs text-white/30 mt-2.5">
+                      {usage.allocated - usage.used} washes remaining this period
+                    </p>
+                  </div>
+                )}
+
+                {/* Next Billing Date */}
+                {subscription.currentPeriodEnd && (
+                  <p className="text-xs text-white/40">
+                    {subscription.cancelAtPeriodEnd
+                      ? 'Access ends '
+                      : 'Next billing date: '}
+                    {new Date(subscription.currentPeriodEnd).toLocaleDateString(
+                      'en-CA',
+                      { month: 'long', day: 'numeric', year: 'numeric' }
                     )}
-                  </div>
-                  <div>
-                    <p className="font-semibold text-white">
-                      {subscription.plan.name}
-                    </p>
-                    <p className="text-sm text-white/40">
-                      $
-                      {(subscription.plan.monthly_price / 100).toFixed(0)}
-                      /month
-                    </p>
-                  </div>
-                </div>
-                <Badge
-                  className={
-                    subscription.cancelAtPeriodEnd
-                      ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-                      : 'bg-green-500/20 text-green-400 border-green-500/30'
-                  }
-                >
-                  {subscription.cancelAtPeriodEnd ? 'Cancelling' : 'Active'}
-                </Badge>
-              </div>
-
-              {/* Usage Progress Bar */}
-              {usage && (
-                <div className="mb-4">
-                  <div className="flex items-center justify-between text-sm mb-2">
-                    <span className="text-white/50">Washes used</span>
-                    <span className="text-white font-medium">
-                      {usage.used} of {usage.allocated}
-                    </span>
-                  </div>
-                  <div className="h-2.5 bg-white/10 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-[#E23232] rounded-full transition-all duration-500"
-                      style={{
-                        width: `${Math.min(
-                          (usage.used / usage.allocated) * 100,
-                          100
-                        )}%`,
-                      }}
-                    />
-                  </div>
-                  <p className="text-xs text-white/30 mt-2">
-                    {usage.allocated - usage.used} washes remaining this period
                   </p>
-                </div>
-              )}
+                )}
 
-              {/* Next Billing Date */}
-              {subscription.currentPeriodEnd && (
-                <p className="text-xs text-white/40">
-                  {subscription.cancelAtPeriodEnd
-                    ? 'Access ends '
-                    : 'Next billing date: '}
-                  {new Date(subscription.currentPeriodEnd).toLocaleDateString(
-                    'en-CA',
-                    { month: 'long', day: 'numeric', year: 'numeric' }
-                  )}
-                </p>
-              )}
-
-              {/* Cancel Button */}
-              {!subscription.cancelAtPeriodEnd && (
-                <Button
-                  variant="outline"
-                  className="w-full mt-4 border-white/10 text-white/60 hover:text-white hover:border-white/20 bg-transparent"
-                  onClick={handleCancel}
-                  disabled={cancelling}
-                >
-                  {cancelling ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Cancelling...
-                    </>
-                  ) : (
-                    'Cancel Subscription'
-                  )}
-                </Button>
-              )}
-            </CardContent>
-          </Card>
+                {/* Cancel Button */}
+                {!subscription.cancelAtPeriodEnd && (
+                  <Button
+                    variant="outline"
+                    className="w-full mt-5 border-white/[0.06] text-white/50 hover:text-[#E23232] hover:border-[#E23232]/20 hover:bg-[#E23232]/5 bg-transparent rounded-xl h-11 transition-all duration-200"
+                    onClick={handleCancel}
+                    disabled={cancelling}
+                  >
+                    {cancelling ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Cancelling...
+                      </>
+                    ) : (
+                      'Cancel Subscription'
+                    )}
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         )}
 
         {/* Plan Cards */}
         {!subscription && (
           <>
-            <h2 className="text-lg font-semibold mb-4">Choose Your Plan</h2>
-            <div className="space-y-4">
+            <h2
+              className="text-lg font-semibold mb-5 animate-fade-in-up"
+              style={{ animationDelay: '120ms' }}
+            >
+              Choose Your Plan
+            </h2>
+            <div className="space-y-5 stagger-children">
               {PLAN_DISPLAY.map((plan) => (
                 <Card
                   key={plan.slug}
-                  className="bg-[#0a0a0a] border-white/10 hover:border-white/20 transition-colors"
+                  className="glass-card rounded-2xl overflow-hidden animate-fade-in-up"
                 >
-                  <CardContent className="p-5">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2.5 rounded-xl bg-white/5 text-white/40">
+                  {/* Accent gradient bar at top */}
+                  <div
+                    className="h-1 w-full"
+                    style={{ background: planAccentGradients[plan.washPlan] || planAccentGradients.regular }}
+                  />
+                  <CardContent className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center gap-4">
+                        <div className="p-3 rounded-2xl bg-white/[0.04] text-white/50">
                           {planIcons[plan.washPlan]}
                         </div>
                         <div>
-                          <p className="font-semibold text-white">
+                          <p className="font-semibold text-white text-base">
                             {plan.name}
                           </p>
-                          <div className="flex items-baseline gap-1 mt-0.5">
-                            <span className="text-2xl font-bold text-white">
+                          <div className="flex items-baseline gap-0.5 mt-1">
+                            <span className="text-3xl font-bold text-white tracking-tight">
                               ${plan.monthlyTotal}
                             </span>
-                            <span className="text-sm text-white/40">/mo</span>
+                            <span className="text-sm text-white/30 ml-0.5">/mo</span>
                           </div>
                         </div>
                       </div>
                       <Badge
                         variant="outline"
-                        className="border-white/10 text-white/50 text-xs"
+                        className="border-white/[0.08] text-white/40 text-xs backdrop-blur-sm"
                       >
                         ${plan.pricePerWash}/wash
                       </Badge>
                     </div>
 
-                    <ul className="space-y-2 mb-4">
+                    <ul className="space-y-2.5 mb-5">
                       {plan.features.map((feature) => (
                         <li
                           key={feature}
-                          className="flex items-center gap-2 text-sm text-white/60"
+                          className="flex items-center gap-2.5 text-sm text-white/50"
                         >
-                          <Check className="w-3.5 h-3.5 text-[#E23232] shrink-0" />
+                          <div className="flex items-center justify-center w-5 h-5 rounded-full bg-[#E23232]/10">
+                            <Check className="w-3 h-3 text-[#E23232]" />
+                          </div>
                           {feature}
                         </li>
                       ))}
                     </ul>
 
                     <Button
-                      className="w-full bg-[#E23232] hover:bg-[#E23232]/80 text-white"
+                      className="w-full bg-[#E23232] hover:bg-[#E23232]/90 text-white font-medium rounded-xl h-11 transition-all duration-200"
+                      style={{
+                        boxShadow: '0 4px 24px rgba(226, 50, 50, 0.25)',
+                      }}
                       onClick={() => handleSubscribe(plan.slug)}
                       disabled={subscribing !== null}
                     >

@@ -73,51 +73,70 @@ export default function NotificationsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
-      <div className="max-w-lg mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Notifications</h1>
+    <div className="min-h-screen text-white">
+      <div className="max-w-lg mx-auto px-4 py-8 animate-fade-in-up">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-2xl font-display text-white tracking-tight">Notifications</h1>
+            <p className="text-white/30 text-sm mt-1">Stay updated on your washes</p>
+          </div>
           {notifications.some((n) => !n.is_read) && (
-            <span className="text-xs text-white/40">
-              {notifications.filter((n) => !n.is_read).length} unread
-            </span>
+            <div className="glass rounded-full px-3 py-1.5 border border-[#E23232]/20">
+              <span className="text-xs text-[#E23232] font-semibold">
+                {notifications.filter((n) => !n.is_read).length} unread
+              </span>
+            </div>
           )}
         </div>
 
         {loading ? (
           <div className="space-y-3">
             {[...Array(4)].map((_, i) => (
-              <Skeleton key={i} className="h-20 w-full bg-white/5 rounded-xl" />
+              <Skeleton key={i} className="h-24 w-full bg-white/5 rounded-2xl" />
             ))}
           </div>
         ) : notifications.length === 0 ? (
-          <Card className="bg-[#0a0a0a] border-white/10">
-            <CardContent className="py-16 text-center">
-              <BellOff className="w-10 h-10 text-white/20 mx-auto mb-3" />
-              <p className="text-white/50">No notifications</p>
-            </CardContent>
-          </Card>
+          <div className="relative mt-12">
+            {/* Ambient glow */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="w-56 h-56 bg-[#E23232]/5 rounded-full blur-[100px]" />
+            </div>
+            <div className="glass-card rounded-2xl relative">
+              <div className="py-20 text-center">
+                <div className="relative w-16 h-16 mx-auto mb-5">
+                  <div className="absolute inset-0 rounded-2xl bg-white/[0.03] border border-white/[0.06]" />
+                  <div className="relative w-full h-full flex items-center justify-center">
+                    <BellOff className="w-7 h-7 text-white/15" />
+                  </div>
+                </div>
+                <p className="text-white/40 text-sm font-medium">No notifications yet</p>
+                <p className="text-white/20 text-xs mt-1.5">We will notify you about your washes</p>
+              </div>
+            </div>
+          </div>
         ) : (
-          <div className="space-y-2">
+          <div className="stagger-children space-y-2.5">
             {notifications.map((notification) => (
-              <Card
+              <div
                 key={notification.id}
                 onClick={() => {
                   if (!notification.is_read) markAsRead(notification.id);
                 }}
-                className={`bg-[#0a0a0a] border-white/10 cursor-pointer transition-colors ${
+                className={`glass-card rounded-2xl cursor-pointer transition-all duration-300 hover:-translate-y-0.5 ${
                   !notification.is_read
-                    ? 'border-l-2 border-l-[#E23232]'
-                    : 'opacity-60'
+                    ? 'border-l-2 border-l-[#E23232] shadow-lg shadow-[#E23232]/5'
+                    : 'opacity-50 hover:opacity-70'
                 }`}
               >
-                <CardContent className="p-4">
-                  <div className="flex items-start gap-3">
+                <div className="p-4">
+                  <div className="flex items-start gap-3.5">
+                    {/* Icon */}
                     <div
-                      className={`mt-0.5 p-2 rounded-full shrink-0 ${
+                      className={`mt-0.5 w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
                         !notification.is_read
-                          ? 'bg-[#E23232]/20 text-[#E23232]'
-                          : 'bg-white/5 text-white/30'
+                          ? 'bg-[#E23232]/15 text-[#E23232] shadow-sm shadow-[#E23232]/10'
+                          : 'bg-white/[0.03] text-white/25'
                       }`}
                     >
                       {notification.is_read ? (
@@ -126,26 +145,32 @@ export default function NotificationsPage() {
                         <Bell className="w-4 h-4" />
                       )}
                     </div>
+
+                    {/* Content */}
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-start justify-between gap-3">
                         <p
-                          className={`text-sm font-medium ${
-                            !notification.is_read ? 'text-white' : 'text-white/60'
+                          className={`text-sm font-medium leading-snug ${
+                            !notification.is_read ? 'text-white' : 'text-white/50'
                           }`}
                         >
                           {notification.title}
                         </p>
-                        <span className="text-xs text-white/30 shrink-0">
+                        <span className={`text-[11px] shrink-0 mt-0.5 font-medium ${
+                          !notification.is_read ? 'text-white/40' : 'text-white/20'
+                        }`}>
                           {formatTime(notification.created_at)}
                         </span>
                       </div>
-                      <p className="text-sm text-white/40 mt-1 line-clamp-2">
+                      <p className={`text-sm mt-1.5 line-clamp-2 leading-relaxed ${
+                        !notification.is_read ? 'text-white/40' : 'text-white/25'
+                      }`}>
                         {notification.body}
                       </p>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             ))}
           </div>
         )}

@@ -65,8 +65,8 @@ export default function WasherProfilePage() {
     return (
       <div className="min-h-screen bg-[#050505] text-white">
         <div className="max-w-lg mx-auto px-4 py-8 space-y-4">
-          <Skeleton className="h-8 w-48 bg-white/5" />
-          <Skeleton className="h-64 w-full bg-white/5 rounded-xl" />
+          <div className="shimmer h-8 w-48 rounded-lg bg-white/5" />
+          <div className="shimmer h-72 w-full rounded-2xl bg-white/5" />
         </div>
       </div>
     );
@@ -76,30 +76,41 @@ export default function WasherProfilePage() {
 
   return (
     <div className="min-h-screen bg-[#050505] text-white">
-      <div className="max-w-lg mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-6">Washer Profile</h1>
+      <div className="max-w-lg mx-auto px-4 py-8 animate-fade-in-up">
+        <h1 className="text-2xl font-display text-white tracking-tight mb-6">Washer Profile</h1>
 
         {/* Header Card */}
-        <Card className="bg-[#0a0a0a] border-white/10 mb-4">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-16 h-16 rounded-full bg-[#E23232]/20 flex items-center justify-center">
-                <User className="w-8 h-8 text-[#E23232]" />
+        <div className="glass-card rounded-2xl p-6 mb-5 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#E23232]/5 via-transparent to-transparent pointer-events-none" />
+          <div className="relative">
+            <div className="flex items-center gap-5 mb-6">
+              {/* Avatar with gradient ring */}
+              <div className="relative">
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#E23232] to-[#E23232]/40 p-[2px]">
+                  <div className="w-full h-full rounded-full bg-[#0a0a0a] flex items-center justify-center">
+                    <User className="w-9 h-9 text-[#E23232]/60" />
+                  </div>
+                </div>
+                {wp?.is_online && (
+                  <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full bg-[#0a0a0a] flex items-center justify-center">
+                    <div className="w-3 h-3 rounded-full bg-green-400 animate-glow-pulse" />
+                  </div>
+                )}
               </div>
               <div className="flex-1">
-                <p className="text-lg font-semibold">{profile?.full_name}</p>
-                <div className="flex items-center gap-3 mt-1">
+                <p className="text-lg font-display text-white">{profile?.full_name}</p>
+                <div className="flex items-center gap-3 mt-2">
                   {wp && (
                     <Badge
                       variant="outline"
-                      className={statusColor[wp.status] || 'border-white/20'}
+                      className={`${statusColor[wp.status] || 'border-white/20'} rounded-full px-2.5 py-0.5 text-[10px] uppercase tracking-wider`}
                     >
                       {wp.status}
                     </Badge>
                   )}
                   {wp?.is_online && (
-                    <span className="flex items-center gap-1 text-xs text-green-400">
-                      <span className="w-2 h-2 rounded-full bg-green-400" />
+                    <span className="flex items-center gap-1.5 text-xs text-green-400 font-medium">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
                       Online
                     </span>
                   )}
@@ -107,109 +118,89 @@ export default function WasherProfilePage() {
               </div>
             </div>
 
-            {/* Stats */}
+            {/* Stats Grid */}
             {wp && (
               <div className="grid grid-cols-2 gap-3">
-                <div className="bg-white/5 rounded-lg p-3 text-center">
-                  <div className="flex items-center justify-center gap-1 text-[#E23232] mb-1">
-                    <Star className="w-4 h-4 fill-current" />
-                    <span className="font-bold text-lg">
+                <div className="glass stat-card rounded-xl p-4 text-center border border-white/[0.06]">
+                  <div className="flex items-center justify-center gap-1.5 mb-1.5">
+                    <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                    <span className="gradient-text font-bold text-xl">
                       {Number(wp.rating_avg).toFixed(1)}
                     </span>
                   </div>
-                  <p className="text-xs text-white/40">Rating</p>
+                  <p className="text-[10px] text-white/30 uppercase tracking-wider">Rating</p>
                 </div>
-                <div className="bg-white/5 rounded-lg p-3 text-center">
-                  <div className="flex items-center justify-center gap-1 text-white mb-1">
-                    <Briefcase className="w-4 h-4" />
-                    <span className="font-bold text-lg">{wp.jobs_completed}</span>
+                <div className="glass stat-card rounded-xl p-4 text-center border border-white/[0.06]">
+                  <div className="flex items-center justify-center gap-1.5 mb-1.5">
+                    <Briefcase className="w-4 h-4 text-white/40" />
+                    <span className="gradient-text font-bold text-xl">{wp.jobs_completed}</span>
                   </div>
-                  <p className="text-xs text-white/40">Jobs Done</p>
+                  <p className="text-[10px] text-white/30 uppercase tracking-wider">Jobs Done</p>
                 </div>
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Bio */}
         {wp?.bio && (
-          <Card className="bg-[#0a0a0a] border-white/10 mb-4">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-white/50 uppercase tracking-wide">
-                Bio
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-white/70">{wp.bio}</p>
-            </CardContent>
-          </Card>
+          <div className="glass-card rounded-2xl p-5 mb-4">
+            <p className="text-[10px] uppercase tracking-widest text-white/30 font-medium mb-3">Bio</p>
+            <p className="text-sm text-white/60 leading-relaxed">{wp.bio}</p>
+          </div>
         )}
 
         {/* Service Zones */}
         {wp?.service_zones && wp.service_zones.length > 0 && (
-          <Card className="bg-[#0a0a0a] border-white/10 mb-4">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-white/50 uppercase tracking-wide flex items-center gap-2">
-                <MapPin className="w-4 h-4" />
-                Service Zones
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-2">
-                {wp.service_zones.map((zone) => (
-                  <Badge
-                    key={zone}
-                    variant="outline"
-                    className="border-white/10 text-white/60"
-                  >
-                    {zone}
-                  </Badge>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          <div className="glass-card rounded-2xl p-5 mb-4">
+            <div className="flex items-center gap-2 mb-3">
+              <MapPin className="w-3.5 h-3.5 text-white/30" />
+              <p className="text-[10px] uppercase tracking-widest text-white/30 font-medium">Service Zones</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {wp.service_zones.map((zone) => (
+                <span
+                  key={zone}
+                  className="glass px-3 py-1.5 rounded-full text-xs text-white/50 border border-white/[0.08] font-medium"
+                >
+                  {zone}
+                </span>
+              ))}
+            </div>
+          </div>
         )}
 
         {/* Vehicle */}
         {wp?.vehicle_make && (
-          <Card className="bg-[#0a0a0a] border-white/10 mb-4">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-white/50 uppercase tracking-wide flex items-center gap-2">
-                <Car className="w-4 h-4" />
-                Vehicle
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-white/70">
-                {wp.vehicle_year} {wp.vehicle_make} {wp.vehicle_model}
-              </p>
-            </CardContent>
-          </Card>
+          <div className="glass-card rounded-2xl p-5 mb-4">
+            <div className="flex items-center gap-2 mb-3">
+              <Car className="w-3.5 h-3.5 text-white/30" />
+              <p className="text-[10px] uppercase tracking-widest text-white/30 font-medium">Vehicle</p>
+            </div>
+            <p className="text-white/60 text-sm font-medium">
+              {wp.vehicle_year} {wp.vehicle_make} {wp.vehicle_model}
+            </p>
+          </div>
         )}
 
         {/* Tools */}
         {wp?.tools_owned && wp.tools_owned.length > 0 && (
-          <Card className="bg-[#0a0a0a] border-white/10">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-white/50 uppercase tracking-wide flex items-center gap-2">
-                <Wrench className="w-4 h-4" />
-                Tools Owned
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-2">
-                {wp.tools_owned.map((tool) => (
-                  <Badge
-                    key={tool}
-                    variant="outline"
-                    className="border-[#E23232]/30 text-[#E23232]/80"
-                  >
-                    {tool}
-                  </Badge>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          <div className="glass-card rounded-2xl p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <Wrench className="w-3.5 h-3.5 text-white/30" />
+              <p className="text-[10px] uppercase tracking-widest text-white/30 font-medium">Tools Owned</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {wp.tools_owned.map((tool) => (
+                <span
+                  key={tool}
+                  className="px-3 py-1.5 rounded-full text-xs font-medium bg-[#E23232]/10 text-[#E23232]/70 border border-[#E23232]/20"
+                >
+                  {tool}
+                </span>
+              ))}
+            </div>
+          </div>
         )}
       </div>
     </div>

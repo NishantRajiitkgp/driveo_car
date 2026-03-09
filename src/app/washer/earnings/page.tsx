@@ -78,104 +78,113 @@ export default function WasherEarningsPage() {
 
   return (
     <div className="min-h-screen bg-[#050505] text-white">
-      <div className="max-w-lg mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-6">Earnings</h1>
+      <div className="max-w-lg mx-auto px-4 py-8 animate-fade-in-up">
+        <h1 className="text-2xl font-display text-white tracking-tight mb-6">Earnings</h1>
 
         {loading ? (
           <div className="space-y-4">
             <div className="grid grid-cols-3 gap-3">
               {[...Array(3)].map((_, i) => (
-                <Skeleton key={i} className="h-24 bg-white/5 rounded-xl" />
+                <div key={i} className="shimmer h-28 bg-white/5 rounded-2xl" />
               ))}
             </div>
-            <Skeleton className="h-64 w-full bg-white/5 rounded-xl" />
+            <div className="shimmer h-64 w-full bg-white/5 rounded-2xl" />
           </div>
         ) : (
           <>
             {/* Summary Cards */}
-            <div className="grid grid-cols-3 gap-3 mb-8">
-              <Card className="bg-[#0a0a0a] border-white/10">
-                <CardContent className="p-4 text-center">
-                  <Clock className="w-4 h-4 text-[#E23232] mx-auto mb-1" />
-                  <p className="text-xs text-white/40 mb-1">Today</p>
-                  <p className="text-lg font-bold text-white">
+            <div className="grid grid-cols-3 gap-3 mb-8 stagger-children">
+              <div className="glass-card stat-card rounded-2xl p-4 text-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none" />
+                <div className="relative">
+                  <div className="w-8 h-8 rounded-full bg-white/[0.04] flex items-center justify-center mx-auto mb-2">
+                    <Clock className="w-4 h-4 text-[#E23232]/60" />
+                  </div>
+                  <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1.5">Today</p>
+                  <p className="gradient-text font-bold text-lg">
                     {formatCents(todayEarnings)}
                   </p>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
 
-              <Card className="bg-[#0a0a0a] border-[#E23232]/30">
-                <CardContent className="p-4 text-center">
-                  <Calendar className="w-4 h-4 text-[#E23232] mx-auto mb-1" />
-                  <p className="text-xs text-white/40 mb-1">This Month</p>
-                  <p className="text-lg font-bold text-[#E23232]">
+              <div className="glass-card stat-card rounded-2xl p-4 text-center gradient-border relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-[#E23232]/5 to-transparent pointer-events-none" />
+                <div className="relative">
+                  <div className="w-8 h-8 rounded-full bg-[#E23232]/10 flex items-center justify-center mx-auto mb-2">
+                    <Calendar className="w-4 h-4 text-[#E23232]/60" />
+                  </div>
+                  <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1.5">This Month</p>
+                  <p className="gradient-text font-bold text-lg">
                     {formatCents(monthEarnings)}
                   </p>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
 
-              <Card className="bg-[#0a0a0a] border-white/10">
-                <CardContent className="p-4 text-center">
-                  <TrendingUp className="w-4 h-4 text-[#E23232] mx-auto mb-1" />
-                  <p className="text-xs text-white/40 mb-1">All Time</p>
-                  <p className="text-lg font-bold text-white">
+              <div className="glass-card stat-card rounded-2xl p-4 text-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none" />
+                <div className="relative">
+                  <div className="w-8 h-8 rounded-full bg-white/[0.04] flex items-center justify-center mx-auto mb-2">
+                    <TrendingUp className="w-4 h-4 text-[#E23232]/60" />
+                  </div>
+                  <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1.5">All Time</p>
+                  <p className="gradient-text font-bold text-lg">
                     {formatCents(allTimeEarnings)}
                   </p>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </div>
 
             {/* Job History */}
-            <h2 className="text-lg font-semibold mb-4">Job History</h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xs font-semibold text-white/40 uppercase tracking-widest">Job History</h2>
+              <span className="text-[10px] text-white/20">{jobs.length} jobs</span>
+            </div>
 
             {jobs.length === 0 ? (
-              <Card className="bg-[#0a0a0a] border-white/10">
-                <CardContent className="py-12 text-center">
-                  <p className="text-white/40">No completed jobs yet</p>
-                </CardContent>
-              </Card>
+              <div className="glass-card rounded-2xl p-12 text-center relative overflow-hidden">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-[#E23232]/5 blur-3xl pointer-events-none" />
+                <p className="text-white/30 text-sm relative">No completed jobs yet</p>
+              </div>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-2.5 stagger-children">
                 {jobs.map((job) => (
-                  <Card
+                  <div
                     key={job.id}
-                    className="bg-[#0a0a0a] border-white/10"
+                    className="glass-card rounded-xl p-4 hover:bg-white/[0.04] transition-all duration-300"
                   >
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="text-sm font-medium text-white">
-                              {planLabel[job.wash_plan] || job.wash_plan}
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2.5 mb-1.5">
+                          <span className="text-sm font-semibold text-white">
+                            {planLabel[job.wash_plan] || job.wash_plan}
+                          </span>
+                          {job.vehicles && (
+                            <span className="text-xs text-white/25">
+                              {job.vehicles.year} {job.vehicles.make}{' '}
+                              {job.vehicles.model}
                             </span>
-                            {job.vehicles && (
-                              <span className="text-xs text-white/30">
-                                {job.vehicles.year} {job.vehicles.make}{' '}
-                                {job.vehicles.model}
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-xs text-white/30">
-                            {job.wash_completed_at
-                              ? new Date(job.wash_completed_at).toLocaleDateString(
-                                  'en-CA',
-                                  {
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: '2-digit',
-                                    minute: '2-digit',
-                                  }
-                                )
-                              : 'Pending'}
-                          </p>
+                          )}
                         </div>
-                        <div className="flex items-center gap-1 text-[#E23232] font-bold">
-                          <DollarSign className="w-4 h-4" />
-                          {(job.washer_payout / 100).toFixed(2)}
-                        </div>
+                        <p className="text-xs text-white/25">
+                          {job.wash_completed_at
+                            ? new Date(job.wash_completed_at).toLocaleDateString(
+                                'en-CA',
+                                {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                }
+                              )
+                            : 'Pending'}
+                        </p>
                       </div>
-                    </CardContent>
-                  </Card>
+                      <div className="flex items-center gap-1 text-green-400 font-bold text-sm">
+                        <DollarSign className="w-4 h-4" />
+                        {(job.washer_payout / 100).toFixed(2)}
+                      </div>
+                    </div>
+                  </div>
                 ))}
               </div>
             )}

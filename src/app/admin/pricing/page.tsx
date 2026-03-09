@@ -102,186 +102,205 @@ export default function AdminPricingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <Settings className="w-6 h-6 text-[#E23232]" />
-            <h1 className="text-2xl font-bold">Pricing Configuration</h1>
+    <div className="space-y-8 md:pt-0 pt-14 animate-fade-in">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[#E23232]/10 flex items-center justify-center">
+            <Settings className="w-5 h-5 text-[#E23232]" />
           </div>
-          <Button
-            onClick={handleSave}
-            disabled={saving}
-            className="bg-[#E23232] hover:bg-[#E23232]/80 text-white"
-          >
-            <Save className="w-4 h-4 mr-2" />
-            {saving ? 'Saving...' : 'Save Changes'}
-          </Button>
+          <div>
+            <h1 className="text-3xl font-display text-white tracking-tight">Pricing</h1>
+            <p className="text-white/30 text-sm mt-0.5">Configure plans, multipliers, and rates</p>
+          </div>
         </div>
-
-        {loading ? (
-          <div className="space-y-4">
-            {[...Array(3)].map((_, i) => (
-              <Skeleton key={i} className="h-32 w-full bg-white/5 rounded-xl" />
-            ))}
-          </div>
-        ) : (
-          <>
-            {/* Base Plan Prices */}
-            <Card className="bg-[#0a0a0a] border-white/10 mb-6">
-              <CardHeader>
-                <CardTitle className="text-lg text-white flex items-center gap-2">
-                  <DollarSign className="w-5 h-5 text-[#E23232]" />
-                  Base Prices (per wash)
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {Object.entries(perWashPrice).map(([plan, cents]) => (
-                    <div
-                      key={plan}
-                      className="bg-white/5 rounded-lg p-4 border border-white/5"
-                    >
-                      <Label className="text-white/50 text-xs uppercase tracking-wide">
-                        {plan === 'interior_exterior'
-                          ? 'Interior & Exterior'
-                          : plan.charAt(0).toUpperCase() + plan.slice(1)}
-                      </Label>
-                      <p className="text-2xl font-bold text-white mt-1">
-                        ${(cents / 100).toFixed(0)}
-                      </p>
-                      <p className="text-xs text-white/30 mt-1">per wash</p>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Monthly Subscription Prices */}
-            <Card className="bg-[#0a0a0a] border-white/10 mb-6">
-              <CardHeader>
-                <CardTitle className="text-lg text-white flex items-center gap-2">
-                  <DollarSign className="w-5 h-5 text-[#E23232]" />
-                  Monthly Subscription Prices
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {plans.map((plan) => (
-                    <div
-                      key={plan.id}
-                      className="flex items-center justify-between bg-white/5 rounded-lg p-4 border border-white/5"
-                    >
-                      <div>
-                        <p className="font-medium text-white">{plan.name}</p>
-                        <p className="text-xs text-white/30">
-                          {plan.washes_per_month} washes/month
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-white/40">$</span>
-                        <Input
-                          type="number"
-                          value={(plan.monthly_price / 100).toFixed(0)}
-                          onChange={(e) =>
-                            updatePlanPrice(
-                              plan.id,
-                              Math.round(parseFloat(e.target.value) * 100) || 0
-                            )
-                          }
-                          className="w-24 bg-white/5 border-white/10 text-white text-right"
-                        />
-                        <span className="text-white/40 text-sm">/mo</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Vehicle Multipliers */}
-            <Card className="bg-[#0a0a0a] border-white/10 mb-6">
-              <CardHeader>
-                <CardTitle className="text-lg text-white flex items-center gap-2">
-                  <Car className="w-5 h-5 text-[#E23232]" />
-                  Vehicle Type Multipliers
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {vehicleMults.map((v) => (
-                    <div
-                      key={v.key}
-                      className="flex items-center justify-between bg-white/5 rounded-lg px-4 py-3 border border-white/5"
-                    >
-                      <span className="text-sm text-white/70">{v.type}</span>
-                      <div className="flex items-center gap-2">
-                        <Input
-                          type="number"
-                          step="0.05"
-                          value={v.multiplier}
-                          onChange={(e) =>
-                            updateVehicleMult(
-                              v.key,
-                              parseFloat(e.target.value) || 1
-                            )
-                          }
-                          className="w-20 bg-white/5 border-white/10 text-white text-right text-sm"
-                        />
-                        <span className="text-white/30 text-sm">x</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Dirt Level Multipliers */}
-            <Card className="bg-[#0a0a0a] border-white/10">
-              <CardHeader>
-                <CardTitle className="text-lg text-white flex items-center gap-2">
-                  <Gauge className="w-5 h-5 text-[#E23232]" />
-                  Dirt Level Multipliers
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {dirtMults.map((d) => (
-                    <div
-                      key={d.level}
-                      className="flex items-center justify-between bg-white/5 rounded-lg px-4 py-3 border border-white/5"
-                    >
-                      <div>
-                        <span className="text-sm text-white/70">
-                          Level {d.level}
-                        </span>
-                        <span className="text-xs text-white/30 ml-2">
-                          ({d.description})
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Input
-                          type="number"
-                          step="0.05"
-                          value={d.multiplier}
-                          onChange={(e) =>
-                            updateDirtMult(
-                              d.level,
-                              parseFloat(e.target.value) || 1
-                            )
-                          }
-                          className="w-20 bg-white/5 border-white/10 text-white text-right text-sm"
-                        />
-                        <span className="text-white/30 text-sm">x</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </>
-        )}
+        <Button
+          onClick={handleSave}
+          disabled={saving}
+          className="bg-[#E23232] hover:bg-[#E23232]/80 text-white rounded-xl shadow-[0_0_25px_rgba(226,50,50,0.25)] hover:shadow-[0_0_35px_rgba(226,50,50,0.35)] disabled:shadow-none transition-all px-6"
+        >
+          <Save className="w-4 h-4 mr-2" />
+          {saving ? 'Saving...' : 'Save Changes'}
+        </Button>
       </div>
+
+      {loading ? (
+        <div className="space-y-4">
+          {[...Array(3)].map((_, i) => (
+            <Skeleton key={i} className="h-40 w-full bg-white/5 rounded-2xl" />
+          ))}
+        </div>
+      ) : (
+        <div className="space-y-6 stagger-children">
+          {/* Base Plan Prices */}
+          <div className="glass-card rounded-2xl overflow-hidden animate-fade-in-up">
+            <div className="p-6 border-b border-white/[0.04]">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-green-500/10 flex items-center justify-center">
+                  <DollarSign className="w-4 h-4 text-green-400" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-display text-white">Base Prices</h2>
+                  <p className="text-white/25 text-xs">Per wash pricing for each plan</p>
+                </div>
+              </div>
+            </div>
+            <div className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {Object.entries(perWashPrice).map(([plan, cents]) => (
+                  <div
+                    key={plan}
+                    className="glass rounded-xl p-5 group hover:bg-white/[0.04] transition-all duration-300"
+                  >
+                    <Label className="text-white/30 text-[10px] uppercase tracking-widest">
+                      {plan === 'interior_exterior'
+                        ? 'Interior & Exterior'
+                        : plan.charAt(0).toUpperCase() + plan.slice(1)}
+                    </Label>
+                    <p className="text-3xl font-bold gradient-text mt-2">
+                      ${(cents / 100).toFixed(0)}
+                    </p>
+                    <p className="text-[10px] text-white/20 mt-2 uppercase tracking-widest">per wash</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Monthly Subscription Prices */}
+          <div className="glass-card rounded-2xl overflow-hidden animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+            <div className="p-6 border-b border-white/[0.04]">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-blue-500/10 flex items-center justify-center">
+                  <DollarSign className="w-4 h-4 text-blue-400" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-display text-white">Monthly Subscriptions</h2>
+                  <p className="text-white/25 text-xs">Recurring plan pricing</p>
+                </div>
+              </div>
+            </div>
+            <div className="p-6 space-y-3">
+              {plans.map((plan) => (
+                <div
+                  key={plan.id}
+                  className="flex items-center justify-between glass rounded-xl p-4 hover:bg-white/[0.04] transition-all duration-300 group"
+                >
+                  <div>
+                    <p className="font-medium text-white text-sm">{plan.name}</p>
+                    <p className="text-[10px] text-white/20 uppercase tracking-widest mt-0.5">
+                      {plan.washes_per_month} washes/month
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-white/25 text-sm">$</span>
+                    <Input
+                      type="number"
+                      value={(plan.monthly_price / 100).toFixed(0)}
+                      onChange={(e) =>
+                        updatePlanPrice(
+                          plan.id,
+                          Math.round(parseFloat(e.target.value) * 100) || 0
+                        )
+                      }
+                      className="premium-input w-24 text-right text-sm rounded-lg"
+                    />
+                    <span className="text-white/20 text-xs font-mono">/mo</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Vehicle Multipliers */}
+          <div className="glass-card rounded-2xl overflow-hidden animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            <div className="p-6 border-b border-white/[0.04]">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center">
+                  <Car className="w-4 h-4 text-purple-400" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-display text-white">Vehicle Multipliers</h2>
+                  <p className="text-white/25 text-xs">Price adjustments by vehicle type</p>
+                </div>
+              </div>
+            </div>
+            <div className="p-6 space-y-3">
+              {vehicleMults.map((v) => (
+                <div
+                  key={v.key}
+                  className="flex items-center justify-between glass rounded-xl px-4 py-3 hover:bg-white/[0.04] transition-all duration-300"
+                >
+                  <span className="text-sm text-white/60">{v.type}</span>
+                  <div className="flex items-center gap-3">
+                    <Input
+                      type="number"
+                      step="0.05"
+                      value={v.multiplier}
+                      onChange={(e) =>
+                        updateVehicleMult(
+                          v.key,
+                          parseFloat(e.target.value) || 1
+                        )
+                      }
+                      className="premium-input w-20 text-right text-sm rounded-lg"
+                    />
+                    <span className="text-white/20 text-xs font-mono w-4">x</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Dirt Level Multipliers */}
+          <div className="glass-card rounded-2xl overflow-hidden animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+            <div className="p-6 border-b border-white/[0.04]">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center">
+                  <Gauge className="w-4 h-4 text-amber-400" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-display text-white">Dirt Multipliers</h2>
+                  <p className="text-white/25 text-xs">Driveo Slide surcharge levels</p>
+                </div>
+              </div>
+            </div>
+            <div className="p-6 space-y-3">
+              {dirtMults.map((d) => (
+                <div
+                  key={d.level}
+                  className="flex items-center justify-between glass rounded-xl px-4 py-3 hover:bg-white/[0.04] transition-all duration-300"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm text-white/60">
+                      Level {d.level}
+                    </span>
+                    <span className="text-[10px] text-white/20 glass rounded-full px-2.5 py-0.5">
+                      {d.description}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="gradient-text text-sm font-bold">{d.multiplier}x</span>
+                    <Input
+                      type="number"
+                      step="0.05"
+                      value={d.multiplier}
+                      onChange={(e) =>
+                        updateDirtMult(
+                          d.level,
+                          parseFloat(e.target.value) || 1
+                        )
+                      }
+                      className="premium-input w-20 text-right text-sm rounded-lg"
+                    />
+                    <span className="text-white/20 text-xs font-mono w-4">x</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -121,139 +121,171 @@ export default function SubscriptionPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#050505] text-white">
-        <div className="max-w-lg mx-auto px-4 py-8 space-y-4">
-          <Skeleton className="h-8 w-48 bg-white/5" />
-          <Skeleton className="h-40 w-full bg-white/5 rounded-xl" />
-          <Skeleton className="h-64 w-full bg-white/5 rounded-xl" />
+      <div className="min-h-screen page-bg text-white">
+        <div className="max-w-lg mx-auto px-4 py-8 space-y-6">
+          <Skeleton className="h-8 w-48 shimmer rounded-lg" />
+          <Skeleton className="h-44 w-full shimmer rounded-2xl" />
+          <Skeleton className="h-6 w-32 shimmer rounded-lg" />
+          <Skeleton className="h-64 w-full shimmer rounded-2xl" />
+          <Skeleton className="h-64 w-full shimmer rounded-2xl" />
+          <Skeleton className="h-64 w-full shimmer rounded-2xl" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen page-bg text-white">
       <div className="max-w-lg mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-6">Subscription</h1>
+        {/* Page Header */}
+        <div className="animate-fade-in-up mb-8">
+          <h1 className="text-3xl font-bold tracking-tight gradient-text mb-1">
+            Subscription
+          </h1>
+          <p className="text-sm text-white/40">
+            Manage your plan and track usage
+          </p>
+        </div>
 
         {/* Current Subscription */}
         {subscription && (
-          <Card className="bg-[#0a0a0a] border-[#E23232]/30 mb-8">
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-lg text-white">
-                  Current Plan
-                </CardTitle>
-                <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
-                  Active
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-3 rounded-xl bg-[#E23232]/20 text-[#E23232]">
-                  {planIcons[subscription.subscription_plans.wash_plan]}
+          <div className="animate-fade-in-up mb-10" style={{ animationDelay: '60ms' }}>
+            <Card className="gradient-border rounded-2xl overflow-hidden animate-glow-pulse">
+              <CardHeader className="pb-2 relative z-10">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-lg text-white font-semibold">
+                    Current Plan
+                  </CardTitle>
+                  <Badge className="bg-green-500/15 text-green-400 border border-green-500/20 backdrop-blur-sm">
+                    Active
+                  </Badge>
                 </div>
-                <div>
-                  <p className="font-semibold text-white">
-                    {subscription.subscription_plans.name}
-                  </p>
-                  <p className="text-sm text-white/40">
-                    ${(subscription.subscription_plans.monthly_price / 100).toFixed(0)}/month
-                  </p>
+              </CardHeader>
+              <CardContent className="relative z-10">
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="p-3.5 rounded-2xl bg-gradient-to-br from-[#E23232]/25 to-[#E23232]/10 text-[#E23232] shadow-lg shadow-[#E23232]/10">
+                    {planIcons[subscription.subscription_plans.wash_plan]}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-white text-lg">
+                      {subscription.subscription_plans.name}
+                    </p>
+                    <p className="text-sm text-white/40">
+                      <span className="text-2xl font-bold text-white">
+                        ${(subscription.subscription_plans.monthly_price / 100).toFixed(0)}
+                      </span>
+                      <span className="text-white/30 ml-0.5">/month</span>
+                    </p>
+                  </div>
                 </div>
-              </div>
 
-              {/* Usage Bar */}
-              {usage && (
-                <div>
-                  <div className="flex items-center justify-between text-sm mb-2">
-                    <span className="text-white/50">Washes this period</span>
-                    <span className="text-white font-medium">
-                      {usage.used} / {usage.allocated}
-                    </span>
+                {/* Usage Bar */}
+                {usage && (
+                  <div className="glass rounded-xl p-4">
+                    <div className="flex items-center justify-between text-sm mb-3">
+                      <span className="text-white/50">Washes this period</span>
+                      <span className="text-white font-semibold">
+                        {usage.used} / {usage.allocated}
+                      </span>
+                    </div>
+                    <div className="h-3 bg-white/[0.06] rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all duration-700 ease-out"
+                        style={{
+                          width: `${Math.min((usage.used / usage.allocated) * 100, 100)}%`,
+                          background: 'linear-gradient(90deg, #E23232 0%, #ff6b3d 100%)',
+                          boxShadow: '0 0 12px rgba(226, 50, 50, 0.4)',
+                        }}
+                      />
+                    </div>
+                    <p className="text-xs text-white/30 mt-2.5">
+                      Period ends{' '}
+                      {new Date(usage.period_end).toLocaleDateString('en-CA', {
+                        month: 'short',
+                        day: 'numeric',
+                      })}
+                    </p>
                   </div>
-                  <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-[#E23232] rounded-full transition-all"
-                      style={{
-                        width: `${Math.min((usage.used / usage.allocated) * 100, 100)}%`,
-                      }}
-                    />
-                  </div>
-                  <p className="text-xs text-white/30 mt-2">
-                    Period ends{' '}
-                    {new Date(usage.period_end).toLocaleDateString('en-CA', {
-                      month: 'short',
-                      day: 'numeric',
-                    })}
-                  </p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         )}
 
         {/* Plan Cards */}
-        <h2 className="text-lg font-semibold mb-4">
+        <h2
+          className="text-lg font-semibold mb-5 animate-fade-in-up"
+          style={{ animationDelay: '120ms' }}
+        >
           {subscription ? 'Change Plan' : 'Choose a Plan'}
         </h2>
 
-        <div className="space-y-4">
+        <div className="space-y-4 stagger-children">
           {plans.map((plan) => {
             const isCurrentPlan = subscription?.plan_id === plan.id;
             return (
               <Card
                 key={plan.id}
-                className={`bg-[#0a0a0a] transition-colors ${
+                className={`rounded-2xl overflow-hidden transition-all duration-300 animate-fade-in-up ${
                   isCurrentPlan
-                    ? 'border-[#E23232]/50'
-                    : 'border-white/10 hover:border-white/20'
+                    ? 'gradient-border animate-glow-pulse'
+                    : 'glass-card hover:shadow-lg hover:shadow-black/20'
                 }`}
               >
-                <CardContent className="p-5">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-3">
+                <CardContent className="p-6 relative z-10">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-4">
                       <div
-                        className={`p-2.5 rounded-xl ${
+                        className={`p-3 rounded-2xl transition-colors ${
                           isCurrentPlan
-                            ? 'bg-[#E23232]/20 text-[#E23232]'
-                            : 'bg-white/5 text-white/40'
+                            ? 'bg-gradient-to-br from-[#E23232]/25 to-[#E23232]/10 text-[#E23232] shadow-lg shadow-[#E23232]/10'
+                            : 'bg-white/[0.04] text-white/40 group-hover:text-white/60'
                         }`}
                       >
                         {planIcons[plan.wash_plan]}
                       </div>
                       <div>
-                        <p className="font-semibold text-white">{plan.name}</p>
-                        <p className="text-2xl font-bold text-white mt-0.5">
-                          ${(plan.monthly_price / 100).toFixed(0)}
-                          <span className="text-sm font-normal text-white/40">
+                        <p className="font-semibold text-white text-base">
+                          {plan.name}
+                        </p>
+                        <div className="flex items-baseline gap-0.5 mt-1">
+                          <span className="text-3xl font-bold text-white tracking-tight">
+                            ${(plan.monthly_price / 100).toFixed(0)}
+                          </span>
+                          <span className="text-sm font-normal text-white/30 ml-0.5">
                             /mo
                           </span>
-                        </p>
+                        </div>
                       </div>
                     </div>
                     {isCurrentPlan && (
-                      <Badge className="bg-[#E23232]/20 text-[#E23232] border-[#E23232]/30">
+                      <Badge className="bg-[#E23232]/15 text-[#E23232] border border-[#E23232]/20 text-xs">
                         Current
                       </Badge>
                     )}
                   </div>
 
-                  <ul className="space-y-2 mb-4">
+                  <ul className="space-y-2.5 mb-5">
                     {(planFeatures[plan.wash_plan] || []).map((feature) => (
                       <li
                         key={feature}
-                        className="flex items-center gap-2 text-sm text-white/60"
+                        className="flex items-center gap-2.5 text-sm text-white/50"
                       >
-                        <Check className="w-3.5 h-3.5 text-[#E23232] shrink-0" />
+                        <div className="flex items-center justify-center w-5 h-5 rounded-full bg-[#E23232]/10">
+                          <Check className="w-3 h-3 text-[#E23232]" />
+                        </div>
                         {feature}
                       </li>
                     ))}
                   </ul>
 
                   {!isCurrentPlan && (
-                    <Button className="w-full bg-[#E23232] hover:bg-[#E23232]/80 text-white">
+                    <Button
+                      className="w-full bg-[#E23232] hover:bg-[#E23232]/90 text-white font-medium rounded-xl h-11 transition-all duration-200"
+                      style={{
+                        boxShadow: '0 4px 24px rgba(226, 50, 50, 0.25)',
+                      }}
+                    >
                       {subscription ? 'Switch Plan' : 'Subscribe'}
                     </Button>
                   )}
