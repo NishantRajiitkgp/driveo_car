@@ -3,6 +3,7 @@ import Script from 'next/script';
 import { Anton, Inter, JetBrains_Mono, Playfair_Display, Poppins, Geist } from 'next/font/google';
 import './globals.css';
 import { cn } from "@/lib/utils";
+import { Providers } from '@/lib/providers';
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -58,8 +59,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={cn(inter.variable, anton.variable, jetbrainsMono.variable, playfairDisplay.variable, poppins.variable, "font-sans", geist.variable)}>
-      <body>
+      <body style={{ backgroundColor: '#050505', color: '#ffffff' }}>
+        <Providers>
         {children}
+        </Providers>
         {GA_ID && (
           <>
             <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
