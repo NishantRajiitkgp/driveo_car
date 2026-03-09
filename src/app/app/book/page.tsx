@@ -16,6 +16,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { AddressAutocomplete } from '@/components/AddressAutocomplete';
 import { DriveoSlide } from '@/components/driveo-slide/DriveoSlide';
 import { calculatePrice, centsToDisplay, formatDuration, PLAN_LABELS } from '@/lib/pricing';
+import { getVehicleImageUrl } from '@/lib/vehicle-image';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import {
@@ -355,7 +356,7 @@ function BookingForm() {
         <div className="space-y-4">
           <DriveoSlide
             vehicleType={form.vehicle.type}
-            vehicleImageUrl={form.vehicle.image_url || '/car-placeholder.svg'}
+            vehicleImageUrl={form.vehicle.image_url || getVehicleImageUrl(form.vehicle.make, form.vehicle.model, form.vehicle.year)}
             vehicleLabel={`${form.vehicle.year} ${form.vehicle.make} ${form.vehicle.model}`}
             selectedPlan={form.washPlan}
             onPlanSelect={(plan) => setForm((f) => ({ ...f, washPlan: plan }))}

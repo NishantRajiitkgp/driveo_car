@@ -147,6 +147,15 @@ export function DirtCanvas({ imageUrl, dirtLevel, width = 480, height = 320 }: D
       carImageRef.current = img;
       render();
     };
+    img.onerror = () => {
+      // Fallback to placeholder if external image fails (CORS etc.)
+      const fallback = new Image();
+      fallback.onload = () => {
+        carImageRef.current = fallback;
+        render();
+      };
+      fallback.src = '/car-placeholder.svg';
+    };
     img.src = imageUrl;
   }, [imageUrl, render]);
 
