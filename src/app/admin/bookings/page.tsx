@@ -43,10 +43,10 @@ export default function AdminBookingsPage() {
   }, [filter]);
 
   const statusBadgeClass = (status: string) => {
-    if (status === 'pending') return 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10 shadow-[0_0_10px_rgba(234,179,8,0.15)]';
-    if (['assigned', 'en_route', 'arrived', 'washing'].includes(status)) return 'text-blue-400 border-blue-500/30 bg-blue-500/10 shadow-[0_0_10px_rgba(59,130,246,0.15)]';
-    if (['completed', 'paid'].includes(status)) return 'text-green-400 border-green-500/30 bg-green-500/10 shadow-[0_0_10px_rgba(34,197,94,0.15)]';
-    if (status === 'cancelled') return 'text-red-400 border-red-500/30 bg-red-500/10 shadow-[0_0_10px_rgba(239,68,68,0.15)]';
+    if (status === 'pending') return 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10';
+    if (['assigned', 'en_route', 'arrived', 'washing'].includes(status)) return 'text-blue-400 border-blue-500/30 bg-blue-500/10';
+    if (['completed', 'paid'].includes(status)) return 'text-green-400 border-green-500/30 bg-green-500/10';
+    if (status === 'cancelled') return 'text-red-400 border-red-500/30 bg-red-500/10';
     return 'text-white/40';
   };
 
@@ -60,7 +60,7 @@ export default function AdminBookingsPage() {
 
       {/* Filter Tabs */}
       <Tabs value={filter} onValueChange={setFilter}>
-        <TabsList className="glass rounded-full p-1 border border-white/[0.06] gap-1">
+        <TabsList className="bg-[#111] rounded-full p-1 border border-white/[0.08] gap-1">
           {[
             { value: 'all', label: 'All' },
             { value: 'pending', label: 'Pending' },
@@ -71,7 +71,7 @@ export default function AdminBookingsPage() {
             <TabsTrigger
               key={tab.value}
               value={tab.value}
-              className="text-xs rounded-full px-4 py-1.5 data-[state=active]:bg-[#E23232] data-[state=active]:text-white data-[state=active]:shadow-[0_0_20px_rgba(226,50,50,0.3)] transition-all duration-300 text-white/40 hover:text-white/60"
+              className="text-xs rounded-full px-4 py-1.5 data-[state=active]:bg-[#E23232] data-[state=active]:text-white transition-colors duration-200 text-white/40 hover:text-white/60"
             >
               {tab.label}
             </TabsTrigger>
@@ -84,7 +84,7 @@ export default function AdminBookingsPage() {
           {[1, 2, 3].map((i) => <Skeleton key={i} className="h-16 bg-white/5 rounded-2xl" />)}
         </div>
       ) : (
-        <div className="glass-card rounded-2xl overflow-hidden animate-fade-in-up">
+        <div className="bg-[#111] border border-white/[0.08] rounded-2xl overflow-hidden animate-fade-in-up">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -98,20 +98,20 @@ export default function AdminBookingsPage() {
                   <th className="text-right p-4 text-white/30 text-[10px] uppercase tracking-widest font-medium">Date</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/[0.04]">
+              <tbody className="divide-y divide-white/[0.06]">
                 {bookings.map((b, idx) => (
                   <tr
                     key={b.id}
-                    className="hover:bg-white/[0.03] transition-all duration-300 group"
+                    className="bg-[#111] hover:bg-white/[0.03] transition-colors duration-200 group"
                     style={{ animationDelay: `${0.03 * idx}s` }}
                   >
                     <td className="p-4 text-white/30 font-mono text-xs">#{b.id.slice(0, 8)}</td>
                     <td className="p-4">
-                      <span className="text-white font-medium">{PLAN_LABELS[b.wash_plan]}</span>
+                      <span className="text-white/80 font-medium">{PLAN_LABELS[b.wash_plan]}</span>
                     </td>
                     <td className="p-4 text-white/50">{b.vehicles?.year} {b.vehicles?.make} {b.vehicles?.model}</td>
                     <td className="p-4">
-                      <span className="text-white/40 font-mono text-xs glass rounded-full px-2.5 py-1">
+                      <span className="text-white/40 font-mono text-xs bg-[#0a0a0a] border border-white/[0.06] rounded-full px-2.5 py-1">
                         {b.dirt_level}/10
                       </span>
                     </td>
@@ -123,7 +123,7 @@ export default function AdminBookingsPage() {
                         {b.status.replace('_', ' ')}
                       </Badge>
                     </td>
-                    <td className="p-4 text-right text-white font-semibold">{centsToDisplay(b.total_price)}</td>
+                    <td className="p-4 text-right text-white/80 font-semibold">{centsToDisplay(b.total_price)}</td>
                     <td className="p-4 text-right text-white/20 text-xs font-mono">{new Date(b.created_at).toLocaleDateString()}</td>
                   </tr>
                 ))}

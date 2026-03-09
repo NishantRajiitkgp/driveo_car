@@ -121,25 +121,25 @@ export default function SubscriptionPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen page-bg text-white">
+      <div className="min-h-screen bg-[#050505] text-white">
         <div className="max-w-lg mx-auto px-4 py-8 space-y-6">
-          <Skeleton className="h-8 w-48 shimmer rounded-lg" />
-          <Skeleton className="h-44 w-full shimmer rounded-2xl" />
-          <Skeleton className="h-6 w-32 shimmer rounded-lg" />
-          <Skeleton className="h-64 w-full shimmer rounded-2xl" />
-          <Skeleton className="h-64 w-full shimmer rounded-2xl" />
-          <Skeleton className="h-64 w-full shimmer rounded-2xl" />
+          <Skeleton className="h-8 w-48 bg-white/[0.06] shimmer rounded-lg" />
+          <Skeleton className="h-44 w-full bg-white/[0.06] shimmer rounded-2xl" />
+          <Skeleton className="h-6 w-32 bg-white/[0.06] shimmer rounded-lg" />
+          <Skeleton className="h-64 w-full bg-white/[0.06] shimmer rounded-2xl" />
+          <Skeleton className="h-64 w-full bg-white/[0.06] shimmer rounded-2xl" />
+          <Skeleton className="h-64 w-full bg-white/[0.06] shimmer rounded-2xl" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen page-bg text-white">
+    <div className="min-h-screen bg-[#050505] text-white">
       <div className="max-w-lg mx-auto px-4 py-8">
         {/* Page Header */}
         <div className="animate-fade-in-up mb-8">
-          <h1 className="text-3xl font-bold tracking-tight gradient-text mb-1">
+          <h1 className="text-3xl font-bold tracking-tight text-white mb-1">
             Subscription
           </h1>
           <p className="text-sm text-white/40">
@@ -150,20 +150,20 @@ export default function SubscriptionPage() {
         {/* Current Subscription */}
         {subscription && (
           <div className="animate-fade-in-up mb-10" style={{ animationDelay: '60ms' }}>
-            <Card className="gradient-border rounded-2xl overflow-hidden animate-glow-pulse">
-              <CardHeader className="pb-2 relative z-10">
+            <Card className="bg-[#111] border border-[#E23232]/30 rounded-2xl overflow-hidden">
+              <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg text-white font-semibold">
                     Current Plan
                   </CardTitle>
-                  <Badge className="bg-green-500/15 text-green-400 border border-green-500/20 backdrop-blur-sm">
+                  <Badge className="bg-green-500/15 text-green-400 border border-green-500/20">
                     Active
                   </Badge>
                 </div>
               </CardHeader>
-              <CardContent className="relative z-10">
+              <CardContent>
                 <div className="flex items-center gap-4 mb-5">
-                  <div className="p-3.5 rounded-2xl bg-gradient-to-br from-[#E23232]/25 to-[#E23232]/10 text-[#E23232] shadow-lg shadow-[#E23232]/10">
+                  <div className="p-3.5 rounded-2xl bg-[#E23232]/15 text-[#E23232]">
                     {planIcons[subscription.subscription_plans.wash_plan]}
                   </div>
                   <div>
@@ -181,7 +181,7 @@ export default function SubscriptionPage() {
 
                 {/* Usage Bar */}
                 {usage && (
-                  <div className="glass rounded-xl p-4">
+                  <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-xl p-4">
                     <div className="flex items-center justify-between text-sm mb-3">
                       <span className="text-white/50">Washes this period</span>
                       <span className="text-white font-semibold">
@@ -190,11 +190,9 @@ export default function SubscriptionPage() {
                     </div>
                     <div className="h-3 bg-white/[0.06] rounded-full overflow-hidden">
                       <div
-                        className="h-full rounded-full transition-all duration-700 ease-out"
+                        className="h-full bg-[#E23232] rounded-full transition-all duration-700 ease-out"
                         style={{
                           width: `${Math.min((usage.used / usage.allocated) * 100, 100)}%`,
-                          background: 'linear-gradient(90deg, #E23232 0%, #ff6b3d 100%)',
-                          boxShadow: '0 0 12px rgba(226, 50, 50, 0.4)',
                         }}
                       />
                     </div>
@@ -228,18 +226,18 @@ export default function SubscriptionPage() {
                 key={plan.id}
                 className={`rounded-2xl overflow-hidden transition-all duration-300 animate-fade-in-up ${
                   isCurrentPlan
-                    ? 'gradient-border animate-glow-pulse'
-                    : 'glass-card hover:shadow-lg hover:shadow-black/20'
+                    ? 'bg-[#111] border border-[#E23232]/30'
+                    : 'bg-[#111] border border-white/[0.08]'
                 }`}
               >
-                <CardContent className="p-6 relative z-10">
+                <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-4">
                       <div
                         className={`p-3 rounded-2xl transition-colors ${
                           isCurrentPlan
-                            ? 'bg-gradient-to-br from-[#E23232]/25 to-[#E23232]/10 text-[#E23232] shadow-lg shadow-[#E23232]/10'
-                            : 'bg-white/[0.04] text-white/40 group-hover:text-white/60'
+                            ? 'bg-[#E23232]/15 text-[#E23232]'
+                            : 'bg-white/[0.04] text-white/40'
                         }`}
                       >
                         {planIcons[plan.wash_plan]}
@@ -282,9 +280,6 @@ export default function SubscriptionPage() {
                   {!isCurrentPlan && (
                     <Button
                       className="w-full bg-[#E23232] hover:bg-[#E23232]/90 text-white font-medium rounded-xl h-11 transition-all duration-200"
-                      style={{
-                        boxShadow: '0 4px 24px rgba(226, 50, 50, 0.25)',
-                      }}
                     >
                       {subscription ? 'Switch Plan' : 'Subscribe'}
                     </Button>

@@ -100,101 +100,95 @@ export default function WasherAvailabilityPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
-      <div className="max-w-lg mx-auto px-4 py-8 animate-fade-in-up">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-display text-white tracking-tight">Availability</h1>
-          <Button
-            onClick={handleSave}
-            disabled={saving}
-            className="bg-gradient-to-r from-[#E23232] to-[#c92a2a] hover:from-[#c92a2a] hover:to-[#a82222] text-white font-semibold rounded-xl shadow-[0_0_20px_rgba(226,50,50,0.2)] hover:shadow-[0_0_30px_rgba(226,50,50,0.3)] transition-all duration-300 border-0 px-5"
-          >
-            <Save className="w-4 h-4 mr-2" />
-            {saving ? 'Saving...' : 'Save'}
-          </Button>
-        </div>
+    <div className="max-w-lg mx-auto px-4 py-8 animate-fade-in-up">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-display text-white tracking-tight">Availability</h1>
+        <Button
+          onClick={handleSave}
+          disabled={saving}
+          className="bg-[#E23232] hover:bg-[#c92a2a] text-white font-semibold rounded-xl transition-colors duration-200 border-0 px-5"
+        >
+          <Save className="w-4 h-4 mr-2" />
+          {saving ? 'Saving...' : 'Save'}
+        </Button>
+      </div>
 
-        {loading ? (
-          <div className="space-y-3">
-            {[...Array(7)].map((_, i) => (
-              <div key={i} className="shimmer h-20 w-full bg-white/5 rounded-2xl" />
-            ))}
-          </div>
-        ) : (
-          <div className="space-y-3 stagger-children">
-            {DAYS.map((day, displayIdx) => {
-              const slot = getSlotByDisplayIndex(displayIdx);
-              if (!slot) return null;
-              return (
-                <div
-                  key={day}
-                  className={`glass-card rounded-2xl transition-all duration-500 ${
-                    slot.is_available
-                      ? 'border-green-500/20 shadow-[0_0_15px_rgba(34,197,94,0.06)]'
-                      : 'opacity-40'
-                  }`}
-                >
-                  <div className="p-4">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-bold tracking-wider transition-all duration-500 ${
-                          slot.is_available
-                            ? 'bg-green-500/10 text-green-400'
-                            : 'bg-white/[0.03] text-white/20'
-                        }`}>
-                          {SHORT_DAYS[displayIdx]}
-                        </div>
-                        <Label className="text-sm font-semibold text-white">
-                          {day}
-                        </Label>
-                      </div>
-                      <div className={`relative rounded-full transition-all duration-500 ${
-                        slot.is_available ? 'shadow-[0_0_12px_rgba(34,197,94,0.2)]' : ''
+      {loading ? (
+        <div className="space-y-3">
+          {[...Array(7)].map((_, i) => (
+            <div key={i} className="h-20 w-full bg-[#111] rounded-2xl" />
+          ))}
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {DAYS.map((day, displayIdx) => {
+            const slot = getSlotByDisplayIndex(displayIdx);
+            if (!slot) return null;
+            return (
+              <div
+                key={day}
+                className={`bg-[#111] border rounded-2xl transition-colors duration-200 ${
+                  slot.is_available
+                    ? 'border-green-500/20'
+                    : 'border-white/[0.08] opacity-40'
+                }`}
+              >
+                <div className="p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-bold tracking-wider transition-colors duration-200 ${
+                        slot.is_available
+                          ? 'bg-green-500/10 text-green-400'
+                          : 'bg-[#0a0a0a] text-white/20'
                       }`}>
-                        <Switch
-                          checked={slot.is_available}
-                          onCheckedChange={(checked) =>
-                            updateSlot(displayIdx, 'is_available', checked)
+                        {SHORT_DAYS[displayIdx]}
+                      </div>
+                      <Label className="text-sm font-semibold text-white">
+                        {day}
+                      </Label>
+                    </div>
+                    <Switch
+                      checked={slot.is_available}
+                      onCheckedChange={(checked) =>
+                        updateSlot(displayIdx, 'is_available', checked)
+                      }
+                    />
+                  </div>
+
+                  {slot.is_available && (
+                    <div className="flex items-center gap-3 animate-fade-in">
+                      <div className="flex items-center gap-2 flex-1">
+                        <div className="w-6 h-6 rounded-md bg-[#0a0a0a] flex items-center justify-center">
+                          <Clock className="w-3 h-3 text-white/30" />
+                        </div>
+                        <Input
+                          type="time"
+                          value={slot.start_time}
+                          onChange={(e) =>
+                            updateSlot(displayIdx, 'start_time', e.target.value)
                           }
+                          className="bg-[#0a0a0a] border-white/[0.08] text-white text-sm h-9 rounded-lg"
+                        />
+                      </div>
+                      <span className="text-white/20 text-xs font-medium tracking-wider">TO</span>
+                      <div className="flex-1">
+                        <Input
+                          type="time"
+                          value={slot.end_time}
+                          onChange={(e) =>
+                            updateSlot(displayIdx, 'end_time', e.target.value)
+                          }
+                          className="bg-[#0a0a0a] border-white/[0.08] text-white text-sm h-9 rounded-lg"
                         />
                       </div>
                     </div>
-
-                    {slot.is_available && (
-                      <div className="flex items-center gap-3 animate-fade-in">
-                        <div className="flex items-center gap-2 flex-1">
-                          <div className="w-6 h-6 rounded-md bg-white/[0.03] flex items-center justify-center">
-                            <Clock className="w-3 h-3 text-white/25" />
-                          </div>
-                          <Input
-                            type="time"
-                            value={slot.start_time}
-                            onChange={(e) =>
-                              updateSlot(displayIdx, 'start_time', e.target.value)
-                            }
-                            className="premium-input bg-white/[0.03] border-white/[0.06] text-white text-sm h-9 rounded-lg"
-                          />
-                        </div>
-                        <span className="text-white/20 text-xs font-medium tracking-wider">TO</span>
-                        <div className="flex-1">
-                          <Input
-                            type="time"
-                            value={slot.end_time}
-                            onChange={(e) =>
-                              updateSlot(displayIdx, 'end_time', e.target.value)
-                            }
-                            className="premium-input bg-white/[0.03] border-white/[0.06] text-white text-sm h-9 rounded-lg"
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                  )}
                 </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

@@ -220,9 +220,9 @@ export default function WasherJobPage() {
   if (loading) {
     return (
       <div className="px-4 pt-6 max-w-lg mx-auto space-y-4">
-        <div className="shimmer h-8 w-48 rounded-lg bg-white/5" />
-        <div className="shimmer h-44 w-full rounded-2xl bg-white/5" />
-        <div className="shimmer h-36 w-full rounded-2xl bg-white/5" />
+        <div className="h-8 w-48 rounded-lg bg-[#111]" />
+        <div className="h-44 w-full rounded-2xl bg-[#111]" />
+        <div className="h-36 w-full rounded-2xl bg-[#111]" />
       </div>
     );
   }
@@ -230,9 +230,8 @@ export default function WasherJobPage() {
   if (!booking) {
     return (
       <div className="px-4 pt-20 text-center">
-        <div className="glass-card rounded-2xl p-8 max-w-lg mx-auto relative overflow-hidden">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-[#E23232]/5 blur-3xl pointer-events-none" />
-          <p className="text-white/40 relative">Job not found</p>
+        <div className="bg-[#111] border border-white/[0.08] rounded-2xl p-8 max-w-lg mx-auto">
+          <p className="text-white/40">Job not found</p>
         </div>
       </div>
     );
@@ -247,57 +246,54 @@ export default function WasherJobPage() {
   return (
     <div className="px-4 pt-6 pb-8 max-w-lg mx-auto space-y-5 animate-fade-in-up">
       {/* Status Header */}
-      <div className="glass-card rounded-2xl p-5 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#E23232]/5 via-transparent to-transparent pointer-events-none" />
-        <div className="relative">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-xl font-display text-white tracking-tight">{PLAN_LABELS[booking.wash_plan]}</h1>
-            <Badge variant="outline" className="capitalize rounded-full px-3 py-1 text-xs bg-[#E23232]/10 text-[#E23232] border-[#E23232]/30">
-              {booking.status.replace('_', ' ')}
-            </Badge>
-          </div>
+      <div className="bg-[#111] border border-white/[0.08] rounded-2xl p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-xl font-display text-white tracking-tight">{PLAN_LABELS[booking.wash_plan]}</h1>
+          <Badge variant="outline" className="capitalize rounded-full px-3 py-1 text-xs bg-[#E23232]/10 text-[#E23232] border-[#E23232]/20">
+            {booking.status.replace('_', ' ')}
+          </Badge>
+        </div>
 
-          {/* Timeline indicator */}
-          <div className="flex items-center gap-1">
-            {statusOrder.slice(0, 5).map((s, i) => (
-              <div key={s} className="flex items-center flex-1">
-                <div className={cn(
-                  'h-1 w-full rounded-full transition-all duration-500',
-                  i <= currentStatusIdx
-                    ? 'bg-[#E23232]'
-                    : 'bg-white/[0.06]'
-                )} />
-              </div>
-            ))}
-          </div>
-          <div className="flex justify-between mt-1.5">
-            {statusOrder.slice(0, 5).map((s, i) => (
-              <span key={s} className={cn(
-                'text-[9px] uppercase tracking-wider',
-                i <= currentStatusIdx ? 'text-[#E23232]/70' : 'text-white/20'
-              )}>
-                {statusTimelineLabels[s]}
-              </span>
-            ))}
-          </div>
+        {/* Timeline indicator */}
+        <div className="flex items-center gap-1">
+          {statusOrder.slice(0, 5).map((s, i) => (
+            <div key={s} className="flex items-center flex-1">
+              <div className={cn(
+                'h-1 w-full rounded-full transition-colors duration-300',
+                i <= currentStatusIdx
+                  ? 'bg-[#E23232]'
+                  : 'bg-white/[0.08]'
+              )} />
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-between mt-1.5">
+          {statusOrder.slice(0, 5).map((s, i) => (
+            <span key={s} className={cn(
+              'text-[9px] uppercase tracking-wider',
+              i <= currentStatusIdx ? 'text-[#E23232]' : 'text-white/20'
+            )}>
+              {statusTimelineLabels[s]}
+            </span>
+          ))}
         </div>
       </div>
 
       {/* Customer Info */}
       {customer && (
-        <div className="glass-card rounded-2xl p-4">
-          <p className="text-[10px] uppercase tracking-widest text-white/30 mb-3 font-medium">Customer</p>
+        <div className="bg-[#111] border border-white/[0.08] rounded-2xl p-4">
+          <p className="text-[10px] uppercase tracking-widest text-white/40 mb-3 font-medium">Customer</p>
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-white/10 to-white/[0.03] flex items-center justify-center border border-white/[0.06]">
+            <div className="w-12 h-12 rounded-full bg-[#0a0a0a] flex items-center justify-center border border-white/[0.08]">
               <User className="w-5 h-5 text-white/40" />
             </div>
             <div className="flex-1">
               <p className="text-white text-sm font-semibold">{customer.full_name}</p>
-              <p className="text-white/35 text-xs mt-0.5">{customer.phone || customer.email}</p>
+              <p className="text-white/40 text-xs mt-0.5">{customer.phone || customer.email}</p>
             </div>
             {customer.phone && (
-              <a href={`tel:${customer.phone}`} className="w-10 h-10 rounded-full glass flex items-center justify-center border border-white/[0.08] hover:border-[#E23232]/30 hover:bg-[#E23232]/5 transition-all duration-300">
-                <Phone className="w-4 h-4 text-white/50" />
+              <a href={`tel:${customer.phone}`} className="w-10 h-10 rounded-full bg-[#0a0a0a] flex items-center justify-center border border-white/[0.08] hover:border-[#E23232]/30 transition-colors duration-200">
+                <Phone className="w-4 h-4 text-white/60" />
               </a>
             )}
           </div>
@@ -305,19 +301,19 @@ export default function WasherJobPage() {
       )}
 
       {/* Vehicle & Location */}
-      <div className="glass-card rounded-2xl p-5 space-y-4">
-        <p className="text-[10px] uppercase tracking-widest text-white/30 font-medium">Job Details</p>
+      <div className="bg-[#111] border border-white/[0.08] rounded-2xl p-5 space-y-4">
+        <p className="text-[10px] uppercase tracking-widest text-white/40 font-medium">Job Details</p>
 
         <div className="space-y-3 text-sm">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-[#0a0a0a] flex items-center justify-center">
               <Car className="w-4 h-4 text-white/40" />
             </div>
-            <span className="text-white font-medium">{vehicle.year} {vehicle.make} {vehicle.model} <span className="text-white/30 font-normal">({vehicle.type.replace('_', ' ')})</span></span>
+            <span className="text-white font-medium">{vehicle.year} {vehicle.make} {vehicle.model} <span className="text-white/40 font-normal">({vehicle.type.replace('_', ' ')})</span></span>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-[#0a0a0a] flex items-center justify-center">
               <MapPin className="w-4 h-4 text-white/40" />
             </div>
             <span className="text-white/60">{booking.service_address}</span>
@@ -330,17 +326,17 @@ export default function WasherJobPage() {
           )}
 
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-[#0a0a0a] flex items-center justify-center">
               <Clock className="w-4 h-4 text-white/40" />
             </div>
-            <span className="text-white/45">~{formatDuration(booking.estimated_duration_min || 0)} · Dirt level {booking.dirt_level}</span>
+            <span className="text-white/40">~{formatDuration(booking.estimated_duration_min || 0)} · Dirt level {booking.dirt_level}</span>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-green-500/[0.06] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center">
               <DollarSign className="w-4 h-4 text-green-400/60" />
             </div>
-            <span className="text-green-400 font-semibold">You earn {centsToDisplay(booking.washer_payout)}</span>
+            <span className="text-[#E23232] font-semibold">You earn {centsToDisplay(booking.washer_payout)}</span>
           </div>
 
           <a
@@ -356,13 +352,13 @@ export default function WasherJobPage() {
 
       {/* Photo Upload */}
       {['arrived', 'washing', 'completed'].includes(booking.status) && (
-        <div className="glass-card rounded-2xl p-5 space-y-5">
-          <p className="text-[10px] uppercase tracking-widest text-white/30 font-medium">Photos</p>
+        <div className="bg-[#111] border border-white/[0.08] rounded-2xl p-5 space-y-5">
+          <p className="text-[10px] uppercase tracking-widest text-white/40 font-medium">Photos</p>
 
           {/* Before Photos */}
           <div>
             <div className="flex items-center justify-between mb-3">
-              <p className="text-white text-sm font-semibold">Before Photos <span className="text-white/30 font-normal">({beforePhotos.length}/5)</span></p>
+              <p className="text-white text-sm font-semibold">Before Photos <span className="text-white/40 font-normal">({beforePhotos.length}/5)</span></p>
               {booking.status === 'arrived' && (
                 <label className="cursor-pointer">
                   <input
@@ -373,7 +369,7 @@ export default function WasherJobPage() {
                     className="hidden"
                     onChange={(e) => handlePhotoUpload('before', e.target.files)}
                   />
-                  <span className="flex items-center gap-1.5 text-[#E23232] text-xs font-medium px-3 py-1.5 rounded-full bg-[#E23232]/10 border border-[#E23232]/20 hover:bg-[#E23232]/15 transition-colors">
+                  <span className="flex items-center gap-1.5 text-[#E23232] text-xs font-medium px-3 py-1.5 rounded-full bg-[#E23232]/10 border border-[#E23232]/20 hover:border-[#E23232]/40 transition-colors">
                     <Camera className="w-3 h-3" /> Take Photo
                   </span>
                 </label>
@@ -384,10 +380,10 @@ export default function WasherJobPage() {
                 <div
                   key={i}
                   className={cn(
-                    'aspect-square rounded-xl border-2 border-dashed flex items-center justify-center text-[10px] font-medium transition-all duration-300',
+                    'aspect-square rounded-xl border-2 border-dashed flex items-center justify-center text-[10px] font-medium transition-colors duration-200',
                     i < beforePhotos.length
-                      ? 'border-green-500/30 bg-green-500/10 text-green-400 shadow-[0_0_12px_rgba(34,197,94,0.1)]'
-                      : 'border-white/[0.08] bg-white/[0.02] text-white/20 hover:border-white/15 hover:bg-white/[0.04] hover:shadow-[0_0_12px_rgba(255,255,255,0.03)]'
+                      ? 'border-green-500/30 bg-green-500/10 text-green-400'
+                      : 'border-white/[0.08] bg-[#0a0a0a] text-white/20 hover:border-white/15'
                   )}
                 >
                   {i < beforePhotos.length ? '✓' : ['F', 'R', 'L', 'R', 'Int'][i]}
@@ -397,12 +393,12 @@ export default function WasherJobPage() {
           </div>
 
           {/* Divider */}
-          <div className="border-t border-white/[0.04]" />
+          <div className="border-t border-white/[0.06]" />
 
           {/* After Photos */}
           <div>
             <div className="flex items-center justify-between mb-3">
-              <p className="text-white text-sm font-semibold">After Photos <span className="text-white/30 font-normal">({afterPhotos.length}/5)</span></p>
+              <p className="text-white text-sm font-semibold">After Photos <span className="text-white/40 font-normal">({afterPhotos.length}/5)</span></p>
               {booking.status === 'washing' && (
                 <label className="cursor-pointer">
                   <input
@@ -413,7 +409,7 @@ export default function WasherJobPage() {
                     className="hidden"
                     onChange={(e) => handlePhotoUpload('after', e.target.files)}
                   />
-                  <span className="flex items-center gap-1.5 text-[#E23232] text-xs font-medium px-3 py-1.5 rounded-full bg-[#E23232]/10 border border-[#E23232]/20 hover:bg-[#E23232]/15 transition-colors">
+                  <span className="flex items-center gap-1.5 text-[#E23232] text-xs font-medium px-3 py-1.5 rounded-full bg-[#E23232]/10 border border-[#E23232]/20 hover:border-[#E23232]/40 transition-colors">
                     <Camera className="w-3 h-3" /> Take Photo
                   </span>
                 </label>
@@ -424,10 +420,10 @@ export default function WasherJobPage() {
                 <div
                   key={i}
                   className={cn(
-                    'aspect-square rounded-xl border-2 border-dashed flex items-center justify-center text-[10px] font-medium transition-all duration-300',
+                    'aspect-square rounded-xl border-2 border-dashed flex items-center justify-center text-[10px] font-medium transition-colors duration-200',
                     i < afterPhotos.length
-                      ? 'border-green-500/30 bg-green-500/10 text-green-400 shadow-[0_0_12px_rgba(34,197,94,0.1)]'
-                      : 'border-white/[0.08] bg-white/[0.02] text-white/20 hover:border-white/15 hover:bg-white/[0.04] hover:shadow-[0_0_12px_rgba(255,255,255,0.03)]'
+                      ? 'border-green-500/30 bg-green-500/10 text-green-400'
+                      : 'border-white/[0.08] bg-[#0a0a0a] text-white/20 hover:border-white/15'
                   )}
                 >
                   {i < afterPhotos.length ? '✓' : ['F', 'R', 'L', 'R', 'Int'][i]}
@@ -443,7 +439,7 @@ export default function WasherJobPage() {
         <Button
           onClick={() => updateStatus(currentAction.action)}
           disabled={updating || (currentAction.action === 'completed' && afterPhotos.length < 5)}
-          className="w-full bg-gradient-to-r from-[#E23232] to-[#c92a2a] hover:from-[#c92a2a] hover:to-[#a82222] text-white font-semibold py-7 text-base rounded-2xl shadow-[0_0_30px_rgba(226,50,50,0.25)] hover:shadow-[0_0_40px_rgba(226,50,50,0.35)] transition-all duration-300 border-0"
+          className="w-full bg-[#E23232] hover:bg-[#c92a2a] text-white font-semibold py-7 text-base rounded-2xl transition-colors duration-200 border-0"
         >
           {updating ? (
             <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Updating...</>

@@ -36,10 +36,7 @@ export function AdminNav() {
     <div className="flex flex-col h-full">
       {/* Logo */}
       <div className="p-6 pb-8 flex items-center gap-2.5">
-        <div className="relative">
-          <Image src="/Driveo-logo.png" alt="Driveo" width={30} height={30} />
-          <div className="absolute inset-0 bg-[#E23232]/20 blur-lg rounded-full" />
-        </div>
+        <Image src="/Driveo-logo.png" alt="Driveo" width={30} height={30} />
         <span className="font-display text-lg text-white tracking-wide">DRIVEO</span>
         <span className="text-[8px] uppercase tracking-[0.2em] text-[#E23232] font-semibold bg-[#E23232]/10 px-2 py-0.5 rounded-md border border-[#E23232]/20 ml-0.5">Admin</span>
       </div>
@@ -52,14 +49,14 @@ export function AdminNav() {
             href={item.href}
             onClick={() => setMobileOpen(false)}
             className={cn(
-              'flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 relative group',
+              'flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors duration-200 relative group',
               isActive(item)
                 ? 'bg-[#E23232]/10 text-[#E23232]'
                 : 'text-white/45 hover:text-white hover:bg-white/[0.04]'
             )}
           >
             {isActive(item) && (
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-[#E23232] rounded-r-full shadow-[0_0_8px_rgba(226,50,50,0.5)]" />
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-[#E23232] rounded-r-full" />
             )}
             <item.icon className={cn('w-[18px] h-[18px] transition-colors', isActive(item) ? 'text-[#E23232]' : 'text-white/30 group-hover:text-white/60')} />
             {item.label}
@@ -68,7 +65,7 @@ export function AdminNav() {
       </nav>
 
       {/* Bottom */}
-      <div className="p-4 mx-3 mb-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+      <div className="p-4 mx-3 mb-3 rounded-xl bg-[#0a0a0a] border border-white/[0.06]">
         <p className="text-[10px] text-white/25 uppercase tracking-wider">Driveo Admin v1.0</p>
       </div>
     </div>
@@ -77,12 +74,12 @@ export function AdminNav() {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden md:block fixed left-0 top-0 bottom-0 w-64 bg-[#080808]/95 backdrop-blur-xl border-r border-white/[0.06] z-40">
+      <aside className="hidden md:block fixed left-0 top-0 bottom-0 w-64 bg-[#0a0a0a] border-r border-white/[0.06] z-40">
         {navContent}
       </aside>
 
       {/* Mobile header */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-[#080808]/90 backdrop-blur-2xl border-b border-white/[0.06] px-4 py-3.5 flex items-center justify-between">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a] border-b border-white/[0.06] px-4 py-3.5 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <Image src="/Driveo-logo.png" alt="Driveo" width={26} height={26} />
           <span className="font-display text-base text-white">DRIVEO</span>
@@ -95,9 +92,9 @@ export function AdminNav() {
 
       {/* Mobile drawer overlay */}
       {mobileOpen && (
-        <div className="md:hidden fixed inset-0 z-40 bg-black/70 backdrop-blur-sm animate-fade-in" onClick={() => setMobileOpen(false)}>
+        <div className="md:hidden fixed inset-0 z-40 bg-black/70 animate-fade-in" onClick={() => setMobileOpen(false)}>
           <aside
-            className="w-72 h-full bg-[#080808] border-r border-white/[0.06] pt-16 animate-slide-in-right"
+            className="w-72 h-full bg-[#0a0a0a] border-r border-white/[0.06] pt-16 animate-slide-in-right"
             onClick={(e) => e.stopPropagation()}
           >
             {navContent}

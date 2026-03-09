@@ -33,18 +33,6 @@ const statusBorderLeft: Record<string, string> = {
   disputed: 'border-l-orange-500/60',
 };
 
-const statusGlow: Record<string, string> = {
-  pending: 'shadow-yellow-500/5',
-  assigned: 'shadow-blue-500/5',
-  en_route: 'shadow-blue-500/5',
-  arrived: 'shadow-purple-500/5',
-  washing: 'shadow-purple-500/5',
-  completed: 'shadow-green-500/5',
-  paid: 'shadow-green-500/5',
-  cancelled: 'shadow-red-500/5',
-  disputed: 'shadow-orange-500/5',
-};
-
 const planLabel: Record<string, string> = {
   regular: 'Regular',
   interior_exterior: 'Interior & Exterior',
@@ -85,11 +73,11 @@ export default function BookingsPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-2xl font-display text-white tracking-tight">My Bookings</h1>
-            <p className="text-white/30 text-sm mt-1">Your wash history and active bookings</p>
+            <p className="text-white/40 text-sm mt-1">Your wash history and active bookings</p>
           </div>
           {bookings.length > 0 && (
-            <div className="glass rounded-full px-3 py-1.5">
-              <span className="text-xs text-white/50 font-medium">{bookings.length} total</span>
+            <div className="bg-[#111] border border-white/[0.08] rounded-full px-3 py-1.5">
+              <span className="text-xs text-white/60 font-medium">{bookings.length} total</span>
             </div>
           )}
         </div>
@@ -101,12 +89,8 @@ export default function BookingsPage() {
             ))}
           </div>
         ) : bookings.length === 0 ? (
-          <div className="relative mt-12">
-            {/* Ambient glow behind empty state */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-64 h-64 bg-[#E23232]/5 rounded-full blur-[100px]" />
-            </div>
-            <div className="glass-card rounded-2xl relative">
+          <div className="mt-12">
+            <div className="bg-[#111] border border-white/[0.08] rounded-2xl">
               <div className="py-20 text-center">
                 <div className="w-16 h-16 rounded-2xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center mx-auto mb-5">
                   <Calendar className="w-7 h-7 text-white/20" />
@@ -132,13 +116,13 @@ export default function BookingsPage() {
                   className="block"
                 >
                   <div
-                    className={`glass-card rounded-2xl cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg border-l-2 ${statusBorderLeft[booking.status] || 'border-l-white/10'} ${statusGlow[booking.status] || ''}`}
+                    className={`bg-[#111] border border-white/[0.08] rounded-2xl cursor-pointer transition-all duration-300 hover:border-white/[0.12] border-l-2 ${statusBorderLeft[booking.status] || 'border-l-white/10'}`}
                   >
                     <div className="p-4">
                       <div className="flex items-start justify-between mb-3">
                         <Badge
                           variant="outline"
-                          className={`${statusColor[booking.status] || 'border-white/20 text-white/60'} text-[10px] uppercase tracking-widest font-semibold px-2.5 py-1 rounded-lg shadow-sm`}
+                          className={`${statusColor[booking.status] || 'border-white/20 text-white/60'} text-[10px] uppercase tracking-widest font-semibold px-2.5 py-1 rounded-lg`}
                         >
                           {booking.status.replace('_', ' ')}
                         </Badge>
@@ -157,7 +141,7 @@ export default function BookingsPage() {
                         </div>
 
                         {vehicle && (
-                          <div className="flex items-center gap-2 text-sm text-white/50">
+                          <div className="flex items-center gap-2 text-sm text-white/60">
                             <Car className="w-3.5 h-3.5 text-white/30" />
                             <span>
                               {vehicle.year} {vehicle.make} {vehicle.model}
@@ -166,7 +150,7 @@ export default function BookingsPage() {
                         )}
 
                         <div className="flex items-center justify-between pt-2 border-t border-white/[0.04]">
-                          <div className="flex items-center gap-2 text-white/30">
+                          <div className="flex items-center gap-2 text-white/40">
                             <Calendar className="w-3.5 h-3.5" />
                             <span className="text-xs">
                               {new Date(booking.created_at).toLocaleDateString('en-CA', {
@@ -177,7 +161,7 @@ export default function BookingsPage() {
                             </span>
                           </div>
                           <div className="flex items-center gap-1 text-white font-semibold text-sm">
-                            <DollarSign className="w-3.5 h-3.5 text-white/50" />
+                            <DollarSign className="w-3.5 h-3.5 text-white/60" />
                             {(booking.total_price / 100).toFixed(2)}
                           </div>
                         </div>

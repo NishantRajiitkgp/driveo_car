@@ -96,10 +96,10 @@ const planIcons: Record<string, React.ReactNode> = {
   detailing: <Crown className="w-6 h-6" />,
 };
 
-const planAccentGradients: Record<string, string> = {
-  regular: 'linear-gradient(135deg, #E23232 0%, #ff6b3d 100%)',
-  interior_exterior: 'linear-gradient(135deg, #E23232 0%, #c026d3 100%)',
-  detailing: 'linear-gradient(135deg, #f59e0b 0%, #E23232 100%)',
+const planAccentColors: Record<string, string> = {
+  regular: '#E23232',
+  interior_exterior: '#c026d3',
+  detailing: '#f59e0b',
 };
 
 export default function MembershipPage() {
@@ -188,30 +188,30 @@ export default function MembershipPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen page-bg text-white">
+      <div className="min-h-screen bg-[#050505] text-white">
         <div className="max-w-lg mx-auto px-4 py-8 space-y-6">
           {/* Header shimmer */}
           <div className="space-y-2">
-            <div className="h-8 w-48 shimmer rounded-lg" />
-            <div className="h-4 w-64 shimmer rounded-md" />
+            <div className="h-8 w-48 bg-white/[0.06] shimmer rounded-lg" />
+            <div className="h-4 w-64 bg-white/[0.06] shimmer rounded-md" />
           </div>
           {/* Card shimmer */}
-          <div className="h-52 w-full shimmer rounded-2xl" />
-          <div className="h-6 w-40 shimmer rounded-lg" />
-          <div className="h-72 w-full shimmer rounded-2xl" />
-          <div className="h-72 w-full shimmer rounded-2xl" />
-          <div className="h-72 w-full shimmer rounded-2xl" />
+          <div className="h-52 w-full bg-white/[0.06] shimmer rounded-2xl" />
+          <div className="h-6 w-40 bg-white/[0.06] shimmer rounded-lg" />
+          <div className="h-72 w-full bg-white/[0.06] shimmer rounded-2xl" />
+          <div className="h-72 w-full bg-white/[0.06] shimmer rounded-2xl" />
+          <div className="h-72 w-full bg-white/[0.06] shimmer rounded-2xl" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen page-bg text-white">
+    <div className="min-h-screen bg-[#050505] text-white">
       <div className="max-w-lg mx-auto px-4 py-8">
         {/* Page Header */}
         <div className="animate-fade-in-up mb-8">
-          <h1 className="text-3xl font-bold tracking-tight gradient-text mb-1">
+          <h1 className="text-3xl font-bold tracking-tight text-white mb-1">
             Membership
           </h1>
           <p className="text-white/40 text-sm">
@@ -222,11 +222,11 @@ export default function MembershipPage() {
         {/* Active Subscription Section */}
         {subscription && (
           <div className="animate-fade-in-up mb-10" style={{ animationDelay: '60ms' }}>
-            <Card className="gradient-border rounded-2xl overflow-hidden animate-glow-pulse">
-              <CardContent className="p-6 relative z-10">
+            <Card className="bg-[#111] border border-[#E23232]/30 rounded-2xl overflow-hidden">
+              <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-5">
                   <div className="flex items-center gap-4">
-                    <div className="p-3.5 rounded-2xl bg-gradient-to-br from-[#E23232]/25 to-[#E23232]/10 text-[#E23232] shadow-lg shadow-[#E23232]/10">
+                    <div className="p-3.5 rounded-2xl bg-[#E23232]/15 text-[#E23232]">
                       {planIcons[subscription.plan.wash_plan] || (
                         <Sparkles className="w-6 h-6" />
                       )}
@@ -246,8 +246,8 @@ export default function MembershipPage() {
                   <Badge
                     className={
                       subscription.cancelAtPeriodEnd
-                        ? 'bg-yellow-500/15 text-yellow-400 border border-yellow-500/20 backdrop-blur-sm'
-                        : 'bg-green-500/15 text-green-400 border border-green-500/20 backdrop-blur-sm'
+                        ? 'bg-yellow-500/15 text-yellow-400 border border-yellow-500/20'
+                        : 'bg-green-500/15 text-green-400 border border-green-500/20'
                     }
                   >
                     {subscription.cancelAtPeriodEnd ? 'Cancelling' : 'Active'}
@@ -256,7 +256,7 @@ export default function MembershipPage() {
 
                 {/* Usage Progress Bar */}
                 {usage && (
-                  <div className="glass rounded-xl p-4 mb-4">
+                  <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-xl p-4 mb-4">
                     <div className="flex items-center justify-between text-sm mb-3">
                       <span className="text-white/50">Washes used</span>
                       <span className="text-white font-semibold">
@@ -265,14 +265,12 @@ export default function MembershipPage() {
                     </div>
                     <div className="h-3 bg-white/[0.06] rounded-full overflow-hidden">
                       <div
-                        className="h-full rounded-full transition-all duration-700 ease-out"
+                        className="h-full bg-[#E23232] rounded-full transition-all duration-700 ease-out"
                         style={{
                           width: `${Math.min(
                             (usage.used / usage.allocated) * 100,
                             100
                           )}%`,
-                          background: 'linear-gradient(90deg, #E23232 0%, #ff6b3d 100%)',
-                          boxShadow: '0 0 12px rgba(226, 50, 50, 0.4)',
                         }}
                       />
                     </div>
@@ -299,7 +297,7 @@ export default function MembershipPage() {
                 {!subscription.cancelAtPeriodEnd && (
                   <Button
                     variant="outline"
-                    className="w-full mt-5 border-white/[0.06] text-white/50 hover:text-[#E23232] hover:border-[#E23232]/20 hover:bg-[#E23232]/5 bg-transparent rounded-xl h-11 transition-all duration-200"
+                    className="w-full mt-5 border-white/[0.08] text-white/50 hover:text-[#E23232] hover:border-[#E23232]/20 hover:bg-[#E23232]/5 bg-transparent rounded-xl h-11 transition-all duration-200"
                     onClick={handleCancel}
                     disabled={cancelling}
                   >
@@ -331,12 +329,12 @@ export default function MembershipPage() {
               {PLAN_DISPLAY.map((plan) => (
                 <Card
                   key={plan.slug}
-                  className="glass-card rounded-2xl overflow-hidden animate-fade-in-up"
+                  className="bg-[#111] border border-white/[0.08] rounded-2xl overflow-hidden animate-fade-in-up"
                 >
-                  {/* Accent gradient bar at top */}
+                  {/* Accent color bar at top */}
                   <div
                     className="h-1 w-full"
-                    style={{ background: planAccentGradients[plan.washPlan] || planAccentGradients.regular }}
+                    style={{ background: planAccentColors[plan.washPlan] || planAccentColors.regular }}
                   />
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between mb-4">
@@ -358,7 +356,7 @@ export default function MembershipPage() {
                       </div>
                       <Badge
                         variant="outline"
-                        className="border-white/[0.08] text-white/40 text-xs backdrop-blur-sm"
+                        className="border-white/[0.08] text-white/40 text-xs"
                       >
                         ${plan.pricePerWash}/wash
                       </Badge>
@@ -380,9 +378,6 @@ export default function MembershipPage() {
 
                     <Button
                       className="w-full bg-[#E23232] hover:bg-[#E23232]/90 text-white font-medium rounded-xl h-11 transition-all duration-200"
-                      style={{
-                        boxShadow: '0 4px 24px rgba(226, 50, 50, 0.25)',
-                      }}
                       onClick={() => handleSubscribe(plan.slug)}
                       disabled={subscribing !== null}
                     >

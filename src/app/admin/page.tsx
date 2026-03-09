@@ -90,7 +90,7 @@ export default function AdminDashboardPage() {
           <h1 className="text-3xl font-display text-white tracking-tight">Dashboard</h1>
           <p className="text-white/30 text-sm mt-1">Platform overview and analytics</p>
         </div>
-        <div className="flex items-center gap-2 glass rounded-full px-4 py-2">
+        <div className="flex items-center gap-2 bg-[#111] border border-white/[0.08] rounded-full px-4 py-2">
           <TrendingUp className="w-4 h-4 text-green-400" />
           <span className="text-green-400 text-xs font-medium">Live</span>
         </div>
@@ -98,18 +98,18 @@ export default function AdminDashboardPage() {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 stagger-children">
-        <div className="glass-card stat-card rounded-2xl p-5 animate-fade-in-up">
+        <div className="stat-card bg-[#111] border border-white/[0.08] rounded-2xl p-5 animate-fade-in-up">
           <div className="flex items-center justify-between mb-4">
             <div className="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center">
               <DollarSign className="w-5 h-5 text-green-400" />
             </div>
             <TrendingUp className="w-4 h-4 text-green-400/50" />
           </div>
-          <p className="text-3xl font-bold gradient-text">{centsToDisplay(stats.totalRevenue)}</p>
+          <p className="text-3xl font-bold text-[#E23232]">{centsToDisplay(stats.totalRevenue)}</p>
           <p className="text-white/30 text-xs mt-2 uppercase tracking-wider">Total Revenue</p>
         </div>
 
-        <div className="glass-card stat-card rounded-2xl p-5 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+        <div className="stat-card bg-[#111] border border-white/[0.08] rounded-2xl p-5 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
           <div className="flex items-center justify-between mb-4">
             <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
               <Car className="w-5 h-5 text-blue-400" />
@@ -120,7 +120,7 @@ export default function AdminDashboardPage() {
           <p className="text-white/30 text-xs mt-2 uppercase tracking-wider">Active Washes</p>
         </div>
 
-        <div className="glass-card stat-card rounded-2xl p-5 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+        <div className="stat-card bg-[#111] border border-white/[0.08] rounded-2xl p-5 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
           <div className="flex items-center justify-between mb-4">
             <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
               <UserCheck className="w-5 h-5 text-purple-400" />
@@ -131,7 +131,7 @@ export default function AdminDashboardPage() {
           <p className="text-white/30 text-xs mt-2 uppercase tracking-wider">Washers Online</p>
         </div>
 
-        <div className="glass-card stat-card rounded-2xl p-5 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+        <div className="stat-card bg-[#111] border border-white/[0.08] rounded-2xl p-5 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
           <div className="flex items-center justify-between mb-4">
             <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
               <Users className="w-5 h-5 text-amber-400" />
@@ -147,7 +147,7 @@ export default function AdminDashboardPage() {
         <div className="space-y-3 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
           {stats.pendingApplications > 0 && (
             <Link href="/admin/washers">
-              <div className="glass-card rounded-2xl p-4 border-l-4 border-l-amber-500 hover:bg-white/[0.04] transition-all cursor-pointer group mb-3">
+              <div className="bg-[#111] border border-white/[0.08] rounded-2xl p-4 border-l-4 border-l-amber-500 hover:border-white/[0.15] transition-colors cursor-pointer group mb-3">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
                     <AlertTriangle className="w-5 h-5 text-amber-400" />
@@ -158,14 +158,14 @@ export default function AdminDashboardPage() {
                     </p>
                     <p className="text-white/30 text-xs mt-0.5">Requires your attention</p>
                   </div>
-                  <ChevronRight className="w-5 h-5 text-white/20 group-hover:text-amber-400 group-hover:translate-x-1 transition-all" />
+                  <ChevronRight className="w-5 h-5 text-white/20 group-hover:text-amber-400 transition-colors" />
                 </div>
               </div>
             </Link>
           )}
           {stats.pendingBookings > 0 && (
             <Link href="/admin/bookings">
-              <div className="glass-card rounded-2xl p-4 border-l-4 border-l-yellow-500 hover:bg-white/[0.04] transition-all cursor-pointer group">
+              <div className="bg-[#111] border border-white/[0.08] rounded-2xl p-4 border-l-4 border-l-yellow-500 hover:border-white/[0.15] transition-colors cursor-pointer group">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-xl bg-yellow-500/10 flex items-center justify-center">
                     <CalendarDays className="w-5 h-5 text-yellow-400" />
@@ -176,7 +176,7 @@ export default function AdminDashboardPage() {
                     </p>
                     <p className="text-white/30 text-xs mt-0.5">Auto-assignment in progress</p>
                   </div>
-                  <ChevronRight className="w-5 h-5 text-white/20 group-hover:text-yellow-400 group-hover:translate-x-1 transition-all" />
+                  <ChevronRight className="w-5 h-5 text-white/20 group-hover:text-yellow-400 transition-colors" />
                 </div>
               </div>
             </Link>
@@ -193,12 +193,12 @@ export default function AdminDashboardPage() {
             <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         </div>
-        <div className="glass-card rounded-2xl overflow-hidden">
-          <div className="divide-y divide-white/[0.04]">
+        <div className="bg-[#111] border border-white/[0.08] rounded-2xl overflow-hidden">
+          <div className="divide-y divide-white/[0.06]">
             {recentBookings.map((b, idx) => (
               <div
                 key={b.id}
-                className="p-4 flex items-center gap-4 hover:bg-white/[0.03] transition-all duration-300 group"
+                className="p-4 flex items-center gap-4 hover:bg-white/[0.03] transition-colors duration-200 group"
                 style={{ animationDelay: `${0.05 * idx}s` }}
               >
                 <div className="w-10 h-10 rounded-xl bg-white/[0.04] flex items-center justify-center shrink-0 group-hover:bg-white/[0.06] transition-colors">
@@ -212,9 +212,9 @@ export default function AdminDashboardPage() {
                     <Badge
                       variant="outline"
                       className={`text-[10px] px-2 py-0.5 rounded-full ${
-                        b.status === 'pending' ? 'text-yellow-400 border-yellow-500/30 bg-yellow-500/5 shadow-[0_0_8px_rgba(234,179,8,0.1)]' :
-                        ['assigned', 'en_route', 'arrived', 'washing'].includes(b.status) ? 'text-blue-400 border-blue-500/30 bg-blue-500/5 shadow-[0_0_8px_rgba(59,130,246,0.1)]' :
-                        ['completed', 'paid'].includes(b.status) ? 'text-green-400 border-green-500/30 bg-green-500/5 shadow-[0_0_8px_rgba(34,197,94,0.1)]' :
+                        b.status === 'pending' ? 'text-yellow-400 border-yellow-500/30 bg-yellow-500/5' :
+                        ['assigned', 'en_route', 'arrived', 'washing'].includes(b.status) ? 'text-blue-400 border-blue-500/30 bg-blue-500/5' :
+                        ['completed', 'paid'].includes(b.status) ? 'text-green-400 border-green-500/30 bg-green-500/5' :
                         'text-white/40 border-white/20'
                       }`}
                     >

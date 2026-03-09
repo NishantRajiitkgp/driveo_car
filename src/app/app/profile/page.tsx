@@ -116,7 +116,7 @@ export default function ProfilePage() {
                 size="sm"
                 onClick={handleSave}
                 disabled={saving}
-                className="bg-[#E23232] hover:bg-[#c92a2a] text-white rounded-xl gap-2 shadow-lg shadow-[#E23232]/20 transition-all"
+                className="bg-[#E23232] hover:bg-[#c92a2a] text-white rounded-xl gap-2 transition-all"
               >
                 <Save className="w-3.5 h-3.5" />
                 {saving ? 'Saving...' : 'Save'}
@@ -125,25 +125,22 @@ export default function ProfilePage() {
           </div>
 
           {/* Avatar + Name Hero */}
-          <div className="glass-card rounded-2xl p-6">
+          <div className="bg-[#111] border border-white/[0.08] rounded-2xl p-6">
             <div className="flex items-center gap-5">
-              {/* Avatar with gradient ring */}
-              <div className="relative">
-                <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-[#E23232] to-[#E23232]/40 opacity-80 blur-sm" />
-                <div className="relative w-18 h-18 rounded-full bg-gradient-to-br from-[#E23232]/30 to-[#E23232]/10 border-2 border-[#E23232]/30 flex items-center justify-center" style={{ width: '72px', height: '72px' }}>
-                  <User className="w-8 h-8 text-[#E23232]" />
-                </div>
+              {/* Avatar — simple circle */}
+              <div className="w-[72px] h-[72px] rounded-full bg-[#E23232]/10 border-2 border-[#E23232]/30 flex items-center justify-center">
+                <User className="w-8 h-8 text-[#E23232]" />
               </div>
               <div>
                 <p className="text-xl font-semibold text-white tracking-tight">{profile?.full_name}</p>
-                <p className="text-sm text-white/30 mt-0.5">Customer</p>
+                <p className="text-sm text-white/40 mt-0.5">Customer</p>
               </div>
             </div>
           </div>
 
           {/* Profile Details */}
-          <div className="glass-card rounded-2xl p-6">
-            <h2 className="text-xs uppercase tracking-[0.2em] text-white/30 font-semibold mb-5">Personal Information</h2>
+          <div className="bg-[#111] border border-white/[0.08] rounded-2xl p-6">
+            <h2 className="text-xs uppercase tracking-[0.2em] text-white/40 font-semibold mb-5">Personal Information</h2>
             <div className="space-y-5">
               {/* Full Name */}
               <div>
@@ -156,7 +153,7 @@ export default function ProfilePage() {
                     onChange={(e) =>
                       setForm({ ...form, full_name: e.target.value })
                     }
-                    className="mt-2 premium-input bg-white/[0.03] border-white/[0.08] text-white rounded-xl"
+                    className="mt-2 bg-white/[0.03] border-white/[0.08] text-white rounded-xl"
                   />
                 ) : (
                   <p className="mt-2 text-white font-medium">{profile?.full_name}</p>
@@ -188,7 +185,7 @@ export default function ProfilePage() {
                       setForm({ ...form, phone: e.target.value })
                     }
                     placeholder="+1 (416) 555-0123"
-                    className="mt-2 premium-input bg-white/[0.03] border-white/[0.08] text-white rounded-xl placeholder:text-white/20"
+                    className="mt-2 bg-white/[0.03] border-white/[0.08] text-white rounded-xl placeholder:text-white/20"
                   />
                 ) : (
                   <div className="flex items-center gap-3 mt-2">
@@ -204,33 +201,31 @@ export default function ProfilePage() {
 
           {/* Referral Code */}
           {profile?.customer_profiles?.referral_code && (
-            <div className="gradient-border rounded-2xl">
-              <div className="glass-card rounded-2xl overflow-hidden">
-                <div className="p-6">
-                  <h2 className="text-xs uppercase tracking-[0.2em] text-white/30 font-semibold mb-4">
-                    Referral Code
-                  </h2>
-                  <div className="flex items-center gap-3">
-                    <code className="flex-1 bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3.5 text-lg font-mono text-[#E23232] tracking-[0.2em] text-center font-bold">
-                      {profile.customer_profiles.referral_code}
-                    </code>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={copyReferral}
-                      className="border-white/[0.08] text-white hover:bg-white/5 shrink-0 rounded-xl w-12 h-12 transition-all"
-                    >
-                      {copied ? (
-                        <Check className="w-4 h-4 text-green-400" />
-                      ) : (
-                        <Copy className="w-4 h-4" />
-                      )}
-                    </Button>
-                  </div>
-                  <p className="text-xs text-white/25 mt-3">
-                    Share this code with friends to earn rewards
-                  </p>
+            <div className="bg-[#111] border border-[#E23232]/30 rounded-2xl">
+              <div className="p-6">
+                <h2 className="text-xs uppercase tracking-[0.2em] text-white/40 font-semibold mb-4">
+                  Referral Code
+                </h2>
+                <div className="flex items-center gap-3">
+                  <code className="flex-1 bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3.5 text-lg font-mono text-[#E23232] tracking-[0.2em] text-center font-bold">
+                    {profile.customer_profiles.referral_code}
+                  </code>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={copyReferral}
+                    className="border-white/[0.08] text-white hover:bg-white/5 shrink-0 rounded-xl w-12 h-12 transition-all"
+                  >
+                    {copied ? (
+                      <Check className="w-4 h-4 text-green-400" />
+                    ) : (
+                      <Copy className="w-4 h-4" />
+                    )}
+                  </Button>
                 </div>
+                <p className="text-xs text-white/25 mt-3">
+                  Share this code with friends to earn rewards
+                </p>
               </div>
             </div>
           )}

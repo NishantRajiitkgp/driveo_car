@@ -79,10 +79,10 @@ export default function NotificationsPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-2xl font-display text-white tracking-tight">Notifications</h1>
-            <p className="text-white/30 text-sm mt-1">Stay updated on your washes</p>
+            <p className="text-white/40 text-sm mt-1">Stay updated on your washes</p>
           </div>
           {notifications.some((n) => !n.is_read) && (
-            <div className="glass rounded-full px-3 py-1.5 border border-[#E23232]/20">
+            <div className="bg-[#E23232]/10 border border-[#E23232]/20 rounded-full px-3 py-1.5">
               <span className="text-xs text-[#E23232] font-semibold">
                 {notifications.filter((n) => !n.is_read).length} unread
               </span>
@@ -97,18 +97,11 @@ export default function NotificationsPage() {
             ))}
           </div>
         ) : notifications.length === 0 ? (
-          <div className="relative mt-12">
-            {/* Ambient glow */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-56 h-56 bg-[#E23232]/5 rounded-full blur-[100px]" />
-            </div>
-            <div className="glass-card rounded-2xl relative">
+          <div className="mt-12">
+            <div className="bg-[#111] border border-white/[0.08] rounded-2xl">
               <div className="py-20 text-center">
-                <div className="relative w-16 h-16 mx-auto mb-5">
-                  <div className="absolute inset-0 rounded-2xl bg-white/[0.03] border border-white/[0.06]" />
-                  <div className="relative w-full h-full flex items-center justify-center">
-                    <BellOff className="w-7 h-7 text-white/15" />
-                  </div>
+                <div className="w-16 h-16 rounded-2xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center mx-auto mb-5">
+                  <BellOff className="w-7 h-7 text-white/15" />
                 </div>
                 <p className="text-white/40 text-sm font-medium">No notifications yet</p>
                 <p className="text-white/20 text-xs mt-1.5">We will notify you about your washes</p>
@@ -123,10 +116,10 @@ export default function NotificationsPage() {
                 onClick={() => {
                   if (!notification.is_read) markAsRead(notification.id);
                 }}
-                className={`glass-card rounded-2xl cursor-pointer transition-all duration-300 hover:-translate-y-0.5 ${
+                className={`bg-[#111] border border-white/[0.08] rounded-2xl cursor-pointer transition-all duration-300 hover:border-white/[0.12] ${
                   !notification.is_read
-                    ? 'border-l-2 border-l-[#E23232] shadow-lg shadow-[#E23232]/5'
-                    : 'opacity-50 hover:opacity-70'
+                    ? 'border-l-2 border-l-[#E23232]'
+                    : 'opacity-60 hover:opacity-80'
                 }`}
               >
                 <div className="p-4">
@@ -135,7 +128,7 @@ export default function NotificationsPage() {
                     <div
                       className={`mt-0.5 w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
                         !notification.is_read
-                          ? 'bg-[#E23232]/15 text-[#E23232] shadow-sm shadow-[#E23232]/10'
+                          ? 'bg-[#E23232]/15 text-[#E23232]'
                           : 'bg-white/[0.03] text-white/25'
                       }`}
                     >
@@ -151,7 +144,7 @@ export default function NotificationsPage() {
                       <div className="flex items-start justify-between gap-3">
                         <p
                           className={`text-sm font-medium leading-snug ${
-                            !notification.is_read ? 'text-white' : 'text-white/50'
+                            !notification.is_read ? 'text-white' : 'text-white/60'
                           }`}
                         >
                           {notification.title}

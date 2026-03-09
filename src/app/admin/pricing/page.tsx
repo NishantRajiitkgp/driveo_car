@@ -117,7 +117,7 @@ export default function AdminPricingPage() {
         <Button
           onClick={handleSave}
           disabled={saving}
-          className="bg-[#E23232] hover:bg-[#E23232]/80 text-white rounded-xl shadow-[0_0_25px_rgba(226,50,50,0.25)] hover:shadow-[0_0_35px_rgba(226,50,50,0.35)] disabled:shadow-none transition-all px-6"
+          className="bg-[#E23232] hover:bg-[#E23232]/80 text-white rounded-xl disabled:shadow-none transition-colors px-6"
         >
           <Save className="w-4 h-4 mr-2" />
           {saving ? 'Saving...' : 'Save Changes'}
@@ -133,8 +133,8 @@ export default function AdminPricingPage() {
       ) : (
         <div className="space-y-6 stagger-children">
           {/* Base Plan Prices */}
-          <div className="glass-card rounded-2xl overflow-hidden animate-fade-in-up">
-            <div className="p-6 border-b border-white/[0.04]">
+          <div className="bg-[#111] border border-white/[0.08] rounded-2xl overflow-hidden animate-fade-in-up">
+            <div className="p-6 border-b border-white/[0.06]">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-green-500/10 flex items-center justify-center">
                   <DollarSign className="w-4 h-4 text-green-400" />
@@ -150,14 +150,14 @@ export default function AdminPricingPage() {
                 {Object.entries(perWashPrice).map(([plan, cents]) => (
                   <div
                     key={plan}
-                    className="glass rounded-xl p-5 group hover:bg-white/[0.04] transition-all duration-300"
+                    className="bg-[#0a0a0a] border border-white/[0.06] rounded-xl p-5 group hover:border-white/[0.12] transition-colors duration-200"
                   >
                     <Label className="text-white/30 text-[10px] uppercase tracking-widest">
                       {plan === 'interior_exterior'
                         ? 'Interior & Exterior'
                         : plan.charAt(0).toUpperCase() + plan.slice(1)}
                     </Label>
-                    <p className="text-3xl font-bold gradient-text mt-2">
+                    <p className="text-3xl font-bold text-[#E23232] mt-2">
                       ${(cents / 100).toFixed(0)}
                     </p>
                     <p className="text-[10px] text-white/20 mt-2 uppercase tracking-widest">per wash</p>
@@ -168,8 +168,8 @@ export default function AdminPricingPage() {
           </div>
 
           {/* Monthly Subscription Prices */}
-          <div className="glass-card rounded-2xl overflow-hidden animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-            <div className="p-6 border-b border-white/[0.04]">
+          <div className="bg-[#111] border border-white/[0.08] rounded-2xl overflow-hidden animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+            <div className="p-6 border-b border-white/[0.06]">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-blue-500/10 flex items-center justify-center">
                   <DollarSign className="w-4 h-4 text-blue-400" />
@@ -184,7 +184,7 @@ export default function AdminPricingPage() {
               {plans.map((plan) => (
                 <div
                   key={plan.id}
-                  className="flex items-center justify-between glass rounded-xl p-4 hover:bg-white/[0.04] transition-all duration-300 group"
+                  className="flex items-center justify-between bg-[#0a0a0a] border border-white/[0.06] rounded-xl p-4 hover:border-white/[0.12] transition-colors duration-200 group"
                 >
                   <div>
                     <p className="font-medium text-white text-sm">{plan.name}</p>
@@ -203,7 +203,7 @@ export default function AdminPricingPage() {
                           Math.round(parseFloat(e.target.value) * 100) || 0
                         )
                       }
-                      className="premium-input w-24 text-right text-sm rounded-lg"
+                      className="bg-[#111] border border-white/[0.08] w-24 text-right text-sm rounded-lg text-white focus:border-white/[0.15] focus:ring-0"
                     />
                     <span className="text-white/20 text-xs font-mono">/mo</span>
                   </div>
@@ -213,8 +213,8 @@ export default function AdminPricingPage() {
           </div>
 
           {/* Vehicle Multipliers */}
-          <div className="glass-card rounded-2xl overflow-hidden animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-            <div className="p-6 border-b border-white/[0.04]">
+          <div className="bg-[#111] border border-white/[0.08] rounded-2xl overflow-hidden animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            <div className="p-6 border-b border-white/[0.06]">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center">
                   <Car className="w-4 h-4 text-purple-400" />
@@ -229,7 +229,7 @@ export default function AdminPricingPage() {
               {vehicleMults.map((v) => (
                 <div
                   key={v.key}
-                  className="flex items-center justify-between glass rounded-xl px-4 py-3 hover:bg-white/[0.04] transition-all duration-300"
+                  className="flex items-center justify-between bg-[#0a0a0a] border border-white/[0.06] rounded-xl px-4 py-3 hover:border-white/[0.12] transition-colors duration-200"
                 >
                   <span className="text-sm text-white/60">{v.type}</span>
                   <div className="flex items-center gap-3">
@@ -243,7 +243,7 @@ export default function AdminPricingPage() {
                           parseFloat(e.target.value) || 1
                         )
                       }
-                      className="premium-input w-20 text-right text-sm rounded-lg"
+                      className="bg-[#111] border border-white/[0.08] w-20 text-right text-sm rounded-lg text-white focus:border-white/[0.15] focus:ring-0"
                     />
                     <span className="text-white/20 text-xs font-mono w-4">x</span>
                   </div>
@@ -253,8 +253,8 @@ export default function AdminPricingPage() {
           </div>
 
           {/* Dirt Level Multipliers */}
-          <div className="glass-card rounded-2xl overflow-hidden animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-            <div className="p-6 border-b border-white/[0.04]">
+          <div className="bg-[#111] border border-white/[0.08] rounded-2xl overflow-hidden animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+            <div className="p-6 border-b border-white/[0.06]">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center">
                   <Gauge className="w-4 h-4 text-amber-400" />
@@ -269,18 +269,18 @@ export default function AdminPricingPage() {
               {dirtMults.map((d) => (
                 <div
                   key={d.level}
-                  className="flex items-center justify-between glass rounded-xl px-4 py-3 hover:bg-white/[0.04] transition-all duration-300"
+                  className="flex items-center justify-between bg-[#0a0a0a] border border-white/[0.06] rounded-xl px-4 py-3 hover:border-white/[0.12] transition-colors duration-200"
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-sm text-white/60">
                       Level {d.level}
                     </span>
-                    <span className="text-[10px] text-white/20 glass rounded-full px-2.5 py-0.5">
+                    <span className="text-[10px] text-white/20 bg-[#111] border border-white/[0.06] rounded-full px-2.5 py-0.5">
                       {d.description}
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="gradient-text text-sm font-bold">{d.multiplier}x</span>
+                    <span className="text-[#E23232] text-sm font-bold">{d.multiplier}x</span>
                     <Input
                       type="number"
                       step="0.05"
@@ -291,7 +291,7 @@ export default function AdminPricingPage() {
                           parseFloat(e.target.value) || 1
                         )
                       }
-                      className="premium-input w-20 text-right text-sm rounded-lg"
+                      className="bg-[#111] border border-white/[0.08] w-20 text-right text-sm rounded-lg text-white focus:border-white/[0.15] focus:ring-0"
                     />
                     <span className="text-white/20 text-xs font-mono w-4">x</span>
                   </div>

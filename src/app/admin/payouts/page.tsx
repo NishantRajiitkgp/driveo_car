@@ -115,9 +115,9 @@ export default function AdminPayoutsPage() {
             <p className="text-white/30 text-sm mt-0.5">Manage washer earnings and transfers</p>
           </div>
         </div>
-        <div className="glass-card rounded-2xl px-5 py-3 border-l-4 border-l-[#E23232]">
+        <div className="bg-[#111] border border-white/[0.08] rounded-2xl px-5 py-3 border-l-4 border-l-[#E23232]">
           <p className="text-[10px] text-white/30 uppercase tracking-widest">Total Pending</p>
-          <p className="text-xl font-bold gradient-text mt-0.5">
+          <p className="text-xl font-bold text-[#E23232] mt-0.5">
             ${(totalPending / 100).toFixed(2)}
           </p>
         </div>
@@ -125,15 +125,15 @@ export default function AdminPayoutsPage() {
 
       {/* Stats Overview */}
       <div className="grid grid-cols-3 gap-4 animate-fade-in-up">
-        <div className="glass-card stat-card rounded-2xl p-4 text-center">
+        <div className="stat-card bg-[#111] border border-white/[0.08] rounded-2xl p-4 text-center">
           <p className="text-2xl font-bold text-white">{washers.length}</p>
           <p className="text-[10px] text-white/25 uppercase tracking-widest mt-1">Washers</p>
         </div>
-        <div className="glass-card stat-card rounded-2xl p-4 text-center">
+        <div className="stat-card bg-[#111] border border-white/[0.08] rounded-2xl p-4 text-center">
           <p className="text-2xl font-bold text-white">{washers.filter(w => w.pending_earnings > 0).length}</p>
           <p className="text-[10px] text-white/25 uppercase tracking-widest mt-1">With Pending</p>
         </div>
-        <div className="glass-card stat-card rounded-2xl p-4 text-center">
+        <div className="stat-card bg-[#111] border border-white/[0.08] rounded-2xl p-4 text-center">
           <p className="text-2xl font-bold text-white">{washers.filter(w => w.stripe_account_id).length}</p>
           <p className="text-[10px] text-white/25 uppercase tracking-widest mt-1">Stripe Connected</p>
         </div>
@@ -146,7 +146,7 @@ export default function AdminPayoutsPage() {
           ))}
         </div>
       ) : washers.length === 0 ? (
-        <div className="glass-card rounded-2xl p-12 text-center">
+        <div className="bg-[#111] border border-white/[0.08] rounded-2xl p-12 text-center">
           <div className="w-16 h-16 rounded-2xl bg-white/[0.03] flex items-center justify-center mx-auto mb-4">
             <User className="w-7 h-7 text-white/10" />
           </div>
@@ -157,7 +157,7 @@ export default function AdminPayoutsPage() {
           {washers.map((washer) => (
             <div
               key={washer.id}
-              className="glass-card rounded-2xl hover:bg-white/[0.04] transition-all duration-300 group animate-fade-in-up"
+              className="bg-[#111] border border-white/[0.08] rounded-2xl hover:border-white/[0.15] transition-colors duration-200 group animate-fade-in-up"
             >
               <div className="p-5">
                 <div className="flex items-center justify-between">
@@ -171,12 +171,12 @@ export default function AdminPayoutsPage() {
                           {washer.full_name}
                         </p>
                         {washer.stripe_account_id ? (
-                          <span className="text-[10px] text-green-400 bg-green-500/10 px-2 py-0.5 rounded-full flex items-center gap-1 shadow-[0_0_8px_rgba(34,197,94,0.1)]">
+                          <span className="text-[10px] text-green-400 bg-green-500/10 px-2 py-0.5 rounded-full flex items-center gap-1">
                             <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
                             Stripe
                           </span>
                         ) : (
-                          <span className="flex items-center gap-1 text-[10px] text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded-full shadow-[0_0_8px_rgba(249,115,22,0.1)]">
+                          <span className="flex items-center gap-1 text-[10px] text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded-full">
                             <AlertCircle className="w-2.5 h-2.5" />
                             No Stripe
                           </span>
@@ -193,7 +193,7 @@ export default function AdminPayoutsPage() {
 
                   <div className="flex items-center gap-5 shrink-0">
                     <div className="text-right">
-                      <p className={`text-xl font-bold ${washer.pending_earnings > 0 ? 'gradient-text' : 'text-white/20'}`}>
+                      <p className={`text-xl font-bold ${washer.pending_earnings > 0 ? 'text-[#E23232]' : 'text-white/20'}`}>
                         ${(washer.pending_earnings / 100).toFixed(2)}
                       </p>
                       <p className="text-[10px] text-white/20 uppercase tracking-widest">pending</p>
@@ -206,7 +206,7 @@ export default function AdminPayoutsPage() {
                         !washer.stripe_account_id ||
                         processingId === washer.id
                       }
-                      className="bg-[#E23232] hover:bg-[#E23232]/80 text-white disabled:opacity-20 rounded-xl shadow-[0_0_20px_rgba(226,50,50,0.2)] hover:shadow-[0_0_30px_rgba(226,50,50,0.3)] disabled:shadow-none transition-all px-5"
+                      className="bg-[#E23232] hover:bg-[#E23232]/80 text-white disabled:opacity-20 rounded-xl disabled:shadow-none transition-colors px-5"
                     >
                       <Send className="w-3.5 h-3.5 mr-2" />
                       {processingId === washer.id ? 'Sending...' : 'Payout'}

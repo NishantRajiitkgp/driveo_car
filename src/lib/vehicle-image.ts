@@ -1,7 +1,7 @@
 /**
  * Generate a photo-realistic car image URL using Imagin Studio CDN.
- * Free for development — no API key needed.
- * Returns a side-profile render of the exact make/model/year.
+ * Uses VEHICLE_IMAGE_API_KEY env var as customer key (paid = no watermark).
+ * Falls back to 'img' demo key (has watermark) if no key is set.
  */
 export function getVehicleImageUrl(
   make: string,
@@ -15,11 +15,9 @@ export function getVehicleImageUrl(
 ): string {
   const { angle = 'side', width = 800, color } = options || {};
 
-  // Imagin Studio expects lowercase, hyphenated names
   const cleanMake = make.toLowerCase().trim().replace(/\s+/g, '-');
   const cleanModel = model.toLowerCase().trim().replace(/\s+/g, '-');
 
-  // Map angle names to Imagin Studio angle numbers
   const angleMap: Record<string, number> = {
     'side': 9,
     'front': 1,
@@ -28,8 +26,11 @@ export function getVehicleImageUrl(
     'rear-side': 4,
   };
 
+  // Use paid customer key if available, otherwise demo key (watermarked)
+  const customerKey = process.env.NEXT_PUBLIC_VEHICLE_IMAGE_KEY || 'img';
+
   const params = new URLSearchParams({
-    customer: 'img',
+    customer: customerKey,
     make: cleanMake,
     modelFamily: cleanModel,
     modelYear: String(year),

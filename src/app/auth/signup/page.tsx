@@ -59,21 +59,14 @@ function SignupForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-[#050505] relative overflow-hidden">
-      {/* Ambient glows */}
-      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[#E23232]/[0.04] rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-[#E23232]/[0.03] rounded-full blur-[100px] pointer-events-none" />
-
-      <div className="w-full max-w-[420px] animate-fade-in-up relative z-10">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-[#050505]">
+      <div className="w-full max-w-[400px] animate-fade-in-up">
         {/* Logo */}
         <div className="text-center mb-10">
-          <Link href="/" className="inline-block group">
-            <div className="relative inline-flex items-center justify-center">
-              <Image src="/Driveo-logo.png" alt="Driveo" width={56} height={56} className="transition-transform group-hover:scale-110" />
-              <div className="absolute inset-0 bg-[#E23232]/20 blur-2xl rounded-full opacity-60" />
-            </div>
+          <Link href="/" className="inline-block">
+            <Image src="/Driveo-logo.png" alt="Driveo" width={48} height={48} />
           </Link>
-          <h1 className="font-display text-3xl text-white mt-6 tracking-wide">
+          <h1 className="font-display text-2xl text-white mt-5 tracking-wide">
             {isWasher ? 'JOIN THE TEAM' : 'GET STARTED'}
           </h1>
           <p className="text-white/40 text-sm mt-2">
@@ -82,7 +75,7 @@ function SignupForm() {
         </div>
 
         {/* Card */}
-        <div className="glass-card rounded-2xl p-8">
+        <div className="bg-[#111] border border-white/[0.08] rounded-2xl p-7">
           {/* Google Sign Up (customers only) */}
           {!isWasher && (
             <>
@@ -102,7 +95,7 @@ function SignupForm() {
                   });
                   if (error) { toast.error(error.message); setLoading(false); }
                 }}
-                className="w-full h-12 bg-white/[0.04] border-white/[0.08] text-white hover:bg-white/[0.08] hover:border-white/[0.15] font-medium rounded-xl transition-all duration-200"
+                className="w-full h-12 bg-white/[0.04] border-white/[0.10] text-white hover:bg-white/[0.08] font-medium rounded-xl"
               >
                 <svg className="w-5 h-5 mr-2.5" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
@@ -114,45 +107,45 @@ function SignupForm() {
               </Button>
 
               <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/[0.06]" /></div>
+                <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/[0.08]" /></div>
                 <div className="relative flex justify-center text-xs">
-                  <span className="px-4 text-white/25 bg-[#050505]/50 backdrop-blur-sm">or sign up with email</span>
+                  <span className="px-4 text-white/30 bg-[#111]">or sign up with email</span>
                 </div>
               </div>
             </>
           )}
 
           <form onSubmit={handleSignup} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="fullName" className="text-white/50 text-xs uppercase tracking-wider font-medium">Full Name</Label>
-              <Input id="fullName" type="text" placeholder="John Doe" value={fullName} onChange={(e) => setFullName(e.target.value)} required className="h-12 bg-white/[0.04] border-white/[0.08] text-white placeholder:text-white/20 rounded-xl premium-input" />
+            <div className="space-y-1.5">
+              <Label htmlFor="fullName" className="text-white/50 text-xs font-medium">Full Name</Label>
+              <Input id="fullName" type="text" placeholder="John Doe" value={fullName} onChange={(e) => setFullName(e.target.value)} required className="h-12 bg-white/[0.04] border-white/[0.10] text-white placeholder:text-white/25 rounded-xl premium-input" />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-white/50 text-xs uppercase tracking-wider font-medium">Email</Label>
-              <Input id="email" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required className="h-12 bg-white/[0.04] border-white/[0.08] text-white placeholder:text-white/20 rounded-xl premium-input" />
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-white/50 text-xs font-medium">Email</Label>
+              <Input id="email" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required className="h-12 bg-white/[0.04] border-white/[0.10] text-white placeholder:text-white/25 rounded-xl premium-input" />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="phone" className="text-white/50 text-xs uppercase tracking-wider font-medium">Phone Number</Label>
-              <Input id="phone" type="tel" placeholder="+1 (416) 555-0123" value={phone} onChange={(e) => setPhone(e.target.value)} className="h-12 bg-white/[0.04] border-white/[0.08] text-white placeholder:text-white/20 rounded-xl premium-input" />
+            <div className="space-y-1.5">
+              <Label htmlFor="phone" className="text-white/50 text-xs font-medium">Phone Number</Label>
+              <Input id="phone" type="tel" placeholder="+1 (416) 555-0123" value={phone} onChange={(e) => setPhone(e.target.value)} className="h-12 bg-white/[0.04] border-white/[0.10] text-white placeholder:text-white/25 rounded-xl premium-input" />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-white/50 text-xs uppercase tracking-wider font-medium">Password</Label>
-              <Input id="password" type="password" placeholder="Min. 8 characters" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} className="h-12 bg-white/[0.04] border-white/[0.08] text-white placeholder:text-white/20 rounded-xl premium-input" />
+            <div className="space-y-1.5">
+              <Label htmlFor="password" className="text-white/50 text-xs font-medium">Password</Label>
+              <Input id="password" type="password" placeholder="Min. 8 characters" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} className="h-12 bg-white/[0.04] border-white/[0.10] text-white placeholder:text-white/25 rounded-xl premium-input" />
             </div>
-            <Button type="submit" disabled={loading} className="w-full h-12 bg-[#E23232] hover:bg-[#c92a2a] text-white font-semibold rounded-xl transition-all duration-200 shadow-[0_4px_24px_rgba(226,50,50,0.25)] hover:shadow-[0_8px_32px_rgba(226,50,50,0.35)] group mt-2">
-              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (<>{isWasher ? 'Apply Now' : 'Create Account'}<ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform" /></>)}
+            <Button type="submit" disabled={loading} className="w-full h-12 bg-[#E23232] hover:bg-[#c92a2a] text-white font-semibold rounded-xl mt-2">
+              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (<>{isWasher ? 'Apply Now' : 'Create Account'}<ArrowRight className="w-4 h-4 ml-2" /></>)}
             </Button>
           </form>
 
-          <div className="mt-8 text-center space-y-2">
-            <p className="text-sm text-white/35">
+          <div className="mt-7 text-center space-y-2">
+            <p className="text-sm text-white/40">
               Already have an account?{' '}
-              <Link href="/auth/login" className="text-[#E23232] hover:text-[#ff6b6b] transition-colors font-medium">Sign in</Link>
+              <Link href="/auth/login" className="text-[#E23232] font-medium">Sign in</Link>
             </p>
             {!isWasher && (
-              <p className="text-sm text-white/35">
+              <p className="text-sm text-white/40">
                 Want to wash cars?{' '}
-                <Link href="/apply" className="text-[#E23232] hover:text-[#ff6b6b] transition-colors font-medium">Apply as a washer</Link>
+                <Link href="/apply" className="text-[#E23232] font-medium">Apply as a washer</Link>
               </p>
             )}
           </div>

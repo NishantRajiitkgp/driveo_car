@@ -35,12 +35,12 @@ const planLabel: Record<string, string> = {
 };
 
 const statusColor: Record<string, string> = {
-  assigned: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-  en_route: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-  arrived: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
-  washing: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
-  completed: 'bg-green-500/20 text-green-400 border-green-500/30',
-  paid: 'bg-green-500/20 text-green-400 border-green-500/30',
+  assigned: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+  en_route: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+  arrived: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+  washing: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+  completed: 'bg-green-500/10 text-green-400 border-green-500/20',
+  paid: 'bg-green-500/10 text-green-400 border-green-500/20',
 };
 
 const statusBorderAccent: Record<string, string> = {
@@ -50,15 +50,6 @@ const statusBorderAccent: Record<string, string> = {
   washing: 'border-l-purple-500',
   completed: 'border-l-green-500',
   paid: 'border-l-green-500',
-};
-
-const statusGlow: Record<string, string> = {
-  assigned: 'shadow-[0_0_12px_rgba(59,130,246,0.08)]',
-  en_route: 'shadow-[0_0_12px_rgba(59,130,246,0.08)]',
-  arrived: 'shadow-[0_0_12px_rgba(168,85,247,0.08)]',
-  washing: 'shadow-[0_0_12px_rgba(168,85,247,0.08)]',
-  completed: 'shadow-[0_0_12px_rgba(34,197,94,0.08)]',
-  paid: 'shadow-[0_0_12px_rgba(34,197,94,0.08)]',
 };
 
 export default function WasherJobsPage() {
@@ -103,7 +94,7 @@ export default function WasherJobsPage() {
   const renderJobCard = (job: Job) => (
     <Link key={job.id} href={`/washer/jobs/${job.id}`}>
       <div
-        className={`glass-card rounded-2xl border-l-[3px] ${statusBorderAccent[job.status] || 'border-l-white/10'} ${statusGlow[job.status] || ''} hover:bg-white/[0.04] transition-all duration-300 cursor-pointer`}
+        className={`bg-[#111] border border-white/[0.08] rounded-2xl border-l-[3px] ${statusBorderAccent[job.status] || 'border-l-white/10'} hover:border-white/[0.15] transition-colors duration-200 cursor-pointer`}
       >
         <div className="p-4">
           <div className="flex items-start justify-between mb-3">
@@ -113,7 +104,7 @@ export default function WasherJobsPage() {
             >
               {job.status.replace('_', ' ')}
             </Badge>
-            <div className="flex items-center gap-1 text-green-400 font-bold text-sm">
+            <div className="flex items-center gap-1 text-[#E23232] font-bold text-sm">
               <DollarSign className="w-3.5 h-3.5" />
               {(job.washer_payout / 100).toFixed(2)}
             </div>
@@ -129,7 +120,7 @@ export default function WasherJobsPage() {
             </div>
 
             {job.vehicles && (
-              <div className="flex items-center gap-2 text-sm text-white/50">
+              <div className="flex items-center gap-2 text-sm text-white/60">
                 <Car className="w-3.5 h-3.5 text-white/30" />
                 <span>
                   {job.vehicles.year} {job.vehicles.make} {job.vehicles.model}
@@ -138,12 +129,12 @@ export default function WasherJobsPage() {
               </div>
             )}
 
-            <div className="flex items-center gap-2 text-sm text-white/35">
+            <div className="flex items-center gap-2 text-sm text-white/40">
               <MapPin className="w-3.5 h-3.5" />
               <span className="line-clamp-1">{job.service_address}</span>
             </div>
 
-            <div className="flex items-center justify-between text-xs text-white/25 pt-1 border-t border-white/[0.04]">
+            <div className="flex items-center justify-between text-xs text-white/30 pt-1 border-t border-white/[0.06]">
               <div className="flex items-center gap-2">
                 {job.scheduled_at ? (
                   <>
@@ -173,73 +164,69 @@ export default function WasherJobsPage() {
   );
 
   const renderEmptyState = (message: string) => (
-    <div className="glass-card rounded-2xl p-12 text-center relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-[#E23232]/5 blur-3xl pointer-events-none" />
-      <p className="text-white/30 text-sm relative">{message}</p>
+    <div className="bg-[#111] border border-white/[0.08] rounded-2xl p-12 text-center">
+      <p className="text-white/40 text-sm">{message}</p>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
-      <div className="max-w-lg mx-auto px-4 py-8 animate-fade-in-up">
-        <h1 className="text-2xl font-display text-white tracking-tight mb-6">My Jobs</h1>
+    <div className="max-w-lg mx-auto px-4 py-8 animate-fade-in-up">
+      <h1 className="text-2xl font-display text-white tracking-tight mb-6">My Jobs</h1>
 
-        {loading ? (
-          <div className="space-y-3">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="shimmer h-36 w-full bg-white/5 rounded-2xl" />
-            ))}
-          </div>
-        ) : (
-          <Tabs defaultValue="active" className="w-full">
-            <TabsList className="w-full glass rounded-full p-1 border border-white/[0.06] mb-6 h-auto">
-              <TabsTrigger
-                value="active"
-                className="flex-1 rounded-full py-2.5 text-sm font-medium data-[state=active]:bg-[#E23232] data-[state=active]:text-white data-[state=active]:shadow-[0_0_20px_rgba(226,50,50,0.3)] text-white/40 transition-all duration-300"
-              >
-                Active ({activeJobs.length})
-              </TabsTrigger>
-              <TabsTrigger
-                value="upcoming"
-                className="flex-1 rounded-full py-2.5 text-sm font-medium data-[state=active]:bg-[#E23232] data-[state=active]:text-white data-[state=active]:shadow-[0_0_20px_rgba(226,50,50,0.3)] text-white/40 transition-all duration-300"
-              >
-                Upcoming ({upcomingJobs.length})
-              </TabsTrigger>
-              <TabsTrigger
-                value="completed"
-                className="flex-1 rounded-full py-2.5 text-sm font-medium data-[state=active]:bg-[#E23232] data-[state=active]:text-white data-[state=active]:shadow-[0_0_20px_rgba(226,50,50,0.3)] text-white/40 transition-all duration-300"
-              >
-                Done ({completedJobs.length})
-              </TabsTrigger>
-            </TabsList>
+      {loading ? (
+        <div className="space-y-3">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="h-36 w-full bg-[#111] rounded-2xl" />
+          ))}
+        </div>
+      ) : (
+        <Tabs defaultValue="active" className="w-full">
+          <TabsList className="w-full bg-[#0a0a0a] rounded-full p-1 border border-white/[0.08] mb-6 h-auto">
+            <TabsTrigger
+              value="active"
+              className="flex-1 rounded-full py-2.5 text-sm font-medium data-[state=active]:bg-[#E23232] data-[state=active]:text-white text-white/40 transition-colors duration-200"
+            >
+              Active ({activeJobs.length})
+            </TabsTrigger>
+            <TabsTrigger
+              value="upcoming"
+              className="flex-1 rounded-full py-2.5 text-sm font-medium data-[state=active]:bg-[#E23232] data-[state=active]:text-white text-white/40 transition-colors duration-200"
+            >
+              Upcoming ({upcomingJobs.length})
+            </TabsTrigger>
+            <TabsTrigger
+              value="completed"
+              className="flex-1 rounded-full py-2.5 text-sm font-medium data-[state=active]:bg-[#E23232] data-[state=active]:text-white text-white/40 transition-colors duration-200"
+            >
+              Done ({completedJobs.length})
+            </TabsTrigger>
+          </TabsList>
 
-            <TabsContent value="active" className="space-y-3 stagger-children">
-              {activeJobs.length === 0 ? (
-                renderEmptyState('No active jobs')
-              ) : (
-                activeJobs.map(renderJobCard)
-              )}
-            </TabsContent>
+          <TabsContent value="active" className="space-y-3">
+            {activeJobs.length === 0 ? (
+              renderEmptyState('No active jobs')
+            ) : (
+              activeJobs.map(renderJobCard)
+            )}
+          </TabsContent>
 
-            <TabsContent value="upcoming" className="space-y-3 stagger-children">
-              {upcomingJobs.length === 0 ? (
-                renderEmptyState('No upcoming jobs')
-              ) : (
-                upcomingJobs.map(renderJobCard)
-              )}
-            </TabsContent>
+          <TabsContent value="upcoming" className="space-y-3">
+            {upcomingJobs.length === 0 ? (
+              renderEmptyState('No upcoming jobs')
+            ) : (
+              upcomingJobs.map(renderJobCard)
+            )}
+          </TabsContent>
 
-            <TabsContent value="completed" className="space-y-3 stagger-children">
-              {completedJobs.length === 0 ? (
-                renderEmptyState('No completed jobs yet')
-              ) : (
-                completedJobs.map(renderJobCard)
-              )}
-            </TabsContent>
-          </Tabs>
-        )}
-      </div>
+          <TabsContent value="completed" className="space-y-3">
+            {completedJobs.length === 0 ? (
+              renderEmptyState('No completed jobs yet')
+            ) : (
+              completedJobs.map(renderJobCard)
+            )}
+          </TabsContent>
+        </Tabs>
+      )}
     </div>
   );
 }

@@ -117,15 +117,15 @@ export default function VehiclesPage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-display text-white tracking-tight">My Vehicles</h1>
-          <p className="text-white/30 text-sm mt-1">Manage your vehicle garage</p>
+          <p className="text-white/40 text-sm mt-1">Manage your vehicle garage</p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger>
-            <Button size="sm" className="bg-[#E23232] hover:bg-[#c92a2a] text-white rounded-xl gap-1.5 shadow-lg shadow-[#E23232]/20">
+            <Button size="sm" className="bg-[#E23232] hover:bg-[#c92a2a] text-white rounded-xl gap-1.5">
               <Plus className="w-4 h-4" /> Add
             </Button>
           </DialogTrigger>
-          <DialogContent className="glass-strong border-white/[0.08] text-white rounded-2xl max-w-md">
+          <DialogContent className="bg-[#141414] border border-white/[0.10] text-white rounded-2xl max-w-md">
             <DialogHeader>
               <DialogTitle className="font-display text-lg tracking-tight">Add Vehicle</DialogTitle>
             </DialogHeader>
@@ -141,7 +141,7 @@ export default function VehiclesPage() {
                       className={cn(
                         'p-2.5 rounded-xl border text-xs text-center transition-all duration-200 font-medium',
                         formType === t
-                          ? 'border-[#E23232]/60 bg-[#E23232]/10 text-white shadow-sm shadow-[#E23232]/10'
+                          ? 'border-[#E23232]/60 bg-[#E23232]/10 text-white'
                           : 'border-white/[0.06] bg-white/[0.02] text-white/40 hover:border-white/[0.12] hover:text-white/60'
                       )}
                     >
@@ -155,24 +155,24 @@ export default function VehiclesPage() {
               <div className="space-y-3">
                 <div className="space-y-1.5">
                   <Label className="text-xs text-white/40">Year</Label>
-                  <AutocompleteInput options={yearOptions} value={formYear} onChange={setFormYear} placeholder="e.g. 2024" className="premium-input bg-white/[0.03] border-white/[0.08] text-white text-sm placeholder:text-white/20 rounded-xl" />
+                  <AutocompleteInput options={yearOptions} value={formYear} onChange={setFormYear} placeholder="e.g. 2024" className="bg-white/[0.03] border-white/[0.08] text-white text-sm placeholder:text-white/20 rounded-xl" />
                 </div>
                 <div className="space-y-1.5">
                   <Label className="text-xs text-white/40">Make</Label>
-                  <AutocompleteInput options={VEHICLE_MAKE_LIST} value={formMake} onChange={(val) => { setFormMake(val); if (val !== formMake) setFormModel(''); }} placeholder="e.g. Honda" className="premium-input bg-white/[0.03] border-white/[0.08] text-white text-sm placeholder:text-white/20 rounded-xl" />
+                  <AutocompleteInput options={VEHICLE_MAKE_LIST} value={formMake} onChange={(val) => { setFormMake(val); if (val !== formMake) setFormModel(''); }} placeholder="e.g. Honda" className="bg-white/[0.03] border-white/[0.08] text-white text-sm placeholder:text-white/20 rounded-xl" />
                 </div>
                 <div className="space-y-1.5">
                   <Label className="text-xs text-white/40">Model</Label>
-                  <AutocompleteInput options={getModelsForMake(formMake)} value={formModel} onChange={setFormModel} placeholder={formMake ? `${formMake} model` : 'Select make first'} className="premium-input bg-white/[0.03] border-white/[0.08] text-white text-sm placeholder:text-white/20 rounded-xl" />
+                  <AutocompleteInput options={getModelsForMake(formMake)} value={formModel} onChange={setFormModel} placeholder={formMake ? `${formMake} model` : 'Select make first'} className="bg-white/[0.03] border-white/[0.08] text-white text-sm placeholder:text-white/20 rounded-xl" />
                 </div>
               </div>
 
               <div className="space-y-1.5">
                 <Label className="text-xs text-white/40">Color (optional)</Label>
-                <Input placeholder="Silver" value={formColor} onChange={(e) => setFormColor(e.target.value)} className="premium-input bg-white/[0.03] border-white/[0.08] text-white text-sm placeholder:text-white/20 rounded-xl" />
+                <Input placeholder="Silver" value={formColor} onChange={(e) => setFormColor(e.target.value)} className="bg-white/[0.03] border-white/[0.08] text-white text-sm placeholder:text-white/20 rounded-xl" />
               </div>
 
-              <Button onClick={addVehicle} disabled={saving || !formMake || !formModel} className="w-full bg-[#E23232] hover:bg-[#c92a2a] text-white rounded-xl h-11 font-semibold shadow-lg shadow-[#E23232]/20 transition-all">
+              <Button onClick={addVehicle} disabled={saving || !formMake || !formModel} className="w-full bg-[#E23232] hover:bg-[#c92a2a] text-white rounded-xl h-11 font-semibold transition-all">
                 {saving ? 'Adding...' : 'Add Vehicle'}
               </Button>
             </div>
@@ -183,17 +183,14 @@ export default function VehiclesPage() {
       {loading ? (
         <div className="space-y-3">
           {[1, 2].map((i) => (
-            <div key={i} className="glass-card rounded-2xl">
+            <div key={i} className="bg-[#111] border border-white/[0.08] rounded-2xl">
               <div className="p-4 h-20 animate-pulse" />
             </div>
           ))}
         </div>
       ) : vehicles.length === 0 ? (
-        <div className="relative mt-8">
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="w-48 h-48 bg-[#E23232]/5 rounded-full blur-[80px]" />
-          </div>
-          <div className="relative rounded-2xl border-2 border-dashed border-white/[0.08] hover:border-white/[0.15] transition-colors duration-300">
+        <div className="mt-8">
+          <div className="rounded-2xl border-2 border-dashed border-white/[0.08] hover:border-white/[0.15] transition-colors duration-300">
             <div className="p-12 text-center">
               <div className="w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center mx-auto mb-5">
                 <Car className="w-7 h-7 text-white/15" />
@@ -209,8 +206,8 @@ export default function VehiclesPage() {
             <div
               key={v.id}
               className={cn(
-                'glass-card rounded-2xl transition-all duration-300 hover:-translate-y-0.5',
-                v.is_primary && 'gradient-border'
+                'bg-[#111] border border-white/[0.08] rounded-2xl transition-all duration-300 hover:border-white/[0.12]',
+                v.is_primary && 'border-[#E23232]/40'
               )}
             >
               <div className="p-4 flex items-center gap-4">
@@ -228,7 +225,7 @@ export default function VehiclesPage() {
                       </span>
                     )}
                   </div>
-                  <p className="text-white/30 text-xs capitalize mt-0.5">
+                  <p className="text-white/40 text-xs capitalize mt-0.5">
                     {VEHICLE_TYPE_LABELS[v.type]}{v.color ? ` · ${v.color}` : ''}
                   </p>
                 </div>

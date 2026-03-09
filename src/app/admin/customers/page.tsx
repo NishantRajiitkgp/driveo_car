@@ -74,7 +74,7 @@ export default function AdminCustomersPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search by name or email..."
-          className="premium-input pl-11 h-12 rounded-xl text-sm"
+          className="bg-[#111] border border-white/[0.08] pl-11 h-12 rounded-xl text-sm text-white placeholder:text-white/25 focus:border-white/[0.15] focus:ring-0"
         />
       </div>
 
@@ -96,7 +96,7 @@ export default function AdminCustomersPage() {
           </div>
 
           {filtered.length === 0 ? (
-            <div className="glass-card rounded-2xl p-12 text-center">
+            <div className="bg-[#111] border border-white/[0.08] rounded-2xl p-12 text-center">
               <div className="w-16 h-16 rounded-2xl bg-white/[0.03] flex items-center justify-center mx-auto mb-4">
                 <Users className="w-7 h-7 text-white/10" />
               </div>
@@ -108,7 +108,7 @@ export default function AdminCustomersPage() {
               {filtered.map((customer) => (
                 <div
                   key={customer.id}
-                  className="glass-card rounded-2xl hover:bg-white/[0.04] transition-all duration-300 group"
+                  className="bg-[#111] border border-white/[0.08] rounded-2xl hover:border-white/[0.15] transition-colors duration-200 group"
                 >
                   <div className="p-4">
                     {/* Desktop */}
@@ -130,13 +130,13 @@ export default function AdminCustomersPage() {
                         {customer.email}
                       </div>
                       <div className="col-span-2 text-center">
-                        <span className="inline-flex items-center gap-1.5 text-xs text-white/50 glass rounded-full px-3 py-1">
+                        <span className="inline-flex items-center gap-1.5 text-xs text-white/50 bg-[#0a0a0a] border border-white/[0.06] rounded-full px-3 py-1">
                           <Car className="w-3 h-3 text-blue-400/60" />
                           {customer.vehicles.length}
                         </span>
                       </div>
                       <div className="col-span-2 text-center">
-                        <span className="inline-flex items-center gap-1.5 text-xs text-white/50 glass rounded-full px-3 py-1">
+                        <span className="inline-flex items-center gap-1.5 text-xs text-white/50 bg-[#0a0a0a] border border-white/[0.06] rounded-full px-3 py-1">
                           <ClipboardList className="w-3 h-3 text-purple-400/60" />
                           {customer.bookings.length}
                         </span>
@@ -172,11 +172,11 @@ export default function AdminCustomersPage() {
                         <span className="truncate">{customer.email}</span>
                       </div>
                       <div className="flex items-center gap-3 ml-12">
-                        <span className="inline-flex items-center gap-1.5 text-xs text-white/40 glass rounded-full px-3 py-1">
+                        <span className="inline-flex items-center gap-1.5 text-xs text-white/40 bg-[#0a0a0a] border border-white/[0.06] rounded-full px-3 py-1">
                           <Car className="w-3 h-3 text-blue-400/60" />
                           {customer.vehicles.length} vehicles
                         </span>
-                        <span className="inline-flex items-center gap-1.5 text-xs text-white/40 glass rounded-full px-3 py-1">
+                        <span className="inline-flex items-center gap-1.5 text-xs text-white/40 bg-[#0a0a0a] border border-white/[0.06] rounded-full px-3 py-1">
                           <ClipboardList className="w-3 h-3 text-purple-400/60" />
                           {customer.bookings.length} bookings
                         </span>
