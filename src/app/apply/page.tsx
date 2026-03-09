@@ -134,7 +134,7 @@ export default function ApplyPage() {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="flex flex-col sm:flex-row gap-4"
             >
-              <Link href="/apply/onboarding">
+              <Link href="/auth/signup?role=washer&redirect=/apply/onboarding">
                 <motion.span
                   className="inline-flex items-center gap-3 bg-[#E23232] text-white font-display text-xl uppercase tracking-wider px-10 py-5 rounded-xl hover:bg-white hover:text-black transition-all group"
                   whileHover={{ scale: 1.03 }}
@@ -338,7 +338,7 @@ export default function ApplyPage() {
             <p className="font-mono text-sm text-white/50 mb-10">
               ✓ No fees to join &nbsp;·&nbsp; ✓ Get approved in 48hrs &nbsp;·&nbsp; ✓ Start earning immediately
             </p>
-            <Link href="/apply/onboarding">
+            <Link href="/auth/signup?role=washer&redirect=/apply/onboarding">
               <motion.span
                 className="inline-flex items-center gap-3 bg-[#E23232] text-white font-display text-xl uppercase tracking-wider px-12 py-6 rounded-xl hover:bg-white hover:text-black transition-all group shadow-2xl shadow-[#E23232]/20"
                 whileHover={{ scale: 1.03 }}

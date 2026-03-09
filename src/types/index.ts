@@ -40,7 +40,7 @@ export type PaymentStatus =
   | 'failed';
 
 // ── Washer Application Status ──
-export type WasherStatus = 'pending' | 'approved' | 'suspended' | 'rejected';
+export type WasherStatus = 'pending' | 'approved' | 'suspended' | 'rejected' | 'query';
 
 // ── Subscription Status ──
 export type SubscriptionStatus = 'active' | 'paused' | 'past_due' | 'cancelled';

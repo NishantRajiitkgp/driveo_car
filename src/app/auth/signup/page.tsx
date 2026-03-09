@@ -15,6 +15,7 @@ import type { UserRole } from '@/types';
 function SignupForm() {
   const searchParams = useSearchParams();
   const isWasher = searchParams.get('role') === 'washer';
+  const redirectTo = searchParams.get('redirect');
 
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -72,8 +73,10 @@ function SignupForm() {
 
     toast.success('Account created! Welcome to Driveo.');
 
-    if (isWasher) {
-      router.push('/washer/onboarding');
+    if (redirectTo) {
+      router.push(redirectTo);
+    } else if (isWasher) {
+      router.push('/washer/dashboard');
     } else {
       router.push('/app/onboarding');
     }
@@ -165,7 +168,7 @@ function SignupForm() {
           {!isWasher && (
             <div className="mt-2 text-center text-sm text-white/50">
               Want to wash cars?{' '}
-              <Link href="/auth/signup?role=washer" className="text-[#E23232] hover:underline">
+              <Link href="/apply" className="text-[#E23232] hover:underline">
                 Apply as a washer
               </Link>
             </div>

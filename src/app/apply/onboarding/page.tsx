@@ -75,9 +75,7 @@ const provinces = [
 
 export interface FormData {
   fullName: string;
-  email: string;
   phone: string;
-  password: string;
   streetAddress: string;
   city: string;
   province: string;
@@ -94,9 +92,7 @@ export interface FormData {
 
 const initialFormData: FormData = {
   fullName: '',
-  email: '',
   phone: '',
-  password: '',
   streetAddress: '',
   city: '',
   province: '',
@@ -135,11 +131,7 @@ export default function OnboardingPage() {
 
     if (step === 0) {
       if (!formData.fullName.trim()) newErrors.fullName = 'Name is required';
-      if (!formData.email.trim()) newErrors.email = 'Email is required';
-      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = 'Invalid email';
       if (!formData.phone.trim()) newErrors.phone = 'Phone is required';
-      if (!formData.password) newErrors.password = 'Password is required';
-      else if (formData.password.length < 8) newErrors.password = 'Min. 8 characters';
     } else if (step === 1) {
       if (!formData.streetAddress.trim()) newErrors.streetAddress = 'Address is required';
       if (!formData.city.trim()) newErrors.city = 'City is required';
@@ -180,9 +172,7 @@ export default function OnboardingPage() {
     try {
       const fd = new window.FormData();
       fd.append('fullName', formData.fullName);
-      fd.append('email', formData.email);
       fd.append('phone', formData.phone);
-      fd.append('password', formData.password);
       fd.append('streetAddress', formData.streetAddress);
       fd.append('city', formData.city);
       fd.append('province', formData.province);
@@ -408,9 +398,7 @@ function StepBasicInfo({ formData, update, errors }: { formData: FormData; updat
         <p className="font-mono text-[12px] text-white/65 tracking-wider">We&apos;ll use this to reach out to you.</p>
       </div>
       <InputField label="Full Name" placeholder="John Doe" value={formData.fullName} onChange={e => update('fullName', e.target.value)} error={errors.fullName} />
-      <InputField label="Email Address" placeholder="john@example.com" type="email" value={formData.email} onChange={e => update('email', e.target.value)} error={errors.email} />
       <InputField label="Phone Number" placeholder="(416) 000-0000" type="tel" value={formData.phone} onChange={e => update('phone', e.target.value)} error={errors.phone} />
-      <InputField label="Password" placeholder="Min. 8 characters" type="password" value={formData.password} onChange={e => update('password', e.target.value)} error={errors.password} />
     </div>
   );
 }
@@ -599,9 +587,7 @@ function StepReview({ formData, update, errors, goToStep }: { formData: FormData
       title: 'Basic Info', step: 0,
       items: [
         { label: 'Name', value: formData.fullName },
-        { label: 'Email', value: formData.email },
         { label: 'Phone', value: formData.phone },
-        { label: 'Password', value: '••••••••' },
       ],
     },
     {

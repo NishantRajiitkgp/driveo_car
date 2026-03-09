@@ -1,14 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { UserCheck, UserX, Star, MapPin } from 'lucide-react';
+import { UserCheck, UserX, Star, MapPin, MessageSquare, Mail } from 'lucide-react';
 import type { Profile, WasherProfile } from '@/types';
 import { cn } from '@/lib/utils';
 
@@ -22,21 +22,18 @@ export default function AdminWashersPage() {
   const [washers, setWashers] = useState<WasherFull[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
+  const [queryDialogOpen, setQueryDialogOpen] = useState(false);
+  const [queryWasherId, setQueryWasherId] = useState('');
+  const [queryMessage, setQueryMessage] = useState('');
 
   async function loadWashers() {
-    const supabase = createClient();
-    let query = supabase
-      .from('profiles')
-      .select('*, washer_profiles(*)')
-      .eq('role', 'washer')
-      .order('created_at', { ascending: false });
-
+    const res = await fetch('/api/admin/washers');
+    const data = await res.json();
+    let list = (data.washers || []).filter((w: WasherFull) => w.washer_profiles);
     if (filter !== 'all') {
-      query = query.eq('washer_profiles.status', filter);
+      list = list.filter((w: WasherFull) => w.washer_profiles.status === filter);
     }
-
-    const { data } = await query;
-    if (data) setWashers(data.filter((w) => w.washer_profiles) as WasherFull[]);
+    setWashers(list);
     setLoading(false);
   }
 
@@ -45,19 +42,35 @@ export default function AdminWashersPage() {
     loadWashers();
   }, [filter]);
 
-  async function updateWasherStatus(washerId: string, status: 'approved' | 'suspended' | 'rejected') {
-    const supabase = createClient();
-    const { error } = await supabase
-      .from('washer_profiles')
-      .update({ status })
-      .eq('id', washerId);
+  async function updateWasherStatus(washerId: string, status: string, message?: string) {
+    const res = await fetch('/api/admin/washers', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ washerId, status, query_message: message }),
+    });
 
-    if (error) {
-      toast.error('Failed to update status');
+    if (!res.ok) {
+      const err = await res.json();
+      toast.error(err.error || 'Failed to update status');
     } else {
-      toast.success(`Washer ${status}`);
+      toast.success(status === 'query' ? 'Query sent to washer' : `Washer ${status}`);
       loadWashers();
     }
+  }
+
+  function openQuery(washerId: string) {
+    setQueryWasherId(washerId);
+    setQueryMessage('');
+    setQueryDialogOpen(true);
+  }
+
+  function submitQuery() {
+    if (!queryMessage.trim()) {
+      toast.error('Please enter a message');
+      return;
+    }
+    updateWasherStatus(queryWasherId, 'query', queryMessage);
+    setQueryDialogOpen(false);
   }
 
   return (
@@ -100,7 +113,8 @@ export default function AdminWashersPage() {
                           className={cn(
                             wp.status === 'pending' ? 'text-yellow-400 border-yellow-500/30' :
                             wp.status === 'approved' ? 'text-green-400 border-green-500/30' :
-                            wp.status === 'suspended' ? 'text-red-400 border-red-500/30' :
+                            wp.status === 'suspended' || wp.status === 'rejected' ? 'text-red-400 border-red-500/30' :
+                            wp.status === 'query' ? 'text-blue-400 border-blue-500/30' :
                             'text-white/40'
                           )}
                         >
@@ -111,20 +125,23 @@ export default function AdminWashersPage() {
                         )}
                       </div>
                       <p className="text-white/40 text-xs mt-0.5">{w.email} · {w.phone}</p>
+                      {wp.bio && (
+                        <p className="text-white/30 text-xs mt-1 line-clamp-2">{wp.bio}</p>
+                      )}
                       <div className="flex items-center gap-4 mt-2 text-white/30 text-xs">
                         <span className="flex items-center gap-1">
                           <Star className="w-3 h-3 text-yellow-500" /> {wp.rating_avg?.toFixed(1) || '—'}
                         </span>
                         <span>{wp.jobs_completed} washes</span>
-                        {wp.service_zones.length > 0 && (
+                        {wp.service_zones && wp.service_zones.length > 0 && (
                           <span className="flex items-center gap-1">
                             <MapPin className="w-3 h-3" /> {wp.service_zones.join(', ')}
                           </span>
                         )}
                       </div>
                     </div>
-                    <div className="flex gap-2 shrink-0">
-                      {wp.status === 'pending' && (
+                    <div className="flex gap-2 shrink-0 flex-wrap justify-end">
+                      {(wp.status === 'pending' || wp.status === 'query') && (
                         <>
                           <Button
                             size="sm"
@@ -141,6 +158,14 @@ export default function AdminWashersPage() {
                           >
                             <UserX className="w-3 h-3 mr-1" /> Reject
                           </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => openQuery(w.id)}
+                            className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10 text-xs"
+                          >
+                            <MessageSquare className="w-3 h-3 mr-1" /> Query
+                          </Button>
                         </>
                       )}
                       {wp.status === 'approved' && (
@@ -153,7 +178,7 @@ export default function AdminWashersPage() {
                           Suspend
                         </Button>
                       )}
-                      {wp.status === 'suspended' && (
+                      {(wp.status === 'suspended' || wp.status === 'rejected') && (
                         <Button
                           size="sm"
                           onClick={() => updateWasherStatus(w.id, 'approved')}
@@ -170,6 +195,36 @@ export default function AdminWashersPage() {
           })}
         </div>
       )}
+
+      {/* Query Dialog */}
+      <Dialog open={queryDialogOpen} onOpenChange={setQueryDialogOpen}>
+        <DialogContent className="bg-[#0a0a0a] border-white/10 text-white">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Mail className="w-5 h-5 text-blue-400" />
+              Send Query to Washer
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-white/50 text-sm">This message will be sent to the washer via email and saved as admin notes.</p>
+            <textarea
+              value={queryMessage}
+              onChange={(e) => setQueryMessage(e.target.value)}
+              placeholder="e.g., Please provide a clearer photo of your government ID..."
+              rows={4}
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-blue-500/50 resize-none"
+            />
+            <div className="flex gap-3 justify-end">
+              <Button variant="outline" onClick={() => setQueryDialogOpen(false)} className="border-white/10 text-white/60">
+                Cancel
+              </Button>
+              <Button onClick={submitQuery} className="bg-blue-600 hover:bg-blue-700 text-white">
+                Send Query
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
