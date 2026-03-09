@@ -27,7 +27,12 @@
       "Bash(unzip:*)",
       "Bash(./ffmpeg-8.0.1-essentials_build/bin/ffmpeg.exe:*)",
       "Bash(ls:*)",
-      "Bash(npx vercel:*)"
+      "Bash(npx vercel:*)",
+      "WebSearch",
+      "Bash(npm install @supabase/supabase-js @supabase/ssr stripe @stripe/stripe-js @stripe/react-stripe-js @tanstack/react-query react-hook-form @hookform/resolvers zod @vis.gl/react-google-maps browser-image-compression date-fns clsx tailwind-merge)",
+      "Bash(npm install -D @sentry/nextjs supabase)",
+      "Bash(npx shadcn@latest init -d --base-color neutral --css-variables --src-dir)",
+      "Bash(npx shadcn@latest init -d)"
     ]
   }
 }

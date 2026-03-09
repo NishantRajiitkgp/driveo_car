@@ -4,19 +4,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Repository Is
 
-This is the repository for **GLEAM Auto Care Inc.** — a proprietary two-sided marketplace platform ("Uber for car detailing") targeting the GTA market. It contains planning documents and an existing marketing landing page.
+This is the repository for **Driveo** — a proprietary two-sided marketplace platform ("Uber for car washing") targeting the GTA market. It contains planning documents and an existing marketing landing page.
 
 ### Planning Documents
 
 | File | Purpose |
 |---|---|
-| `GLEAM_Business_Plan.md` | Full business plan: model, market, financials, go-to-market, operations |
-| `GLEAM_Experience_Build.md` | Complete PRD: database schema, API routes, UI specs, feature scope for the MVP build |
+| `DRIVEO_ARCHITECTURE.md` | **Primary source of truth.** Complete system architecture, pricing model, Driveo Slide spec, database schema, API routes, development roadmap |
 | `GTA_Car_Detailing_Dossier.md` | Market research dossier: TAM/SAM/SOM, competitor landscape, demand drivers |
 
-### Glean-Modern (Landing Page)
+> **Note**: `GLEAM_Business_Plan.md` and `GLEAM_Experience_Build.md` are legacy documents from when the project was called "GLEAM" with a different pricing model. They are **outdated** and should NOT be used as reference. Use `DRIVEO_ARCHITECTURE.md` instead.
 
-A standalone React landing page in `Glean-Modern/` (separate git repo). Single-page marketing site built with Vite + React 19 + Tailwind CSS v4 + Framer Motion.
+### Landing Page
+
+A standalone React landing page in `Glean-Modern/` (separate git repo, being renamed to Driveo). Single-page marketing site built with Vite + React 19 + Tailwind CSS v4 + Framer Motion.
 
 **Dev commands** (run from `Glean-Modern/`):
 ```bash
@@ -27,72 +28,92 @@ npm run lint         # type-check only (tsc --noEmit)
 npm run clean        # remove dist/
 ```
 
-**Structure**: The entire page lives in `src/App.tsx` (single component, ~477 lines). Styles in `src/index.css` (custom cursor, noise overlay, marquee animation, font imports via Bunny CDN). Static assets (images, video) in `public/`.
+**Design tokens**: Dark theme (`#050505` bg), accent red (`#E23232`). Fonts: Anton (display), Inter (body), JetBrains Mono (mono), Playfair Display (serif italic).
 
-**Key libraries**: `framer-motion` (scroll-driven parallax, entrance animations), `lucide-react` (icons), `@tailwindcss/vite` (Tailwind v4 Vite plugin — no `tailwind.config`, uses `@theme` directive in CSS).
-
-**Design tokens**: Dark theme (`#050505` bg), accent red (`#E23232`). Fonts: Anton (display), Inter (body), JetBrains Mono (mono), Playfair Display (serif italic). Path alias `@` resolves to project root.
-
-**Note**: `Glean-Modern/.env.example` references Gemini API keys from a prior scaffold — these are not used by the current landing page.
-
-## Planned Tech Stack
-
-When building the platform, use exactly this stack (defined in the business plan):
+## Tech Stack
 
 | Layer | Technology |
 |---|---|
-| Framework | Next.js 14+ with App Router, TypeScript, Tailwind CSS |
+| Framework | Next.js 15 (stable) with App Router, TypeScript, Tailwind CSS v4 |
+| UI Components | shadcn/ui (customized to Driveo branding) |
 | Database | Supabase (PostgreSQL with Row Level Security) |
-| Auth | Supabase Auth — email/phone OTP; roles: `customer`, `provider`, `admin` |
+| Auth | Supabase Auth — email/phone OTP; roles: `customer`, `washer`, `admin` |
 | File storage | Supabase Storage (before/after job photos in private buckets, signed URLs) |
-| Real-time | Supabase Realtime (Phase 2: live provider GPS tracking) |
-| Payments | Stripe + Stripe Connect (subscriptions + provider payouts) |
+| Real-time | Supabase Realtime (live washer GPS tracking + booking status push) |
+| Payments | Stripe (pre-auth on booking, capture after wash) + Stripe Connect (washer payouts) |
+| Data Fetching | TanStack Query (React Query) |
+| Forms | React Hook Form + Zod |
 | SMS | Twilio |
 | Email | Resend + React Email |
-| Maps | Google Maps API (address autocomplete MVP; live tracking Phase 2) |
-| Deployment | Vercel (production: gleam.ca, staging: dev.gleam.ca) |
+| Maps | Google Maps API (autocomplete + live tracking) |
+| Vehicle Images | Vehicle image API (CarAPI / CarsXE) for Driveo Slide |
+| Dirt Effect | HTML Canvas with texture overlays (multiply blend mode) |
+| Deployment | Vercel (production: driveo.ca, staging: dev.driveo.ca) |
 | Monitoring | Sentry |
 
 Initialize the project with:
 ```bash
-npx create-next-app@latest gleam --typescript --tailwind --app
+npx create-next-app@latest driveo --typescript --tailwind --app
 ```
 
 ## Platform Architecture
 
-Three distinct web apps within a single Next.js monorepo, separated by route segments:
+Three distinct web apps within a single Next.js monorepo:
 
 ```
-gleam.ca/           → Marketing site (SSR, SEO landing pages, local SEO, plan pages)
-gleam.ca/app/*      → Customer PWA (booking, vehicle profiles, subscriptions, job tracking, photo viewer)
-gleam.ca/provider/* → Provider PWA (job queue, accept/decline, before/after photo upload, earnings)
-gleam.ca/admin/*    → Admin dashboard (providers, customers, bookings, pricing, payouts)
-gleam.ca/fleet/*    → Fleet portal (Phase 2)
+driveo.ca/           → Marketing site (SSR, SEO, plan pages)
+driveo.ca/app/*      → Customer PWA (booking, Driveo Slide, vehicle profiles, subscriptions, live tracking)
+driveo.ca/washer/*   → Washer PWA (job queue, accept/decline, before/after photos, earnings)
+driveo.ca/admin/*    → Admin dashboard (washers, customers, bookings, pricing, payouts)
 ```
 
-## User Roles & Database
+## User Roles
 
-Three roles defined in `user_metadata.role` via Supabase Auth, enforced at the DB level via RLS on all tables:
-- `customer` — books services, manages vehicles/subscriptions
-- `provider` — receives and completes jobs, uploads photos
+Three roles defined in `user_metadata.role` via Supabase Auth, enforced via RLS:
+- `customer` — books washes, manages vehicles/subscriptions
+- `washer` — receives jobs (auto-assigned), completes washes, uploads photos
 - `admin` — full platform management
 
-The complete database schema (all tables, columns, RLS policies) is specified in `GLEAM_Experience_Build.md` Section 3.
+## Key Business Rules
 
-## Key Business Rules to Encode
+- **Brand**: Driveo (driveo.ca)
+- **Pricing model**: Plan + Vehicle Type Multiplier + Dirt Level Multiplier
+- **Three wash plans**: Regular ($18), Interior & Exterior ($25), Detailing ($189)
+- **Washer payouts**: Regular/I&E = $11 per wash, Detailing = $22 per wash — via Stripe Connect
+- **Payment flow**: Pre-authorize card on booking, capture payment after wash completion (Uber model)
+- **Driveo Slide**: Dirt level slider (0-10) with visual car dirt overlay. Levels 0-5 = base price. Levels 6-10 = increasing surcharge multiplier.
+- **Washer assignment**: Fully automated — nearest available washer (Uber model)
+- **Real-time tracking**: Customer sees live washer location on map
+- **Before/after photos**: Mandatory on every job
+- **Booking types**: Instant (ASAP) or Scheduled (pick date/time)
+- **Monthly membership**: 8 washes/month based on selected plan
+- **Non-solicitation**: washers cannot contact Driveo customers directly
 
-- **Pricing is vehicle-type-based**: sedan / SUV / pickup / minivan matrix — not flat-rate
-- **Partner payout rate**: 45% of job revenue, paid within 48 hrs of completion via Stripe Connect
-- **Before/after photos are mandatory** on every job — 5 photos each from specified angles
-- **Subscription plans**: GLEAM Go ($59), Plus ($109), Full ($189), Prime ($299) — no rollover, 30-day cancel
-- **Fleet plans**: minimum 3 vehicles, monthly invoice net-15
-- **Non-solicitation**: providers cannot contact GLEAM customers directly — enforce at the data layer (no customer contact info exposed to providers)
+## Vehicle Type Multipliers
 
-## MVP vs. Phase 2 Scope
+| Vehicle Type | Multiplier |
+|---|---|
+| Sedan/Coupe | 1.0x (base) |
+| Crossover | 1.15x |
+| SUV | 1.25x |
+| Minivan | 1.25x |
+| Pickup | 1.20x |
+| Large SUV/Truck | 1.40x |
 
-The MVP (Months 1–4) excludes: real-time provider GPS map, auto provider matching (admin assigns manually in MVP), native iOS/Android apps, fleet portal, referral program, and push notifications. These are Phase 2. Build MVP scope only unless told otherwise.
+## Dirt Level Multipliers (Driveo Slide)
 
-## Environment Variables Needed
+| Level | Multiplier | Description |
+|---|---|---|
+| 0-5 | 1.0x | Base price (light to normal dirt) |
+| 6 | 1.15x | Moderately dirty |
+| 7 | 1.30x | Dirty |
+| 8 | 1.50x | Very dirty |
+| 9 | 1.75x | Heavily soiled |
+| 10 | 2.0x | Extreme (mud, heavy grime) |
+
+**Price formula**: `Plan Base Price × Vehicle Multiplier × Dirt Multiplier`
+
+## Environment Variables
 
 ```
 # Supabase
@@ -115,4 +136,10 @@ RESEND_API_KEY=
 
 # Google Maps
 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=
+
+# Vehicle Images
+VEHICLE_IMAGE_API_KEY=
+
+# Sentry
+NEXT_PUBLIC_SENTRY_DSN=
 ```

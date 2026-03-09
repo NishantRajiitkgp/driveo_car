@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
-import { Anton, Inter, JetBrains_Mono, Playfair_Display, Poppins } from 'next/font/google';
+import { Anton, Inter, JetBrains_Mono, Playfair_Display, Poppins, Geist } from 'next/font/google';
 import './globals.css';
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
@@ -54,7 +57,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${anton.variable} ${jetbrainsMono.variable} ${playfairDisplay.variable} ${poppins.variable}`}>
+    <html lang="en" className={cn(inter.variable, anton.variable, jetbrainsMono.variable, playfairDisplay.variable, poppins.variable, "font-sans", geist.variable)}>
       <body>
         {children}
         {GA_ID && (
