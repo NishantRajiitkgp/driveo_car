@@ -2,6 +2,7 @@
 
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useCursor } from './CursorProvider';
 
@@ -136,20 +137,17 @@ export function BookingForm() {
                 <label className="font-mono text-[10px] text-white/70 uppercase tracking-widest block mb-2">Notes (optional)</label>
                 <textarea placeholder="Gate codes, parking level, pet hair situation..." rows={2} className="w-full bg-[#111] border border-white/10 rounded-xl px-5 py-4 font-mono text-sm outline-none focus:border-[#E23232] transition-colors text-white placeholder:text-white/60 resize-none"></textarea>
               </motion.div>
-              <motion.button
-                variants={formFieldVariants}
-                type="button"
-                className="w-full bg-[#E23232] text-white font-display text-xl uppercase tracking-wider py-5 rounded-xl hover:bg-white hover:text-black transition-all mt-2 group"
-                onMouseEnter={() => setIsHovering(true)}
-                onMouseLeave={() => setIsHovering(false)}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <span className="flex items-center justify-center gap-3">
+              <motion.div variants={formFieldVariants}>
+                <Link
+                  href="/auth/signup"
+                  className="w-full bg-[#E23232] text-white font-display text-xl uppercase tracking-wider py-5 rounded-xl hover:bg-white hover:text-black transition-all mt-2 group flex items-center justify-center gap-3"
+                  onMouseEnter={() => setIsHovering(true)}
+                  onMouseLeave={() => setIsHovering(false)}
+                >
                   Book My Wash — 20% Off
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </span>
-              </motion.button>
+                </Link>
+              </motion.div>
               <motion.p variants={formFieldVariants} className="font-mono text-[10px] text-white/40 uppercase tracking-widest text-center">
                 Spring special — 20% off first wash. Satisfaction guaranteed.
               </motion.p>

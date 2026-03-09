@@ -84,22 +84,37 @@ export function Navbar() {
             <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#E23232] group-hover:w-full transition-all duration-300" />
           </motion.span>
         </Link>
-        <motion.button
-          className={`font-mono text-xs uppercase tracking-widest border px-6 py-3 rounded-full transition-all duration-300 ${
-            scrolled
-              ? 'bg-[#E23232] border-[#E23232] text-white hover:bg-white hover:text-black hover:border-white'
-              : 'border-white/30 hover:bg-[#E23232] hover:border-[#E23232] hover:text-white'
-          }`}
-          onMouseEnter={() => setIsHovering(true)}
-          onMouseLeave={() => setIsHovering(false)}
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.97 }}
-        >
-          Book Your First Wash
-        </motion.button>
+        <Link href="/auth/login">
+          <motion.span
+            className="font-mono text-xs uppercase tracking-widest text-white/70 hover:text-[#E23232] transition-colors relative group"
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.38 }}
+          >
+            Log In
+            <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#E23232] group-hover:w-full transition-all duration-300" />
+          </motion.span>
+        </Link>
+        <Link href="/auth/signup">
+          <motion.button
+            className={`font-mono text-xs uppercase tracking-widest border px-6 py-3 rounded-full transition-all duration-300 ${
+              scrolled
+                ? 'bg-[#E23232] border-[#E23232] text-white hover:bg-white hover:text-black hover:border-white'
+                : 'border-white/30 hover:bg-[#E23232] hover:border-[#E23232] hover:text-white'
+            }`}
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            Book Your First Wash
+          </motion.button>
+        </Link>
       </div>
       <button className="md:hidden text-white"><Menu /></button>
     </motion.nav>
