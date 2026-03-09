@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export function BeforeAfterSlider() {
-  const [sliderPos, setSliderPos] = useState(50);
+  const [sliderPos, setSliderPos] = useState(60);
   const [containerWidth, setContainerWidth] = useState(1400);
   const sliderRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
