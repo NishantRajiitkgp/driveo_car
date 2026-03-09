@@ -8,6 +8,8 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DollarSign, Send, User, AlertCircle } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 interface WasherPayout {
   id: string;
   full_name: string;

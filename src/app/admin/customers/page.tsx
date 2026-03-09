@@ -7,6 +7,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
 import { Users, Search, Car, ClipboardList, Mail } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 interface CustomerRow {
   id: string;
   full_name: string;

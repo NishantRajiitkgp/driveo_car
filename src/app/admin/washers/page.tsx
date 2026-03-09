@@ -12,6 +12,8 @@ import { UserCheck, UserX, Star, MapPin } from 'lucide-react';
 import type { Profile, WasherProfile } from '@/types';
 import { cn } from '@/lib/utils';
 
+export const dynamic = 'force-dynamic';
+
 interface WasherFull extends Profile {
   washer_profiles: WasherProfile;
 }

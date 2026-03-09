@@ -13,6 +13,8 @@ import {
 } from 'lucide-react';
 import type { Booking, Vehicle } from '@/types';
 
+export const dynamic = 'force-dynamic';
+
 interface BookingWithVehicle extends Booking {
   vehicles: Vehicle;
 }

@@ -9,6 +9,8 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { centsToDisplay, PLAN_LABELS } from '@/lib/pricing';
 import type { Booking, Vehicle, Profile } from '@/types';
 
+export const dynamic = 'force-dynamic';
+
 interface BookingFull extends Booking {
   vehicles: Vehicle;
   profiles: Profile;

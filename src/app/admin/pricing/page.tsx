@@ -9,6 +9,8 @@ import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Settings, Save, DollarSign, Car, Gauge } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 interface PlanPricing {
   id: string;
   name: string;

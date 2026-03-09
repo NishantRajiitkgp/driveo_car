@@ -17,6 +17,8 @@ import {
 import type { Booking, Profile, Vehicle, BookingPhoto } from '@/types';
 import { cn } from '@/lib/utils';
 
+export const dynamic = 'force-dynamic';
+
 interface BookingWithDetails extends Booking {
   vehicles: Vehicle;
   profiles: Profile; // customer profile via customer_id
