@@ -1,8 +1,15 @@
 'use client';
 
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { loadStripe } from '@stripe/stripe-js';
+import {
+  Elements,
+  PaymentElement,
+  useStripe,
+  useElements,
+} from '@stripe/react-stripe-js';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,12 +20,118 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import {
   Car, MapPin, ChevronRight, ChevronLeft, Zap, CalendarDays, Sparkles,
-  Clock, CreditCard, CheckCircle2, Loader2,
+  Clock, CreditCard, CheckCircle2, Loader2, ShieldCheck, Lock,
 } from 'lucide-react';
 import type { Vehicle, WashPlan, BookingFormData } from '@/types';
 
-const STEPS = ['Vehicle', 'Location', 'Wash & Dirt', 'When', 'Confirm'];
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
+const STEPS = ['Vehicle', 'Location', 'Wash & Dirt', 'When', 'Review', 'Payment'];
+
+// ── Payment Form (mounted inside Stripe Elements provider) ──
+function PaymentForm({
+  onSuccess,
+  onBack,
+  totalCents,
+  submitting,
+  setSubmitting,
+}: {
+  onSuccess: (bookingId: string) => void;
+  onBack: () => void;
+  totalCents: number;
+  submitting: boolean;
+  setSubmitting: (v: boolean) => void;
+}) {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [paymentReady, setPaymentReady] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const handleSubmit = useCallback(async () => {
+    if (!stripe || !elements) return;
+
+    setSubmitting(true);
+    setErrorMessage(null);
+
+    const { error } = await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        return_url: `${window.location.origin}/app/book/success`,
+      },
+      redirect: 'if_required',
+    });
+
+    if (error) {
+      setErrorMessage(error.message || 'Payment failed. Please try again.');
+      setSubmitting(false);
+      return;
+    }
+
+    // Payment confirmed (pre-authorized) — booking was already created server-side
+    // The bookingId was stored when we created the PaymentIntent
+    // We retrieve it from the payment intent's metadata via redirect or manual success
+    onSuccess('');
+  }, [stripe, elements, setSubmitting, onSuccess]);
+
+  return (
+    <div className="space-y-4">
+      <h2 className="text-lg font-display text-white">Payment</h2>
+
+      <Card className="bg-[#0a0a0a] border-white/10">
+        <CardContent className="p-4 space-y-4">
+          <div className="flex items-center gap-2 text-white/50 text-xs mb-2">
+            <Lock className="w-3 h-3" />
+            <span>Secure payment powered by Stripe</span>
+          </div>
+
+          <PaymentElement
+            onReady={() => setPaymentReady(true)}
+            options={{
+              layout: 'tabs',
+            }}
+          />
+
+          {errorMessage && (
+            <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+              {errorMessage}
+            </div>
+          )}
+
+          <div className="flex items-center gap-2 pt-2">
+            <ShieldCheck className="w-4 h-4 text-green-500/60" />
+            <p className="text-white/30 text-[11px]">
+              Your card will be pre-authorized for {centsToDisplay(totalCents)}. You are only charged after the wash is completed.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="flex gap-3">
+        <Button
+          variant="outline"
+          onClick={onBack}
+          disabled={submitting}
+          className="flex-1 border-white/10 text-white hover:bg-white/5"
+        >
+          <ChevronLeft className="w-4 h-4 mr-1" /> Back
+        </Button>
+        <Button
+          onClick={handleSubmit}
+          disabled={submitting || !stripe || !paymentReady}
+          className="flex-1 bg-[#E23232] hover:bg-[#c92a2a] text-white font-semibold"
+        >
+          {submitting ? (
+            <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Processing...</>
+          ) : (
+            <><CreditCard className="w-4 h-4 mr-2" /> Authorize {centsToDisplay(totalCents)}</>
+          )}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+// ── Main Booking Form ──
 function BookingForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -28,6 +141,10 @@ function BookingForm() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+
+  // Stripe state
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [bookingId, setBookingId] = useState<string | null>(null);
 
   const [form, setForm] = useState<BookingFormData>({
     vehicleId: '',
@@ -77,6 +194,10 @@ function BookingForm() {
       toast.error('Enter your address');
       return;
     }
+    if (step === 3 && !form.isInstant && !form.scheduledAt) {
+      toast.error('Pick a date and time');
+      return;
+    }
     setStep((s) => Math.min(s + 1, STEPS.length - 1));
   }
 
@@ -84,7 +205,8 @@ function BookingForm() {
     setStep((s) => Math.max(s - 1, 0));
   }
 
-  async function handleBook() {
+  // Create booking + PaymentIntent when moving from Review to Payment
+  async function handleProceedToPayment() {
     if (!form.vehicle || !price) return;
     setSubmitting(true);
 
@@ -113,12 +235,19 @@ function BookingForm() {
       }
 
       const data = await res.json();
-      toast.success('Booking confirmed! Finding you a washer...');
-      router.push(`/app/track/${data.bookingId}`);
+      setClientSecret(data.clientSecret);
+      setBookingId(data.bookingId);
+      setStep(5); // Move to payment step
     } catch {
       toast.error('Something went wrong');
+    } finally {
       setSubmitting(false);
     }
+  }
+
+  function handlePaymentSuccess() {
+    toast.success('Booking confirmed! Finding you a washer...');
+    router.push(`/app/track/${bookingId}`);
   }
 
   if (loading) {
@@ -302,10 +431,10 @@ function BookingForm() {
         </div>
       )}
 
-      {/* Step 4: Confirm */}
+      {/* Step 4: Review */}
       {step === 4 && form.vehicle && price && (
         <div className="space-y-4">
-          <h2 className="text-lg font-display text-white">Confirm your booking</h2>
+          <h2 className="text-lg font-display text-white">Review your booking</h2>
 
           <Card className="bg-[#0a0a0a] border-white/10">
             <CardContent className="p-4 space-y-3">
@@ -326,6 +455,10 @@ function BookingForm() {
                 <span className="text-white text-sm">
                   {form.isInstant ? 'Now — next available' : new Date(form.scheduledAt!).toLocaleString()}
                 </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Clock className="w-4 h-4 text-white/40" />
+                <span className="text-white/50 text-sm">Est. {formatDuration(price.estimatedDurationMin)}</span>
               </div>
             </CardContent>
           </Card>
@@ -368,18 +501,80 @@ function BookingForm() {
               <ChevronLeft className="w-4 h-4 mr-1" /> Back
             </Button>
             <Button
-              onClick={handleBook}
+              onClick={handleProceedToPayment}
               disabled={submitting}
               className="flex-1 bg-[#E23232] hover:bg-[#c92a2a] text-white font-semibold"
             >
               {submitting ? (
-                <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Booking...</>
+                <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Setting up...</>
               ) : (
-                <><CheckCircle2 className="w-4 h-4 mr-2" /> Confirm Booking</>
+                <><CreditCard className="w-4 h-4 mr-2" /> Proceed to Payment</>
               )}
             </Button>
           </div>
         </div>
+      )}
+
+      {/* Step 5: Payment (Stripe Elements) */}
+      {step === 5 && clientSecret && price && (
+        <Elements
+          stripe={stripePromise}
+          options={{
+            clientSecret,
+            appearance: {
+              theme: 'night',
+              variables: {
+                colorPrimary: '#E23232',
+                colorBackground: '#0a0a0a',
+                colorText: '#f5f5f5',
+                colorTextSecondary: '#999999',
+                colorDanger: '#ef4444',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                borderRadius: '12px',
+                spacingUnit: '4px',
+              },
+              rules: {
+                '.Input': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  color: '#f5f5f5',
+                },
+                '.Input:focus': {
+                  border: '1px solid #E23232',
+                  boxShadow: '0 0 0 1px #E23232',
+                },
+                '.Label': {
+                  color: 'rgba(255, 255, 255, 0.5)',
+                },
+                '.Tab': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  color: 'rgba(255, 255, 255, 0.5)',
+                },
+                '.Tab--selected': {
+                  backgroundColor: 'rgba(226, 50, 50, 0.1)',
+                  border: '1px solid #E23232',
+                  color: '#f5f5f5',
+                },
+                '.Tab:hover': {
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                },
+              },
+            },
+          }}
+        >
+          <PaymentForm
+            onSuccess={handlePaymentSuccess}
+            onBack={() => {
+              // Go back to review — note: the booking + PI were already created
+              // The user can still go back and re-confirm
+              setStep(4);
+            }}
+            totalCents={price.totalCents}
+            submitting={submitting}
+            setSubmitting={setSubmitting}
+          />
+        </Elements>
       )}
     </div>
   );

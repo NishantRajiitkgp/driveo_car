@@ -4,10 +4,6 @@ import { stripe, getOrCreateStripeCustomer } from '@/lib/stripe';
 import { calculatePrice, PLAN_LABELS } from '@/lib/pricing';
 import type { VehicleType, WashPlan } from '@/types';
 
-/**
- * POST /api/bookings — Create a booking with Stripe pre-authorization.
- * Returns a clientSecret for the frontend to confirm the payment via Stripe Elements.
- */
 export async function POST(request: Request) {
   try {
     const supabase = await createClient();
@@ -30,12 +26,21 @@ export async function POST(request: Request) {
       scheduledAt,
     } = body;
 
-    // Validate
+    // Validate required fields
     if (!vehicleId || !washPlan || dirtLevel === undefined || !serviceAddress) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Get vehicle to determine type
+    if (dirtLevel < 0 || dirtLevel > 10) {
+      return NextResponse.json({ error: 'Invalid dirt level' }, { status: 400 });
+    }
+
+    const validPlans: WashPlan[] = ['regular', 'interior_exterior', 'detailing'];
+    if (!validPlans.includes(washPlan)) {
+      return NextResponse.json({ error: 'Invalid wash plan' }, { status: 400 });
+    }
+
+    // Get vehicle (verify ownership)
     const { data: vehicle, error: vehicleError } = await supabase
       .from('vehicles')
       .select('*')
@@ -47,7 +52,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Vehicle not found' }, { status: 404 });
     }
 
-    // Calculate price
+    // Calculate price using existing pricing engine
     const price = calculatePrice(
       washPlan as WashPlan,
       vehicle.type as VehicleType,
@@ -56,7 +61,7 @@ export async function POST(request: Request) {
 
     const adminSupabase = await createAdminClient();
 
-    // Get or create Stripe customer for pre-auth
+    // Get or create Stripe customer
     const stripeCustomerId = await getOrCreateStripeCustomer(
       user.id,
       user.email || '',
@@ -69,7 +74,7 @@ export async function POST(request: Request) {
       amount: price.totalCents,
       currency: 'cad',
       customer: stripeCustomerId,
-      capture_method: 'manual',
+      capture_method: 'manual', // Pre-authorize only — capture after wash completion
       metadata: {
         driveo_user_id: user.id,
         vehicle_id: vehicleId,
@@ -82,7 +87,7 @@ export async function POST(request: Request) {
       },
     });
 
-    // Create booking
+    // Create booking record with authorized payment status
     const { data: booking, error: bookingError } = await adminSupabase
       .from('bookings')
       .insert({
@@ -120,10 +125,13 @@ export async function POST(request: Request) {
 
     // Update PaymentIntent metadata with booking ID
     await stripe.paymentIntents.update(paymentIntent.id, {
-      metadata: { ...paymentIntent.metadata, booking_id: booking.id },
+      metadata: {
+        ...paymentIntent.metadata,
+        booking_id: booking.id,
+      },
     });
 
-    // Create notification for customer
+    // Create notification
     await adminSupabase.from('notifications').insert({
       user_id: user.id,
       type: 'booking_created',
@@ -132,58 +140,13 @@ export async function POST(request: Request) {
       data: { booking_id: booking.id },
     });
 
-    // Auto-assign nearest washer for instant bookings
-    if (isInstant && serviceLat && serviceLng) {
-      try {
-        const { findNearestWasher, assignWasher } = await import('@/lib/assignment');
-        const nearestWasher = await findNearestWasher(serviceLat, serviceLng);
-        if (nearestWasher) {
-          await assignWasher(booking.id, nearestWasher.id);
-        }
-      } catch (assignErr) {
-        console.error('Auto-assignment failed (non-blocking):', assignErr);
-      }
-    }
-
     return NextResponse.json({
       bookingId: booking.id,
       clientSecret: paymentIntent.client_secret,
       price: price.totalCents,
     });
   } catch (err) {
-    console.error('Booking API error:', err);
+    console.error('Booking create API error:', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
-}
-
-export async function GET(request: Request) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  const { searchParams } = new URL(request.url);
-  const status = searchParams.get('status');
-  const limit = parseInt(searchParams.get('limit') || '20');
-
-  let query = supabase
-    .from('bookings')
-    .select('*, vehicles(*)')
-    .eq('customer_id', user.id)
-    .order('created_at', { ascending: false })
-    .limit(limit);
-
-  if (status) {
-    query = query.eq('status', status);
-  }
-
-  const { data, error } = await query;
-
-  if (error) {
-    return NextResponse.json({ error: 'Failed to fetch bookings' }, { status: 500 });
-  }
-
-  return NextResponse.json({ bookings: data });
 }

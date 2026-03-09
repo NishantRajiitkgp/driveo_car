@@ -10,6 +10,7 @@ import { PLAN_LABELS, centsToDisplay, formatDuration } from '@/lib/pricing';
 import { Car, MapPin, Phone, MessageCircle, Clock, CheckCircle2, Circle, Loader2 } from 'lucide-react';
 import type { Booking, Profile, WasherProfile, Vehicle } from '@/types';
 import { cn } from '@/lib/utils';
+import LiveTrackingMap from '@/components/LiveTrackingMap';
 
 interface BookingWithRelations extends Booking {
   vehicles: Vehicle;
@@ -32,6 +33,8 @@ export default function TrackingPage() {
   const [booking, setBooking] = useState<BookingWithRelations | null>(null);
   const [washer, setWasher] = useState<(Profile & { washer_profiles: WasherProfile }) | null>(null);
   const [loading, setLoading] = useState(true);
+  const [washerLat, setWasherLat] = useState<number | null>(null);
+  const [washerLng, setWasherLng] = useState<number | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -50,16 +53,20 @@ export default function TrackingPage() {
             .select('*, washer_profiles(*)')
             .eq('id', data.washer_id)
             .single();
-          if (washerData) setWasher(washerData);
+          if (washerData) {
+            setWasher(washerData);
+            setWasherLat(washerData.washer_profiles?.current_lat ?? null);
+            setWasherLng(washerData.washer_profiles?.current_lng ?? null);
+          }
         }
       }
       setLoading(false);
     }
     load();
 
-    // Subscribe to real-time updates
+    // Subscribe to real-time booking updates
     const supabase = createClient();
-    const channel = supabase
+    const bookingChannel = supabase
       .channel(`booking:${id}`)
       .on('postgres_changes', {
         event: 'UPDATE',
@@ -71,8 +78,30 @@ export default function TrackingPage() {
       })
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => { supabase.removeChannel(bookingChannel); };
   }, [id]);
+
+  // Subscribe to washer location updates in real-time
+  useEffect(() => {
+    if (!booking?.washer_id) return;
+
+    const supabase = createClient();
+    const washerChannel = supabase
+      .channel(`washer-location:${booking.washer_id}`)
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'washer_profiles',
+        filter: `id=eq.${booking.washer_id}`,
+      }, (payload) => {
+        const updated = payload.new as WasherProfile;
+        setWasherLat(updated.current_lat);
+        setWasherLng(updated.current_lng);
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(washerChannel); };
+  }, [booking?.washer_id]);
 
   if (loading) {
     return (
@@ -144,17 +173,16 @@ export default function TrackingPage() {
         </Card>
       )}
 
-      {/* Map placeholder */}
-      {['en_route', 'arrived'].includes(booking.status) && (
-        <Card className="bg-[#0a0a0a] border-white/10 overflow-hidden">
-          <div className="h-48 bg-gradient-to-b from-white/5 to-transparent flex items-center justify-center">
-            <div className="text-center text-white/20">
-              <MapPin className="w-8 h-8 mx-auto mb-2" />
-              <p className="text-xs">Live map tracking</p>
-              <p className="text-[10px] text-white/10">Google Maps integration</p>
-            </div>
-          </div>
-        </Card>
+      {/* Live Map */}
+      {['assigned', 'en_route', 'arrived', 'washing'].includes(booking.status) && (
+        <LiveTrackingMap
+          serviceLat={booking.service_lat}
+          serviceLng={booking.service_lng}
+          washerLat={washerLat}
+          washerLng={washerLng}
+          washerName={washer?.full_name || 'Washer'}
+          status={booking.status}
+        />
       )}
 
       {/* Status Timeline */}
@@ -163,7 +191,6 @@ export default function TrackingPage() {
           {STATUS_ORDER.map((status, i) => {
             const isPast = i < currentStatusIdx;
             const isCurrent = i === currentStatusIdx;
-            const isFuture = i > currentStatusIdx;
             const timestamp = status === 'assigned' ? booking.washer_assigned_at :
               status === 'en_route' ? booking.washer_en_route_at :
               status === 'arrived' ? booking.washer_arrived_at :

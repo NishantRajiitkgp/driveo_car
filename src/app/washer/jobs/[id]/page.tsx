@@ -39,6 +39,33 @@ export default function WasherJobPage() {
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
 
+  // Send washer GPS location while en_route or washing
+  useEffect(() => {
+    if (!booking || !['en_route', 'arrived', 'washing'].includes(booking.status)) return;
+    if (!navigator.geolocation) return;
+
+    let active = true;
+    const watchId = navigator.geolocation.watchPosition(
+      async (pos) => {
+        if (!active) return;
+        try {
+          await fetch('/api/washer/location', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+          });
+        } catch { /* silently fail */ }
+      },
+      () => {},
+      { enableHighAccuracy: true, maximumAge: 10000, timeout: 15000 }
+    );
+
+    return () => {
+      active = false;
+      navigator.geolocation.clearWatch(watchId);
+    };
+  }, [booking?.status, booking?.id]);
+
   useEffect(() => {
     async function load() {
       const supabase = createClient();
@@ -101,10 +128,36 @@ export default function WasherJobPage() {
 
     if (error) {
       toast.error('Failed to update status');
-    } else {
-      toast.success(`Status updated to ${newStatus.replace('_', ' ')}`);
-      setBooking((prev) => prev ? { ...prev, status: newStatus as Booking['status'], ...timestamps } : null);
+      setUpdating(false);
+      return;
     }
+
+    toast.success(`Status updated to ${newStatus.replace('_', ' ')}`);
+    setBooking((prev) => prev ? { ...prev, status: newStatus as Booking['status'], ...timestamps } : null);
+
+    // Trigger payment capture when wash is completed
+    if (newStatus === 'completed') {
+      try {
+        const captureRes = await fetch('/api/bookings/capture', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ bookingId: booking.id }),
+        });
+
+        if (captureRes.ok) {
+          toast.success('Payment captured successfully');
+          setBooking((prev) => prev ? { ...prev, payment_status: 'captured', status: 'paid' } : null);
+        } else {
+          const captureErr = await captureRes.json();
+          console.error('Payment capture failed:', captureErr);
+          toast.error('Wash completed, but payment capture failed. Admin will handle it.');
+        }
+      } catch (captureError) {
+        console.error('Payment capture error:', captureError);
+        toast.error('Wash completed, but payment capture failed. Admin will handle it.');
+      }
+    }
+
     setUpdating(false);
   }
 

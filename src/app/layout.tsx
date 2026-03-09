@@ -63,6 +63,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Providers>
         {children}
         </Providers>
+        {process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY && (
+          <Script
+            src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places,geometry`}
+            strategy="afterInteractive"
+          />
+        )}
         {GA_ID && (
           <>
             <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />

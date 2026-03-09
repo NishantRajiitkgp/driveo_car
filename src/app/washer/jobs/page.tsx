@@ -6,7 +6,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { MapPin, Car, DollarSign, Clock, Calendar } from 'lucide-react';
+import { MapPin, Car, DollarSign, Clock, Calendar, ChevronRight } from 'lucide-react';
+import Link from 'next/link';
 
 interface Job {
   id: string;
@@ -82,9 +83,9 @@ export default function WasherJobsPage() {
   const completedJobs = jobs.filter(completedFilter);
 
   const renderJobCard = (job: Job) => (
+    <Link key={job.id} href={`/washer/jobs/${job.id}`}>
     <Card
-      key={job.id}
-      className="bg-[#0a0a0a] border-white/10 hover:border-white/20 transition-colors"
+      className="bg-[#0a0a0a] border-white/10 hover:border-white/20 transition-colors cursor-pointer"
     >
       <CardContent className="p-4">
         <div className="flex items-start justify-between mb-3">
@@ -124,29 +125,33 @@ export default function WasherJobsPage() {
             <span className="line-clamp-1">{job.service_address}</span>
           </div>
 
-          <div className="flex items-center gap-2 text-xs text-white/30">
-            {job.scheduled_at ? (
-              <>
-                <Calendar className="w-3 h-3" />
-                <span>
-                  {new Date(job.scheduled_at).toLocaleDateString('en-CA', {
-                    month: 'short',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
-                </span>
-              </>
-            ) : (
-              <>
-                <Clock className="w-3 h-3" />
-                <span>Instant</span>
-              </>
-            )}
+          <div className="flex items-center justify-between text-xs text-white/30">
+            <div className="flex items-center gap-2">
+              {job.scheduled_at ? (
+                <>
+                  <Calendar className="w-3 h-3" />
+                  <span>
+                    {new Date(job.scheduled_at).toLocaleDateString('en-CA', {
+                      month: 'short',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <Clock className="w-3 h-3" />
+                  <span>Instant</span>
+                </>
+              )}
+            </div>
+            <ChevronRight className="w-4 h-4 text-white/20" />
           </div>
         </div>
       </CardContent>
     </Card>
+    </Link>
   );
 
   return (
