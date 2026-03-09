@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient, createAdminClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
@@ -24,12 +25,54 @@ export async function POST(request: NextRequest) {
     const experienceLevel = formData.get('experienceLevel') as string;
     const yearsExperience = formData.get('yearsExperience') as string;
     const maxWashesPerDay = formData.get('maxWashesPerDay') as string;
+    const governmentId = formData.get('governmentId') as File | null;
+    const insurance = formData.get('insurance') as File | null;
 
     if (!fullName) {
       return NextResponse.json({ error: 'Name is required' }, { status: 400 });
     }
 
-    const admin = await createAdminClient();
+    // Use raw supabase-js client with service role key to bypass RLS on storage
+    const admin = createSupabaseClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    );
+
+    // Upload documents to Supabase Storage
+    let governmentIdPath = '';
+    let insurancePath = '';
+
+    if (governmentId && governmentId.size > 0) {
+      const ext = governmentId.name.split('.').pop() || 'jpg';
+      const path = `${user.id}/government-id.${ext}`;
+      const buffer = Buffer.from(await governmentId.arrayBuffer());
+      const { error: uploadErr } = await admin.storage
+        .from('washer-docs')
+        .upload(path, buffer, {
+          contentType: governmentId.type,
+          upsert: true,
+        });
+      if (!uploadErr) {
+        governmentIdPath = path;
+        console.log('[Apply] Gov ID uploaded:', path);
+      } else {
+        console.error('[Apply] Gov ID upload error:', uploadErr.message);
+      }
+    }
+
+    if (insurance && insurance.size > 0) {
+      const ext = insurance.name.split('.').pop() || 'pdf';
+      const path = `${user.id}/insurance.${ext}`;
+      const buffer = Buffer.from(await insurance.arrayBuffer());
+      const { error: uploadErr } = await admin.storage
+        .from('washer-docs')
+        .upload(path, buffer, {
+          contentType: insurance.type,
+          upsert: true,
+        });
+      if (!uploadErr) insurancePath = path;
+      else console.error('[Apply] Insurance upload error:', uploadErr.message);
+    }
 
     // Update the profile with washer details
     await admin.from('profiles').upsert({
@@ -40,17 +83,28 @@ export async function POST(request: NextRequest) {
       phone,
     });
 
+    // Store structured application data as JSON in bio field
+    const applicationData = {
+      fullName,
+      phone,
+      streetAddress,
+      city,
+      province,
+      postalCode,
+      experienceLevel,
+      yearsExperience: yearsExperience || '',
+      maxWashesPerDay: maxWashesPerDay || '4',
+      governmentIdPath,
+      insurancePath,
+      appliedAt: new Date().toISOString(),
+    };
+
     // Create/update washer profile with application details
     await admin.from('washer_profiles').upsert({
       id: user.id,
       status: 'pending',
-      bio: `${experienceLevel === 'trained' ? `Trained professional with ${yearsExperience || '2+'} years experience` : 'Eager fresher ready to learn'}. Based in ${city}, ${province}. Can do ${maxWashesPerDay} washes/day.`,
-      service_zones: [],
-      tools_owned: [],
-      vehicle_make: '',
-      vehicle_model: '',
-      address: `${streetAddress}, ${city}, ${province} ${postalCode}`,
-      max_washes_per_day: parseInt(maxWashesPerDay) || 4,
+      bio: JSON.stringify(applicationData),
+      service_zones: [postalCode?.substring(0, 3)].filter(Boolean),
     });
 
     // Send notification email to admin (if Resend is configured)
@@ -65,7 +119,7 @@ export async function POST(request: NextRequest) {
           body: JSON.stringify({
             from: 'DRIVEO Applications <onboarding@resend.dev>',
             to: process.env.ADMIN_EMAIL,
-            subject: `🚗 New Washer Application: ${fullName}`,
+            subject: `New Washer Application: ${fullName}`,
             html: `
               <h2>New Washer Application</h2>
               <p><strong>Name:</strong> ${fullName}</p>
@@ -74,6 +128,7 @@ export async function POST(request: NextRequest) {
               <p><strong>Location:</strong> ${streetAddress}, ${city}, ${province} ${postalCode}</p>
               <p><strong>Experience:</strong> ${experienceLevel === 'trained' ? `Trained (${yearsExperience} years)` : 'Fresher'}</p>
               <p><strong>Max Washes/Day:</strong> ${maxWashesPerDay}</p>
+              <p><strong>Documents:</strong> Gov ID ${governmentIdPath ? 'uploaded' : 'missing'}, Insurance ${insurancePath ? 'uploaded' : 'not provided'}</p>
               <p><a href="https://driveo.ca/admin/washers">Review in Admin Dashboard</a></p>
             `,
           }),
@@ -83,7 +138,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    console.log(`✅ Washer application submitted for ${fullName} (${user.email}) — pending approval`);
+    console.log(`Washer application submitted for ${fullName} (${user.email}) — pending approval`);
 
     return NextResponse.json({ success: true });
   } catch (error) {

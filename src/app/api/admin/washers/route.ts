@@ -1,15 +1,47 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient, createAdminClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 
 export async function GET() {
-  const admin = await createAdminClient();
+  // Use raw supabase-js client to fully bypass RLS
+  const admin = createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  );
+
   const { data } = await admin
     .from('profiles')
     .select('*, washer_profiles(*)')
     .eq('role', 'washer')
     .order('created_at', { ascending: false });
 
-  return NextResponse.json({ washers: data || [] });
+  // Generate signed URLs for any documents referenced in bio JSON
+  const washers = data || [];
+  for (const w of washers) {
+    const wp = w.washer_profiles;
+    if (!wp?.bio) continue;
+
+    try {
+      const appData = JSON.parse(wp.bio);
+      if (appData.governmentIdPath) {
+        const { data: signedUrl } = await admin.storage
+          .from('washer-docs')
+          .createSignedUrl(appData.governmentIdPath, 3600);
+        appData.governmentIdUrl = signedUrl?.signedUrl || '';
+      }
+      if (appData.insurancePath) {
+        const { data: signedUrl } = await admin.storage
+          .from('washer-docs')
+          .createSignedUrl(appData.insurancePath, 3600);
+        appData.insuranceUrl = signedUrl?.signedUrl || '';
+      }
+      wp.application_data = appData;
+    } catch {
+      wp.application_data = null;
+    }
+  }
+
+  return NextResponse.json({ washers });
 }
 
 export async function PATCH(request: NextRequest) {
@@ -19,31 +51,32 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
   }
 
-  // Verify caller is admin
+  // Verify caller is authenticated
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
+
+  const admin = createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  );
+
+  // Check if caller is admin (if authenticated, check role; allow service-level access)
+  if (user) {
+    const { data: profile } = await admin
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    if (!profile || profile.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+    }
+  } else {
     return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
-  }
-
-  const admin = await createAdminClient();
-
-  // Check if caller is admin
-  const { data: profile } = await admin
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-
-  if (!profile || profile.role !== 'admin') {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
   }
 
   // Update washer status
   const updateData: Record<string, unknown> = { status };
-  if (query_message) {
-    updateData.admin_notes = query_message;
-  }
 
   const { error } = await admin
     .from('washer_profiles')
@@ -64,9 +97,9 @@ export async function PATCH(request: NextRequest) {
   // Send email notification to washer (if Resend configured)
   if (process.env.RESEND_API_KEY && washerProfile?.email) {
     const subjects: Record<string, string> = {
-      approved: '🎉 Your DRIVEO application has been approved!',
+      approved: 'Your DRIVEO application has been approved!',
       rejected: 'Your DRIVEO application update',
-      query: '📋 We need more info about your DRIVEO application',
+      query: 'We need more info about your DRIVEO application',
     };
 
     const bodies: Record<string, string> = {
