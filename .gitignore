@@ -20,3 +20,12 @@ ffmpeg.zip
 DRIVEO Partner — Dawn Preparation.mp4
 
 .vercel
+
+# Claude Code local settings (may contain secrets)
+.claude/settings.local.json
+
+# Build artifacts
+tsconfig.tsbuildinfo
+
+# Debug files
+washers_debug*.json

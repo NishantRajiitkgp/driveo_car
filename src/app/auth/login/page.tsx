@@ -32,12 +32,19 @@ function LoginForm() {
       return;
     }
 
-    const role = data.user?.user_metadata?.role;
+    // Fetch role from profiles table (source of truth)
+    let role = data.user?.user_metadata?.role;
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', data.user.id)
+      .single();
+    if (profile?.role) role = profile.role;
+
     if (redirect && redirect !== '/') router.push(redirect);
-    else if (role === 'customer') router.push('/app/home');
     else if (role === 'washer') router.push('/washer/dashboard');
     else if (role === 'admin') router.push('/admin');
-    else router.push('/');
+    else router.push('/app/home');
     router.refresh();
   }
 

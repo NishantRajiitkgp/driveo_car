@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import {
   Car, MapPin, Phone, Navigation, Camera, Clock,
   DollarSign, CheckCircle2, Loader2, ArrowRight,
-  User,
+  User, X,
 } from 'lucide-react';
 import type { Booking, Profile, Vehicle, BookingPhoto } from '@/types';
 import { cn } from '@/lib/utils';
@@ -47,8 +47,10 @@ export default function WasherJobPage() {
   const [booking, setBooking] = useState<BookingWithDetails | null>(null);
   const [customer, setCustomer] = useState<Profile | null>(null);
   const [photos, setPhotos] = useState<BookingPhoto[]>([]);
+  const [photoUrls, setPhotoUrls] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
+  const [deleting, setDeleting] = useState<string | null>(null);
 
   // Send washer GPS location while en_route or washing
   useEffect(() => {
@@ -110,6 +112,56 @@ export default function WasherJobPage() {
     }
     load();
   }, [id]);
+
+  // Load signed URLs for photo previews
+  useEffect(() => {
+    if (photos.length === 0) return;
+    async function loadUrls() {
+      const supabase = createClient();
+      const urls: Record<string, string> = {};
+      for (const photo of photos) {
+        if (photoUrls[photo.id]) {
+          urls[photo.id] = photoUrls[photo.id];
+          continue;
+        }
+        const { data } = await supabase.storage
+          .from('booking-photos')
+          .createSignedUrl(photo.storage_path, 3600);
+        if (data?.signedUrl) urls[photo.id] = data.signedUrl;
+      }
+      setPhotoUrls(urls);
+    }
+    loadUrls();
+  }, [photos]);
+
+  async function handleDeletePhoto(photo: BookingPhoto) {
+    setDeleting(photo.id);
+    const supabase = createClient();
+
+    // Delete from storage
+    await supabase.storage.from('booking-photos').remove([photo.storage_path]);
+
+    // Delete from database
+    const { error } = await supabase
+      .from('booking_photos')
+      .delete()
+      .eq('id', photo.id);
+
+    if (error) {
+      toast.error(`Failed to delete photo: ${error.message}`);
+      setDeleting(null);
+      return;
+    }
+
+    setPhotos((prev) => prev.filter((p) => p.id !== photo.id));
+    setPhotoUrls((prev) => {
+      const next = { ...prev };
+      delete next[photo.id];
+      return next;
+    });
+    setDeleting(null);
+    toast.success('Photo deleted');
+  }
 
   async function updateStatus(newStatus: string) {
     if (!booking) return;
@@ -180,14 +232,15 @@ export default function WasherJobPage() {
 
     const angles = ['front', 'rear', 'driver_side', 'passenger_side', 'interior'];
 
+    let uploaded = 0;
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const angle = angles[photos.filter((p) => p.photo_type === type).length + i] || 'front';
-      const path = `booking-photos/${booking.id}/${type}/${crypto.randomUUID()}.jpg`;
+      const path = `${booking.id}/${type}/${crypto.randomUUID()}.jpg`;
 
       const { error: uploadError } = await supabase.storage
         .from('booking-photos')
-        .upload(path, file, { contentType: 'image/jpeg' });
+        .upload(path, file, { contentType: file.type || 'image/jpeg' });
 
       if (uploadError) {
         toast.error(`Failed to upload photo: ${uploadError.message}`);
@@ -202,19 +255,28 @@ export default function WasherJobPage() {
         angle_label: angle,
       });
 
-      if (!insertError) {
-        setPhotos((prev) => [...prev, {
-          id: crypto.randomUUID(),
-          booking_id: booking.id,
-          washer_id: user.id,
-          photo_type: type,
-          storage_path: path,
-          angle_label: angle as BookingPhoto['angle_label'],
-          created_at: new Date().toISOString(),
-        }]);
+      if (insertError) {
+        console.error('Photo record insert error:', insertError);
+        toast.error(`Failed to save photo record: ${insertError.message}`);
+        continue;
       }
+
+      const photoId = crypto.randomUUID();
+      const localUrl = URL.createObjectURL(file);
+
+      setPhotos((prev) => [...prev, {
+        id: photoId,
+        booking_id: booking.id,
+        washer_id: user.id,
+        photo_type: type,
+        storage_path: path,
+        angle_label: angle as BookingPhoto['angle_label'],
+        created_at: new Date().toISOString(),
+      }]);
+      setPhotoUrls((prev) => ({ ...prev, [photoId]: localUrl }));
+      uploaded++;
     }
-    toast.success('Photos uploaded');
+    if (uploaded > 0) toast.success(`${uploaded} photo${uploaded > 1 ? 's' : ''} uploaded`);
   }
 
   if (loading) {
@@ -359,7 +421,7 @@ export default function WasherJobPage() {
           <div>
             <div className="flex items-center justify-between mb-3">
               <p className="text-white text-sm font-semibold">Before Photos <span className="text-white/40 font-normal">({beforePhotos.length}/5)</span></p>
-              {booking.status === 'arrived' && (
+              {booking.status === 'arrived' && beforePhotos.length < 5 && (
                 <label className="cursor-pointer">
                   <input
                     type="file"
@@ -376,19 +438,47 @@ export default function WasherJobPage() {
               )}
             </div>
             <div className="grid grid-cols-5 gap-2">
-              {Array.from({ length: 5 }, (_, i) => (
-                <div
-                  key={i}
-                  className={cn(
-                    'aspect-square rounded-xl border-2 border-dashed flex items-center justify-center text-[10px] font-medium transition-colors duration-200',
-                    i < beforePhotos.length
-                      ? 'border-green-500/30 bg-green-500/10 text-green-400'
-                      : 'border-white/[0.08] bg-[#0a0a0a] text-white/20 hover:border-white/15'
-                  )}
-                >
-                  {i < beforePhotos.length ? '✓' : ['F', 'R', 'L', 'R', 'Int'][i]}
-                </div>
-              ))}
+              {Array.from({ length: 5 }, (_, i) => {
+                const photo = beforePhotos[i];
+                const url = photo ? photoUrls[photo.id] : null;
+                return (
+                  <div key={photo?.id || `empty-before-${i}`} className="relative aspect-square">
+                    {photo && url ? (
+                      <>
+                        <img
+                          src={url}
+                          alt={photo.angle_label || 'Before'}
+                          className="w-full h-full object-cover rounded-xl border-2 border-green-500/30"
+                        />
+                        {booking.status === 'arrived' && (
+                          <button
+                            onClick={() => handleDeletePhoto(photo)}
+                            disabled={deleting === photo.id}
+                            className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-red-500 flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg"
+                          >
+                            {deleting === photo.id ? (
+                              <Loader2 className="w-3 h-3 text-white animate-spin" />
+                            ) : (
+                              <X className="w-3 h-3 text-white" />
+                            )}
+                          </button>
+                        )}
+                        <span className="absolute bottom-1 left-1 text-[8px] font-medium text-white bg-black/60 px-1.5 py-0.5 rounded">
+                          {['Front', 'Rear', 'Left', 'Right', 'Int'][i] || photo.angle_label}
+                        </span>
+                      </>
+                    ) : photo ? (
+                      <div className="w-full h-full rounded-xl border-2 border-green-500/30 bg-green-500/10 flex items-center justify-center">
+                        <Loader2 className="w-4 h-4 text-green-400 animate-spin" />
+                      </div>
+                    ) : (
+                      <div className="w-full h-full rounded-xl border-2 border-dashed border-white/[0.08] bg-[#0a0a0a] flex items-center justify-center text-[10px] font-medium text-white/20">
+                        {['F', 'R', 'L', 'R', 'Int'][i]}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -399,7 +489,7 @@ export default function WasherJobPage() {
           <div>
             <div className="flex items-center justify-between mb-3">
               <p className="text-white text-sm font-semibold">After Photos <span className="text-white/40 font-normal">({afterPhotos.length}/5)</span></p>
-              {booking.status === 'washing' && (
+              {booking.status === 'washing' && afterPhotos.length < 5 && (
                 <label className="cursor-pointer">
                   <input
                     type="file"
@@ -416,19 +506,47 @@ export default function WasherJobPage() {
               )}
             </div>
             <div className="grid grid-cols-5 gap-2">
-              {Array.from({ length: 5 }, (_, i) => (
-                <div
-                  key={i}
-                  className={cn(
-                    'aspect-square rounded-xl border-2 border-dashed flex items-center justify-center text-[10px] font-medium transition-colors duration-200',
-                    i < afterPhotos.length
-                      ? 'border-green-500/30 bg-green-500/10 text-green-400'
-                      : 'border-white/[0.08] bg-[#0a0a0a] text-white/20 hover:border-white/15'
-                  )}
-                >
-                  {i < afterPhotos.length ? '✓' : ['F', 'R', 'L', 'R', 'Int'][i]}
-                </div>
-              ))}
+              {Array.from({ length: 5 }, (_, i) => {
+                const photo = afterPhotos[i];
+                const url = photo ? photoUrls[photo.id] : null;
+                return (
+                  <div key={photo?.id || `empty-after-${i}`} className="relative aspect-square">
+                    {photo && url ? (
+                      <>
+                        <img
+                          src={url}
+                          alt={photo.angle_label || 'After'}
+                          className="w-full h-full object-cover rounded-xl border-2 border-green-500/30"
+                        />
+                        {booking.status === 'washing' && (
+                          <button
+                            onClick={() => handleDeletePhoto(photo)}
+                            disabled={deleting === photo.id}
+                            className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-red-500 flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg"
+                          >
+                            {deleting === photo.id ? (
+                              <Loader2 className="w-3 h-3 text-white animate-spin" />
+                            ) : (
+                              <X className="w-3 h-3 text-white" />
+                            )}
+                          </button>
+                        )}
+                        <span className="absolute bottom-1 left-1 text-[8px] font-medium text-white bg-black/60 px-1.5 py-0.5 rounded">
+                          {['Front', 'Rear', 'Left', 'Right', 'Int'][i] || photo.angle_label}
+                        </span>
+                      </>
+                    ) : photo ? (
+                      <div className="w-full h-full rounded-xl border-2 border-green-500/30 bg-green-500/10 flex items-center justify-center">
+                        <Loader2 className="w-4 h-4 text-green-400 animate-spin" />
+                      </div>
+                    ) : (
+                      <div className="w-full h-full rounded-xl border-2 border-dashed border-white/[0.08] bg-[#0a0a0a] flex items-center justify-center text-[10px] font-medium text-white/20">
+                        {['F', 'R', 'L', 'R', 'Int'][i]}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

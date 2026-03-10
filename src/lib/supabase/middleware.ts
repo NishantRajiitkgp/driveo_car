@@ -56,17 +56,32 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.redirect(url);
     }
 
-    // Get user role from metadata
-    const role = user.user_metadata?.role as string | undefined;
+    // Get user role — check metadata first, then fall back to profiles table
+    let role = user.user_metadata?.role as string | undefined;
+
+    if (!role) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+      if (profile?.role) role = profile.role;
+    }
 
     // Role-based route protection
-    if (pathname.startsWith('/app') && role !== 'customer') {
-      return NextResponse.redirect(new URL('/auth/login', request.url));
+    if (pathname.startsWith('/app') && role && role !== 'customer') {
+      // Redirect non-customers away from customer app
+      if (role === 'washer') return NextResponse.redirect(new URL('/washer/dashboard', request.url));
+      if (role === 'admin') return NextResponse.redirect(new URL('/admin', request.url));
     }
     if (pathname.startsWith('/washer') && role !== 'washer') {
+      if (role === 'customer') return NextResponse.redirect(new URL('/app/home', request.url));
+      if (role === 'admin') return NextResponse.redirect(new URL('/admin', request.url));
       return NextResponse.redirect(new URL('/auth/login', request.url));
     }
     if (pathname.startsWith('/admin') && role !== 'admin') {
+      if (role === 'customer') return NextResponse.redirect(new URL('/app/home', request.url));
+      if (role === 'washer') return NextResponse.redirect(new URL('/washer/dashboard', request.url));
       return NextResponse.redirect(new URL('/auth/login', request.url));
     }
 

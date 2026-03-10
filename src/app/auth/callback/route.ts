@@ -58,14 +58,18 @@ export async function GET(request: Request) {
           return NextResponse.redirect(`${origin}/app/onboarding`);
         }
 
-        const role = user.user_metadata?.role;
+        // Fetch role from profiles table (source of truth)
+        let role = user.user_metadata?.role;
+        const { data: profileData } = await adminSupabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+        if (profileData?.role) role = profileData.role;
 
         // Route based on role
         if (next !== '/') {
           return NextResponse.redirect(`${origin}${next}`);
-        }
-        if (role === 'customer') {
-          return NextResponse.redirect(`${origin}/app/home`);
         }
         if (role === 'washer') {
           return NextResponse.redirect(`${origin}/washer/dashboard`);

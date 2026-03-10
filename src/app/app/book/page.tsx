@@ -15,13 +15,14 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { AddressAutocomplete } from '@/components/AddressAutocomplete';
 import { DriveoSlide } from '@/components/driveo-slide/DriveoSlide';
+import { CalendarPicker } from '@/components/CalendarPicker';
 import { calculatePrice, centsToDisplay, formatDuration, PLAN_LABELS } from '@/lib/pricing';
 import { getVehicleImageUrl } from '@/lib/vehicle-image';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import {
   Car, MapPin, ChevronRight, ChevronLeft, Zap, CalendarDays, Sparkles,
-  Clock, CreditCard, CheckCircle2, Loader2, ShieldCheck, Lock,
+  Clock, CreditCard, Loader2, ShieldCheck, Lock,
 } from 'lucide-react';
 import type { Vehicle, WashPlan, BookingFormData } from '@/types';
 
@@ -408,12 +409,9 @@ function BookingForm() {
           </div>
 
           {!form.isInstant && (
-            <Input
-              type="datetime-local"
-              value={form.scheduledAt || ''}
-              onChange={(e) => setForm((f) => ({ ...f, scheduledAt: e.target.value }))}
-              min={new Date().toISOString().slice(0, 16)}
-              className="bg-white/5 border-white/10 text-white"
+            <CalendarPicker
+              value={form.scheduledAt}
+              onChange={(iso) => setForm((f) => ({ ...f, scheduledAt: iso }))}
             />
           )}
 
