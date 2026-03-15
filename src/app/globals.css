@@ -232,6 +232,15 @@ body {
   100% { transform: scale(2.5); opacity: 0; }
 }
 
+/* --- Scrollbar Hide Utility --- */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* --- Driveo Design System — Always Dark Theme --- */
 :root {
   --background: #050505;

@@ -29,3 +29,12 @@ tsconfig.tsbuildinfo
 
 # Debug files
 washers_debug*.json
+
+# LaTeX documents
+*.tex
+*.aux
+*.log
+*.pdf
+*.toc
+*.out
+*.synctex.gz
