@@ -1,16 +1,134 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import { ArrowUpRight, Star, MapPin, Sparkles } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { ArrowUpRight, Star, MapPin, Sparkles, LocateFixed, Loader2 } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
 import { useCursor } from './CursorProvider';
 import { vehiclePrices } from '@/lib/data';
 
+interface Prediction {
+  place_id: string;
+  description: string;
+}
+
 export function HeroSection() {
   const { setIsHovering } = useCursor();
   const [selectedVehicle, setSelectedVehicle] = useState('Sedan');
+  const [address, setAddress] = useState('');
+  const [predictions, setPredictions] = useState<Prediction[]>([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [detecting, setDetecting] = useState(false);
   const containerRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const autocompleteService = useRef<google.maps.places.AutocompleteService | null>(null);
+  const placesService = useRef<google.maps.places.PlacesService | null>(null);
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const hasGoogleMaps = typeof window !== 'undefined' && window.google?.maps?.places;
+
+  useEffect(() => {
+    if (hasGoogleMaps) {
+      autocompleteService.current = new google.maps.places.AutocompleteService();
+      const div = document.createElement('div');
+      placesService.current = new google.maps.places.PlacesService(div);
+    }
+  }, [hasGoogleMaps]);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setShowDropdown(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Auto-detect location on mount
+  useEffect(() => {
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        if (hasGoogleMaps) {
+          const geocoder = new google.maps.Geocoder();
+          geocoder.geocode({ location: { lat: latitude, lng: longitude } }, (results, status) => {
+            if (status === 'OK' && results?.[0]) {
+              setAddress(results[0].formatted_address);
+            }
+          });
+        } else {
+          try {
+            const res = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`,
+              { headers: { 'User-Agent': 'Driveo/1.0' } }
+            );
+            const data = await res.json();
+            if (data.display_name) setAddress(data.display_name);
+          } catch { /* ignore */ }
+        }
+      },
+      () => { /* permission denied — leave empty */ },
+      { enableHighAccuracy: false, timeout: 5000 }
+    );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const fetchPredictions = useCallback((input: string) => {
+    if (!autocompleteService.current || input.length < 3) {
+      setPredictions([]);
+      return;
+    }
+    autocompleteService.current.getPlacePredictions(
+      { input, componentRestrictions: { country: 'ca' }, types: ['address'] },
+      (results) => {
+        setPredictions(results?.map((r) => ({ place_id: r.place_id, description: r.description })) || []);
+      }
+    );
+  }, []);
+
+  function handleAddressChange(val: string) {
+    setAddress(val);
+    setShowDropdown(true);
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    debounceTimer.current = setTimeout(() => fetchPredictions(val), 300);
+  }
+
+  function selectPrediction(p: Prediction) {
+    setAddress(p.description);
+    setShowDropdown(false);
+    setPredictions([]);
+  }
+
+  function detectLocation() {
+    if (!navigator.geolocation) return;
+    setDetecting(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        if (hasGoogleMaps) {
+          const geocoder = new google.maps.Geocoder();
+          geocoder.geocode({ location: { lat: latitude, lng: longitude } }, (results, status) => {
+            setDetecting(false);
+            if (status === 'OK' && results?.[0]) setAddress(results[0].formatted_address);
+          });
+        } else {
+          try {
+            const res = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`,
+              { headers: { 'User-Agent': 'Driveo/1.0' } }
+            );
+            const data = await res.json();
+            if (data.display_name) setAddress(data.display_name);
+          } catch { /* ignore */ }
+          setDetecting(false);
+        }
+      },
+      () => setDetecting(false),
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  }
 
   const { scrollYProgress: heroScroll } = useScroll({
     target: containerRef,
@@ -72,9 +190,44 @@ export function HeroSection() {
             <Sparkles className="w-4 h-4 text-[#E23232]" />
             <span className="font-mono text-xs text-[#E23232] uppercase tracking-widest">Spring Revival — 20% off your first wash</span>
           </div>
-          <div className="flex items-center gap-4 border-b border-white/20 pb-6 mb-6">
-            <MapPin className="text-[#E23232] w-6 h-6 shrink-0" />
-            <input type="text" placeholder="WHERE SHOULD WE COME? (ADDRESS)" className="bg-transparent outline-none font-mono text-sm w-full uppercase placeholder:text-white/50 text-white" />
+          <div ref={dropdownRef} className="relative border-b border-white/20 pb-6 mb-6">
+            <div className="flex items-center gap-4">
+              <MapPin className="text-[#E23232] w-6 h-6 shrink-0" />
+              <input
+                type="text"
+                value={address}
+                onChange={(e) => handleAddressChange(e.target.value)}
+                onFocus={() => predictions.length > 0 && setShowDropdown(true)}
+                placeholder="WHERE SHOULD WE COME? (ADDRESS)"
+                autoComplete="off"
+                className="bg-transparent outline-none font-mono text-sm w-full uppercase placeholder:text-white/50 text-white"
+              />
+              <button
+                type="button"
+                onClick={detectLocation}
+                disabled={detecting}
+                className="shrink-0 p-1.5 rounded-full text-white/40 hover:text-[#E23232] transition-colors"
+                title="Use my current location"
+              >
+                {detecting ? <Loader2 className="w-5 h-5 animate-spin" /> : <LocateFixed className="w-5 h-5" />}
+              </button>
+            </div>
+            {showDropdown && predictions.length > 0 && (
+              <div className="absolute z-50 left-0 right-0 top-full mt-2 max-h-48 overflow-y-auto rounded-xl border border-white/10 bg-[#0a0a0a]/95 backdrop-blur-md shadow-2xl">
+                {predictions.map((p) => (
+                  <button
+                    key={p.place_id}
+                    type="button"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => selectPrediction(p)}
+                    className="w-full px-4 py-3 text-left font-mono text-xs text-white/80 hover:bg-white/10 transition-colors flex items-start gap-3 uppercase tracking-wider"
+                  >
+                    <MapPin className="w-3.5 h-3.5 text-[#E23232]/60 mt-0.5 shrink-0" />
+                    <span className="line-clamp-2">{p.description}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
           <div className="flex flex-wrap gap-2 mb-8">
             {Object.keys(vehiclePrices).map((vehicle) => (
