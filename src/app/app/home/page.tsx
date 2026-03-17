@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState, useMemo } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { Car, MapPin, ArrowRight, Clock, CreditCard, Sparkles } from 'lucide-react';
+import { Car, CarFront, MapPin, ArrowRight, Clock, CreditCard, Sparkles } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PLAN_LABELS, centsToDisplay, PLAN_PRICES } from '@/lib/pricing';
 import type { Profile, Vehicle, Booking, WashPlan } from '@/types';
@@ -48,43 +48,6 @@ const stageMap: Record<string, number> = {
   arrived: 1, washing: 1, completed: 2,
 };
 
-/* ── car silhouette — boxy SUV outline matching the reference ── */
-function CarSVG({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 160 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* SUV body */}
-      <path
-        d="M18 68 L18 58 C18 56 19 54 22 53 L38 50 L52 28 C54 24 58 20 66 18 L110 18 C116 18 120 22 122 26 L132 50 L142 53 C144 54 146 56 146 58 L146 68 C146 70 144 72 142 72 L132 72 C130 72 128 68 122 68 L42 68 C36 68 34 72 32 72 L22 72 C20 72 18 70 18 68 Z"
-        stroke="currentColor"
-        strokeWidth="2"
-        opacity="0.3"
-        strokeLinejoin="round"
-      />
-      {/* roof line */}
-      <path
-        d="M52 28 C54 24 58 20 66 18 L110 18 C116 18 120 22 122 26 L128 40 L46 40 Z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        opacity="0.2"
-        strokeLinejoin="round"
-      />
-      {/* window divider */}
-      <line x1="88" y1="19" x2="88" y2="40" stroke="currentColor" strokeWidth="1.5" opacity="0.18" />
-      {/* windshield */}
-      <line x1="50" y1="40" x2="58" y2="22" stroke="currentColor" strokeWidth="1.5" opacity="0.18" />
-      {/* rear window */}
-      <line x1="124" y1="40" x2="116" y2="22" stroke="currentColor" strokeWidth="1.5" opacity="0.18" />
-      {/* beltline */}
-      <line x1="38" y1="50" x2="132" y2="50" stroke="currentColor" strokeWidth="1" opacity="0.1" />
-      {/* front wheel */}
-      <circle cx="42" cy="72" r="14" stroke="currentColor" strokeWidth="2" opacity="0.25" />
-      <circle cx="42" cy="72" r="8" stroke="currentColor" strokeWidth="1.5" opacity="0.15" />
-      {/* rear wheel */}
-      <circle cx="122" cy="72" r="14" stroke="currentColor" strokeWidth="2" opacity="0.25" />
-      <circle cx="122" cy="72" r="8" stroke="currentColor" strokeWidth="1.5" opacity="0.15" />
-    </svg>
-  );
-}
 
 export default function CustomerHomePage() {
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -377,7 +340,9 @@ export default function CustomerHomePage() {
                     {primaryVehicle.color ? ` \u00B7 ${primaryVehicle.color}` : ''}
                   </p>
                 </div>
-                <CarSVG className="w-36 md:w-44 h-auto text-white shrink-0 -mr-3 -mb-2" />
+                <div className="shrink-0 -mr-1 -mb-1 opacity-[0.12]">
+                  <CarFront className="w-28 md:w-36 h-28 md:h-36 text-white" strokeWidth={1} />
+                </div>
               </div>
 
               {/* VIN + manage */}
